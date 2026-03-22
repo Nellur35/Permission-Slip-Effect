@@ -30,6 +30,28 @@ If nothing found: "No architecture.md found. Threat modeling needs an architectu
 
 Read the architecture document.
 
+## Step 1.5: Detect Scope Mode
+
+Glob for `change-surface.md` at project root.
+
+**If `change-surface.md` exists → Scoped Mode.** Read it. The threat model covers only the areas the change surface touches.
+
+From the change surface map, identify which of the 14 areas are relevant:
+- Trust boundaries crossed → Trust Boundaries, Authentication, Authorization
+- New external dependencies → External Dependencies, Supply Chain
+- New secrets or credentials → Secrets Lifecycle
+- New data handling → Data Flows, Data Lifecycle
+- Infrastructure changes → Infrastructure & Cloud, IAM Blast Radius, IaC & Configuration
+- New runtime components → Runtime Security
+- New error paths → Error Handling
+- AI-assisted development → LLM-Specific (always relevant if using this methodology)
+
+For areas not touched by the change: one line — "Not affected by this change. Verify if scope expands." Do not fill boilerplate.
+
+**If no `change-surface.md` → Full Mode.** Proceed to Step 2 as normal — all 14 areas.
+
+**Scope expansion trigger:** If examining the relevant areas reveals risks in areas you initially excluded, add them. The change surface map is the starting scope, not the final scope.
+
 ## Step 2: Examine Every Area
 
 For every component and trust boundary, answer:
@@ -136,3 +158,7 @@ If any answer is missing or vague, go back and fill it in.
 **Misses the LLM-specific area.** Area 14 (LLM-Specific) was added because AI-assisted development introduces supply chain risks the model doesn't naturally consider — hallucinated dependencies, insecure code suggestions, prompt injection via generated code. The model frequently skips this area or treats it as "N/A" even when the project is being built with AI tools. If you're using this methodology, you're using AI tools. This area is never N/A.
 
 **Trust boundary diagram is decorative.** The ASCII diagram often doesn't match the threat analysis that follows. Components appear in the diagram but not the threat table, or vice versa. The diagram should be the source of truth — every component and boundary in the diagram gets a row in the threat analysis. If the counts don't match, something was skipped.
+
+**Scoped mode excludes too aggressively.** The change surface says "authentication" so the model only examines authentication. But adding auth introduces secrets (Secrets Lifecycle), changes IAM roles (IAM Blast Radius), and adds a token store (Data Lifecycle). Each area the model excludes is an area an attacker might find first. When in doubt, include the area with a brief analysis rather than exclude it.
+
+**Full 14-area treatment on scoped changes.** The change touches authentication but the model fills all 14 areas anyway, most with "low risk — standard mitigations." This wastes tokens and dilutes the real findings. In scoped mode, cover only the areas the change surface identifies. Mark excluded areas with "not affected by this change" — one line, not a paragraph.

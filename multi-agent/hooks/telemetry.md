@@ -18,6 +18,10 @@ Every telemetry entry captures:
 | `tool` | Which tool was used | `Read`, `Write`, `Bash` |
 | `target` | File or artifact involved | `tools/threat-model.md`, `threat_model.md` |
 | `notes` | Optional context | `user redirected to different approach` |
+| `scope_estimate` | Estimated scope before execution | `single-function`, `single-feature`, `multi-component`, `full-system` |
+| `output_lines` | Lines of output produced | `45` |
+| `areas_covered` | For threat model: areas examined | `3/14` |
+| `findings_count` | For review: findings produced | `7` |
 
 ### Event Types
 
@@ -26,6 +30,7 @@ Every telemetry entry captures:
 - **`skill_skip`** — A skill was read but no artifact was produced. The model changed direction.
 - **`skill_override`** — The navigator rejected or significantly modified the skill's output.
 - **`skill_rerun`** — The same skill was invoked again in the same session. Signal of either iteration or thrashing.
+- **`scope_mismatch`** — The skill's output depth didn't match its scope estimate. A single-function scope produced a 13-area threat model, or a full-system scope produced a 3-finding review. This is the cost discipline violation signal.
 
 ---
 

@@ -4,9 +4,10 @@ description: >
   Phase 1 product intake questionnaire. Replaces the blank problem
   statement template with an interactive conversation that extracts
   the real problem, rejects premature solutions, and produces a
-  ready-to-use handoff artifact. Supports both greenfield projects
-  and existing codebases. Activates when the user wants to start
-  Phase 1, define a problem, or kick off a new project.
+  ready-to-use handoff artifact. Supports greenfield projects,
+  existing codebases, and scoped changes to existing systems.
+  Activates when the user wants to start Phase 1, define a problem,
+  kick off a new project, or scope a specific change.
 allowed-tools:
   - Read
   - Write
@@ -22,11 +23,14 @@ You run an interactive intake. One question at a time. Never dump all questions 
 
 ## Step 1: Detect Project Type
 
-Ask: "Tell me what you're working on. Is this a new project or an existing codebase?"
+Ask: "Tell me what you're working on. Is this a new project, an existing codebase, or a specific change to an existing system?"
 
 - If new/greenfield -> Greenfield Path
-- If existing -> Existing Project Path
+- If existing + broad assessment needed -> Existing Project Path
+- If existing + specific change ("I need to add X", "we're migrating Y", "adding a feature to Z") -> Scoped Change Path
 - If unclear, ask a clarifying follow-up
+
+**Detection signals for Scoped Change Path:** The navigator describes a specific feature, migration, integration, or fix against a system that already works. They say "add," "migrate," "integrate," "replace," "update" — not "build" or "start." The system exists and functions; they're changing one part of it.
 
 ## Greenfield Path
 
@@ -53,6 +57,21 @@ Ask these questions ONE AT A TIME. Same rules -- wait, skip what's answered, pus
 4. What documentation exists? Architecture docs, runbooks, threat models, test suites?
 5. Security surface: what data does the system handle, what's the auth model, what's the blast radius if compromised?
 6. Constraints: timeline, team, what absolutely cannot change, what can?
+
+After collecting answers, generate the artifact.
+
+## Scoped Change Path
+
+Ask these questions ONE AT A TIME. Same rules — wait, skip what's answered, push back on vague answers. This path is intentionally shorter — 6 questions, not 8 — because the scope is narrower.
+
+1. What specifically are you changing? One sentence. Not the system — the change.
+2. What components does this change touch? APIs, services, data stores, infrastructure, trust boundaries. List them.
+3. What trust boundaries does this change cross? Where does trusted meet untrusted in the change path?
+4. What's the blast radius if this change breaks? Who's affected, what data is at risk, what degrades?
+5. What exists today that this change interacts with? Auth model, existing APIs, dependencies, deployment pipeline.
+6. Constraints: timeline, what absolutely cannot change in the existing system, what can?
+
+**Cost discipline:** Do not expand to full intake unless the answers reveal the change is actually a full rebuild.
 
 After collecting answers, generate the artifact.
 
@@ -149,6 +168,56 @@ Write this to `problem_statement.md` using the Write tool.
 
 Write this to `reconstruction_assessment.md` using the Write tool.
 
+### Scoped Change -> `change-surface.md`
+
+```markdown
+# Change Surface Map
+
+## The Change
+[What's being changed, from Q1. One sentence.]
+
+## Components Affected
+| Component | How It's Affected | Exists Today? |
+|-----------|------------------|--------------|
+| [from Q2] | [added / modified / replaced / removed] | [yes / new] |
+
+## Trust Boundaries Crossed
+| Boundary | What Crosses It | Direction |
+|----------|----------------|-----------|
+| [from Q3] | [data / control / auth] | [in / out / both] |
+
+## Blast Radius
+[From Q4. If this change breaks, what's the worst case? Who's affected? What data is at risk?]
+
+## Existing System Context
+[From Q5. Auth model, APIs, dependencies, deployment pipeline — only what the change interacts with.]
+
+## Constraints
+[From Q6. What can't change, timeline, team.]
+
+## Scope Boundary
+**In scope:** [components listed above]
+**Out of scope:** Everything else in the existing system. If the change expands beyond these components, re-run intake with the Existing Project Path.
+
+## Second-Order Effects Check
+- [ ] Does this change affect components not listed above? If uncertain, list candidates.
+- [ ] Does this change modify a trust boundary that other components depend on?
+- [ ] Does this change introduce a new dependency that the existing system doesn't have?
+
+If any answer is "yes" or "uncertain" — expand the scope. Add the affected components to the table above. Scoped mode should be easy to widen and hard to narrow.
+
+## Gate Check
+- [ ] Change is specific enough to scope (not "improve the system")
+- [ ] At least one trust boundary identified or explicitly none
+- [ ] Blast radius is concrete, not vague
+- [ ] Second-order effects checked
+
+---
+*This file is the handoff artifact for scoped methodology phases. Only components in this map are in scope. Everything not here does not carry forward.*
+```
+
+Write this to `change-surface.md` using the Write tool.
+
 ## Auto Gate Check
 
 After writing the artifact, verify:
@@ -156,6 +225,7 @@ After writing the artifact, verify:
 1. "What breaks if this isn't built?" has a specific, concrete answer (not "it would be nice" -- something actually breaks)
 2. At least one alternative to building this was considered and rejected with a reason
 3. For existing projects: current state is documented enough to recommend an entry phase
+4. For scoped changes: change is specific enough to scope, at least one trust boundary identified, blast radius is concrete, second-order effects checked
 
 If any gate fails, do not accept it silently. Ask the specific question that closes the gap. Example: "You haven't told me what happens if this doesn't get built. Who's affected and what breaks for them?"
 
@@ -165,6 +235,7 @@ Once the artifact passes the gate check, tell the user:
 
 - For greenfield: "Your problem statement is written to `problem_statement.md`. This is the handoff artifact for Phase 2 (Requirements). Feed it into Phase 2 to define what the system must do."
 - For existing projects: "Your reconstruction assessment is written to `reconstruction_assessment.md`. Based on what exists, your recommended entry point is Phase [N]. Feed this artifact into that phase. Run `/audit` for a deeper scan of the existing codebase and CI/CD."
+- For scoped changes: "Your change surface map is written to `change-surface.md`. The methodology runs in scoped mode — only the components in this map are in scope. Threat model covers only the trust boundaries this change crosses. Review focuses on the seam between new and existing code. Gate checks verify the change surface, not the full system."
 
 ## Style Rules
 
@@ -186,3 +257,7 @@ Once the artifact passes the gate check, tell the user:
 **Reconstruction path produces shallow assessments.** For existing codebases, the model tends to accept the user's self-description at face value instead of running `/audit` to verify. The recommended entry phase often defaults to "Phase 6" even when the existing architecture has never been threat modeled. Check: if the recommended phase is 6 or 7, is there evidence that Phases 3-5 artifacts actually exist and are current?
 
 **One-question-at-a-time breaks in fast conversations.** If the navigator is experienced and answers multiple questions in one message, the model sometimes still asks the next question instead of acknowledging what was already answered. It follows the "one at a time" instruction literally when it should adapt to the navigator's pace.
+
+**Scoped path narrows too aggressively.** The navigator says "just adding OAuth" and the model scopes to authentication only. But the real risk is in IAM blast radius, secrets lifecycle, and token storage — components the navigator didn't mention because they don't exist yet. The second-order effects check exists for this reason. If the model skips it or accepts "no" without examining the change's downstream dependencies, the scope is dangerously narrow.
+
+**Runs full intake on trivial changes.** The navigator says "I need to add input validation to the login endpoint" and the model runs 8 questions. This is a single-function change — the problem is already stated. Acknowledge the problem, confirm scope, write a one-paragraph change surface map. Don't run the full questionnaire when the answer is in the first message.

@@ -177,3 +177,5 @@ Top 3-5 gaps to close, ranked by impact:
 **Reports "Missing" when it's "Different."** The methodology expects specific artifacts (architecture.md, threat_model.md). Existing projects often have equivalent content under different names or in different locations (DESIGN.md, security-review.pdf, architecture decisions in ADR format). The audit should recognize equivalent artifacts, not just pattern-match filenames.
 
 **Doesn't distinguish advisory from blocking.** Some gaps are critical (no secret scanning on a project with API keys). Others are nice-to-have (no property-based tests on a CRUD app). The audit output should distinguish: "Fix before any new work" vs. "Add when practical." Without this, the navigator either fixes everything (expensive) or nothing (risky).
+
+**Runs full-system audit when an impact scan would suffice.** The navigator asks "what does this change affect?" and the model runs the full audit — 50+ findings across the entire codebase. An impact scan (what does this specific change touch, what trust boundaries does it cross, what tests need to run) is lighter, faster, and answers the actual question.

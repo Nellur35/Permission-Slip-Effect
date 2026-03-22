@@ -48,6 +48,19 @@ Does the code match the architecture doc? Are there hardcoded dependencies that 
 ### General (anything else)
 What assumptions does this make? Which are unverified? What happens when this fails? What's missing? What would an adversary exploit?
 
+### Scoped Review (Brownfield)
+
+If `change-surface.md` exists, the review focuses on the **seam** — where new code meets existing code.
+
+Priority findings for scoped reviews:
+1. **Interface mismatches** — does the new code assume something about the existing system that isn't true?
+2. **Assumption violations** — does the existing system behave differently than the new code expects?
+3. **Trust boundary changes** — did the change move, add, or weaken a trust boundary?
+4. **Scope creep** — does the implementation touch components not listed in `change-surface.md`? If yes, the scope expanded without the threat model expanding with it.
+5. **Regression risk** — what existing behavior could this change break?
+
+The adversarial mandate is the same. The aperture is narrower. Don't review the entire codebase — review the change and its contact points with the existing system.
+
 ## Step 3: Structured Argument
 
 This is not a one-way critique. It's a structured argument:
@@ -101,3 +114,5 @@ High: [N]  Medium: [N]  Low: [N]
 **Doesn't cross-reference the threat model.** When reviewing code (Phase 7), the review skill should check whether threat mitigations from Phase 4 are actually implemented. It often doesn't — it reviews the code on its own terms. Check: if `threat_model.md` exists, does the review reference it? If not, the review missed the highest-value findings.
 
 **Severity inflation on first pass, deflation on pushback.** First review: everything is High. Author pushes back. Second pass: everything becomes Medium. Neither is calibrated. Severity should be tied to the threat model's impact ratings, not to the model's confidence level.
+
+**Produces 30+ findings on small artifacts.** Under the adversarial mandate, the model finds everything it can. On a 200-line script, this produces 30 findings where 5 high-severity ones would be more actionable. Cap findings to what the navigator can act on in one session. Lead with the highest severity. If there are more than 10 findings, the top 5 get full detail and the rest get one-line summaries.

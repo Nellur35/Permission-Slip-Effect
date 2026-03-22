@@ -24,7 +24,7 @@ The navigator role deepens with practice. Over time, they learn to front-load in
 
 **If the full skill set is installed** (`.claude/skills/`), use: `/intake` for Phase 1, `/threat-model` for Phase 4, `/review` at any handoff, `/gate-check` before phase transitions, `/audit` to scan an existing codebase. The sections below work standalone without those skills.
 
-**Cost discipline:** AI time is a budget, not infinite. Max 3 sentences of instruction before code. Don't re-read files already in context. Batch related edits. Cap fix attempts at 3 — if the third doesn't work, re-analyze the approach. Use the phase structure to minimize back-and-forth.
+**Cost discipline:** AI time is a budget, not infinite. Max 3 sentences of instruction before code. Don't re-read files already in context. Batch related edits. Cap fix attempts at 2 — then ask the navigator or escalate to multi-model reasoning. Never burn >2 cycles without switching approach. Before dispatching a subagent on "add X to file" tasks, grep for X first. Effort matches scope: a 200-line script does not get a 13-area threat model.
 
 ---
 
@@ -207,11 +207,13 @@ Standard gates are common across projects. Custom gates — derived from YOUR th
 - Coverage threshold — based on risk profile, not vanity
 - Linting, type checking, complexity limits
 
-**The Two Unbreakable Rules:**
+**The Three Unbreakable Rules:**
 
 **Rule 1:** Tests must verify behavior against requirements — not execute lines of code. Coverage is a side effect of good tests, never a goal.
 
 **Rule 2:** Pipeline gates must never be weakened to make things pass. If something fails, fix the code or reconsider the architecture.
+
+**Rule 3:** Effort matches scope. A 200-line script does not get a 13-area threat model. A single-function change does not get an 8-question intake. Every skill estimates scope before executing and matches output depth to input complexity.
 
 **Gate questions — do not proceed until answered:**
 - What does a passing pipeline actually prove?
@@ -333,6 +335,12 @@ When any phase surfaces an upstream flaw:
 4. Propagate changes forward through all downstream phases
 
 Document what triggered the re-entry and what changed — one sentence is enough.
+
+### Scoped Mode (Brownfield)
+
+When the intake produces `change-surface.md` instead of `problem_statement.md` or `reconstruction_assessment.md`, the methodology runs in scoped mode. Same phases, same gates, same adversarial stance — narrower aperture. Only the components in the change surface map are in scope. Threat model covers only the areas the change touches. Review focuses on the seam between new and existing code. Gate checks verify the change surface, not the full system.
+
+**Scope expansion rule:** If any phase reveals the change affects more components than `change-surface.md` lists, update the map. If the scope doubles, switch to full mode. Scoped mode should be easy to widen and hard to narrow.
 
 ---
 
@@ -2292,6 +2300,8 @@ The retro produces lessons. The lessons say "update SKILL.md with X." Nobody upd
 - Colludes on premature solutions after one redirect attempt
 - Skips the "why not code" question — the one that catches projects that shouldn't be built
 - Reconstruction path defaults to "Phase 6" even when Phases 3-5 artifacts don't exist
+- Scoped path narrows too aggressively — "just adding OAuth" scopes to auth only, missing secrets lifecycle, IAM blast radius, token storage
+- Runs full intake on trivial changes — the problem is in the first message, don't run 8 questions
 
 ### review
 
@@ -2300,6 +2310,7 @@ The retro produces lessons. The lessons say "update SKILL.md with X." Nobody upd
 - Forgets adversarial mandate mid-review — output shifts to balanced assessment
 - Doesn't cross-reference threat model when reviewing code
 - Severity inflation on first pass, deflation on pushback — neither calibrated
+- Produces 30+ findings on small artifacts — cap to top 5 with full detail, rest as one-liners
 
 ### threat-model
 
@@ -2308,6 +2319,8 @@ The retro produces lessons. The lessons say "update SKILL.md with X." Nobody upd
 - Generates textbook threats that don't apply to the actual system
 - Misses LLM-specific area even when the project is built with AI tools
 - Trust boundary diagram doesn't match the threat analysis table
+- Scoped mode excludes too aggressively — adding auth implies secrets, IAM, token storage
+- Full 14-area treatment on scoped changes — cover only relevant areas, one-line exclusions for the rest
 
 ### gate-check
 
@@ -2316,6 +2329,7 @@ The retro produces lessons. The lessons say "update SKILL.md with X." Nobody upd
 - Doesn't read upstream artifacts for cross-phase verification
 - Non-actionable FAILs ("requirements need more detail")
 - Skips Phase 3.5 even when architecture contains unverified assumptions
+- Runs full gate verification on minor scoped phase transitions
 
 ### audit
 
@@ -2323,6 +2337,7 @@ The retro produces lessons. The lessons say "update SKILL.md with X." Nobody upd
 - Misses custom build tooling and non-standard CI/CD patterns
 - Reports "Missing" for artifacts that exist under different names
 - No distinction between blocking gaps and nice-to-have improvements
+- Runs full-system audit when an impact scan would answer the question
 
 ### session-retro
 
@@ -2331,6 +2346,7 @@ The retro produces lessons. The lessons say "update SKILL.md with X." Nobody upd
 - Conflict detection is theoretical — model doesn't read all existing rules to compare
 - Quick summary escape hatch used too aggressively on sessions with real surprises
 - Doesn't verify whether tactical lessons were actually applied
+- Full 3-stage retro on routine sessions — use quick summary when nothing surprising happened
 
 ## Skill Telemetry
 

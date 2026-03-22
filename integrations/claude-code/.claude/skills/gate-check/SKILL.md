@@ -34,6 +34,26 @@ Glob for artifacts to figure out where the user is:
 
 If ambiguous, ask: "Which phase are you checking?"
 
+## Step 1.5: Detect Scope Mode
+
+Glob for `change-surface.md`.
+
+If found → scoped gates apply. Gate questions verify the **change surface**, not the full system.
+
+### Scoped Gate Additions (apply alongside phase-specific gates)
+
+For every phase in scoped mode, add:
+- [ ] Does this artifact stay within the scope defined in `change-surface.md`?
+- [ ] If the artifact touches components outside the change surface, has `change-surface.md` been updated?
+- [ ] Are second-order effects on the existing system addressed?
+
+### Phase 4 Scoped Gate (Threat Model)
+- [ ] Does the threat model cover every trust boundary the change crosses?
+- [ ] Are excluded areas explicitly marked with "not affected by this change"?
+- [ ] If more than 10 of 14 areas are covered, is scoped mode still justified?
+
+If no `change-surface.md` → full gates apply as normal.
+
 ## Step 2: Read the Artifact
 
 Read the artifact for the detected phase.
@@ -138,3 +158,5 @@ Read the artifact for the detected phase.
 **"FAIL" without actionable gaps.** When gates fail, the output should say exactly what's missing and what to do. "FAIL — requirements need more detail" is not actionable. "FAIL — requirement R3 ('system handles high load') has no testable threshold. Define a specific number (requests/second, P95 latency)" is actionable.
 
 **Skips Phase 3.5 gate entirely.** The Discovery Spike gate exists but is optional, so the model almost always skips it even when the architecture contains unverified assumptions. If architecture.md mentions "assuming the API supports X" or "pending confirmation of Y," Phase 3.5 should be triggered, not skipped.
+
+**Runs full gate verification on minor phase transitions.** A scoped change moving from Phase 4 to Phase 5 doesn't need full cross-phase verification of every upstream artifact. Verify the change surface is still accurate, the scoped threat model covers the right areas, and move on. Full verification is for full-system runs.

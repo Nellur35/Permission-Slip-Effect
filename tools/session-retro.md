@@ -66,6 +66,7 @@ Read the output. Answer:
 4. **Override patterns.** If the navigator overrode a skill's output, why? Categories: scope mismatch (fix skill instructions), quality issue (add to gotchas), context issue (skill didn't read the right artifacts), legitimate pivot (not a skill problem).
 5. **Rerun patterns.** If a skill was invoked multiple times, was it iteration (refining output — healthy) or thrashing (not getting what was needed — skill needs rewrite)?
 6. **Completion rate.** If below 70%, the skill library is doing more reading than producing. Either skills are overtriggering or the methodology is pulling in more context than needed for the task.
+7. **Cost efficiency.** Did any skill over-produce relative to scope? A scoped change that got full-system treatment, a 30-finding review on a 200-line script, a 13-area threat model when 3 areas were relevant. If effort didn't match scope, the cost discipline constraint isn't working.
 
 Feed all findings into Stage 3 as telemetry-sourced lessons. Format:
 
