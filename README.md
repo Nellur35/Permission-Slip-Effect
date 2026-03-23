@@ -95,7 +95,7 @@ Full experiment data: [`experiments/`](experiments/) — model shootout, v3 vs v
 |------|------|
 | [`pipeline/`](pipeline/) | CLI for multi-model reasoning and adversarial review |
 | [`integrations/`](integrations/) | Claude Code, Kiro, Cursor, Antigravity setups |
-| [`multi-agent/`](multi-agent/) | Earned multi-agent emergence — diary, hooks, telemetry, domain-split sessions |
+| [`multi-agent/`](multi-agent/) | Earned multi-agent emergence — project log, hooks, telemetry, domain-split sessions |
 | [`gotchas/`](gotchas/) | Known failure modes — system-level and per-skill. Where Claude breaks and how to catch it |
 | [`experiments/`](experiments/) | Validation data — model shootout, v3 vs v4 A/B, research synthesis |
 | [`reasoning-pipeline.md`](reasoning-pipeline.md) | Framework reference — variants, selection logic, when to use which |

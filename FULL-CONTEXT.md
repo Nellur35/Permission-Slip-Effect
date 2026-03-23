@@ -350,7 +350,7 @@ When the intake produces `change-surface.md` instead of `problem_statement.md` o
 
 Every work session produces signal — bug fix, feature, refactor, investigation, tech debt, anything. This is not a postmortem. This runs after any session where work was done, across all phases.
 
-**Quick filter:** Session involved a decision, surprise, or recognized pattern → full loop. Routine execution → one-line summary to `diary.md`.
+**Quick filter:** Session involved a decision, surprise, or recognized pattern → full loop. Routine execution → one-line summary to `project-log.md`.
 
 **Three stages, strictly sequential:**
 
@@ -358,9 +358,9 @@ Every work session produces signal — bug fix, feature, refactor, investigation
 
 **Stage 2 — Retrospective.** Start with what worked well (same causal rigor as problems). Then: patterns repeating? Expected vs. actual delta? New understanding? Friction?
 
-**Stage 3 — Lessons Learned.** Executable actions only — "add check X to gate Y," not "be more careful." Tactical (apply in 2 min, do now) vs. strategic (log and schedule). Before applying: conflict check against existing rules. If a lesson contradicts a rule — do not apply, escalate to Graph of Thoughts analysis against `diary.md` to find the shared root.
+**Stage 3 — Lessons Learned.** Executable actions only — "add check X to gate Y," not "be more careful." Tactical (apply in 2 min, do now) vs. strategic (log and schedule). Before applying: conflict check against existing rules. If a lesson contradicts a rule — do not apply, escalate to Graph of Thoughts analysis against `project-log.md` to find the shared root.
 
-**Diary:** Append to the existing `diary.md` (same corpus used for agent emergence). Do not create a separate file.
+**Project Log:** Append to the existing `project-log.md` (same corpus used for agent emergence). Do not create a separate file.
 
 **Hook trigger:** Session ending → offer to run. Concrete trigger, not discipline. Full tool with templates: `tools/session-retro.md`.
 
@@ -1273,15 +1273,15 @@ Run a structured retrospective after any work session. Not just when things brea
 **Input:** Describe what happened this session. Bug fix, new feature, tech debt, investigation, refactor, configuration change — anything.
 **Output:** Root cause analysis, retrospective, and executable lessons learned that feed back into your process.
 
-**Quick filter:** Full loop when the session involved a decision, surprise, recognized pattern, or unclear takeaway. Quick summary for routine execution — one paragraph to `diary.md`.
+**Quick filter:** Full loop when the session involved a decision, surprise, recognized pattern, or unclear takeaway. Quick summary for routine execution — one paragraph to `project-log.md`.
 
-**Stage 1 — RCA.** For each significant event: what happened (factual) → causal chain (5 Whys) → enabling condition (if this restates the event, go deeper) → decision point → recurring or new (check `diary.md`).
+**Stage 1 — RCA.** For each significant event: what happened (factual) → causal chain (5 Whys) → enabling condition (if this restates the event, go deeper) → decision point → recurring or new (check `project-log.md`).
 
 **Stage 2 — Retrospective.** What worked well and why (same causal depth as problems)? Patterns repeating? Expected vs. actual delta? New understanding? Friction?
 
 **Stage 2.5 — Telemetry Review (if available).** If `telemetry.jsonl` exists, run `analyze-telemetry.sh` before generating lessons. Compare what skills actually fired vs. what the navigator noticed. Check for: blind spots (activations the navigator didn't mention), overtriggering (skills read but no output), undertriggering (skills that should have fired but didn't), override patterns, rerun patterns, completion rate. Feed findings into Stage 3 as skill-tuning lessons. See `multi-agent/hooks/telemetry.md`.
 
-**Stage 3 — Lessons Learned.** Executable actions only. Tactical (apply in 2 min) vs. strategic (log and schedule). Conflict check: if a lesson contradicts an existing rule — do not apply, do not waive. Escalate to GoT analysis against `diary.md`. Resolution comes from the shared root. Append diary entry after each run.
+**Stage 3 — Lessons Learned.** Executable actions only. Tactical (apply in 2 min) vs. strategic (log and schedule). Conflict check: if a lesson contradicts an existing rule — do not apply, do not waive. Escalate to GoT analysis against `project-log.md`. Resolution comes from the shared root. Append log entry after each run.
 
 Full templates and output formats: `tools/session-retro.md`.
 
@@ -2247,8 +2247,8 @@ They're the same idea at different scales. The pipeline manages reasoning contex
 | SPLIT | Reviewers hit contradictory conclusions — highest-value output, human decides |
 | De-anchoring | Forcing the model past the prompt anchor through framework rotation |
 | Bootstrap gap | The thing that builds the artifact can't be the thing that reviews it |
-| Diary | Auto-collected project log — feeds emergence analysis and retro |
-| Emergence | Multi-agent roles earned through diary data, not assigned upfront |
+| Project Log | System of record — feeds emergence analysis and retro |
+| Emergence | Multi-agent roles earned through log data, not assigned upfront |
 
 ---
 
@@ -2264,7 +2264,7 @@ One terminal, one context window, one navigator — and the project needs what a
 
 **When it hits:** Projects with 3+ major components, cross-cutting concerns, or anything where the threat model alone exceeds ~30% of the context window.
 
-**What to do:** This is the Tier 0 → Tier 2 transition point. The diary should show the symptoms: recurring `[BOTTLENECK]` tags, skills reading the same files repeatedly, shallow analysis where earlier sessions produced depth. When you see it — split. Read `multi-agent/MULTI-AGENT.md`.
+**What to do:** This is the Tier 0 → Tier 2 transition point. The project log should show the symptoms: recurring `[BOTTLENECK]` tags, skills reading the same files repeatedly, shallow analysis where earlier sessions produced depth. When you see it — split. Read `multi-agent/MULTI-AGENT.md`.
 
 ### Context Window Amnesia
 
@@ -2350,7 +2350,7 @@ The retro produces lessons. The lessons say "update SKILL.md with X." Nobody upd
 
 ## Skill Telemetry
 
-Telemetry hooks log which skills fire, how often, and what happens after. The diary captures what the navigator noticed. Telemetry captures what actually happened. Diff the two and you find blind spots.
+Telemetry hooks log which skills fire, how often, and what happens after. The project log captures what the navigator noticed. Telemetry captures what actually happened. Diff the two and you find blind spots.
 
 Setup: `multi-agent/hooks/telemetry.md`. Analysis feeds into session retro Stage 2.5.
 

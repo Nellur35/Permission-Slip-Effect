@@ -1,6 +1,6 @@
 # Skill Telemetry Hooks
 
-Telemetry answers: which skills fire, how often, in what phase, and what happens after. The diary captures what the *navigator* noticed. Telemetry captures what *actually happened*. Diff the two and you find blind spots.
+Telemetry answers: which skills fire, how often, in what phase, and what happens after. The project log captures what the *navigator* noticed. Telemetry captures what *actually happened*. Diff the two and you find blind spots.
 
 ---
 
@@ -36,7 +36,7 @@ Every telemetry entry captures:
 
 ## Log Format
 
-JSONL (one JSON object per line) in `telemetry.jsonl` at project root, alongside `diary.md`.
+JSONL (one JSON object per line) in `telemetry.jsonl` at project root, alongside `project-log.md`.
 
 ```jsonl
 {"timestamp":"2026-03-21T14:32:07Z","session_id":"s-a1b2","event":"skill_read","skill":"threat-model","phase":"4","tool":"Read","target":"integrations/claude-code/.claude/skills/threat-model/SKILL.md","notes":""}
@@ -98,10 +98,10 @@ Kiro's hook is less precise than Claude Code's — it fires on file save, not on
 
 ## Git — Pre-Commit Telemetry Summary (Optional)
 
-Append to the existing diary pre-commit hook:
+Append to the existing project log pre-commit hook:
 
 ```bash
-# Add to .git/hooks/pre-commit after the diary check
+# Add to .git/hooks/pre-commit after the log-check
 
 # Telemetry summary for this commit
 if [ -f telemetry.jsonl ]; then
@@ -122,7 +122,7 @@ fi
 ## What Telemetry Does NOT Capture
 
 - **Quality of output.** Telemetry says the skill fired. It doesn't say the output was good. That's the retro's job.
-- **Navigator cognitive load.** Telemetry can't tell you the navigator was overwhelmed. Diary friction tags (`[BOTTLENECK]`) capture that.
+- **Navigator cognitive load.** Telemetry can't tell you the navigator was overwhelmed. Project log friction tags (`[BOTTLENECK]`) capture that.
 - **Why a skill didn't fire.** Absence is invisible. If a skill should have triggered but didn't, only the retro catches it.
 - **Cross-session trends.** Single-session telemetry is noise. Value emerges over 5+ sessions. The retro aggregates.
 
@@ -130,7 +130,7 @@ fi
 
 ## Privacy and Storage
 
-- Telemetry stays local. `telemetry.jsonl` lives in the project, committed to git alongside `diary.md`.
+- Telemetry stays local. `telemetry.jsonl` lives in the project, committed to git alongside `project-log.md`.
 - No external transmission. No analytics service. The navigator owns the data.
 - `.gitignore` it if you don't want telemetry in version control — but the retro is less useful without historical data.
 - Rotation: archive entries older than 30 days to `telemetry-archive/YYYY-MM.jsonl` to keep the active file small.

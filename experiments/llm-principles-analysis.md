@@ -80,7 +80,7 @@ This is not metaphor. LLM architecture and the reasoning pipeline are both infor
 
 ### P9: Emergence Thresholds — Minor Gap
 
-The multi-agent architecture correctly embraces emergence. Minor gap: the threshold for role identification (15-30 diary entries) is heuristic rather than principled. Need observable signals: concern appearing in 25%+ of entries, recurring cross-reference patterns, navigator time concentration exceeding 30%.
+The multi-agent architecture correctly embraces emergence. Minor gap: the threshold for role identification (15-30 log entries) is heuristic rather than principled. Need observable signals: concern appearing in 25%+ of entries, recurring cross-reference patterns, navigator time concentration exceeding 30%.
 
 ---
 

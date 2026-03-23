@@ -85,7 +85,7 @@ Run `/audit` (or paste `tools/audit.md`). It scans your codebase, maps what exis
 
 ### "I want multi-agent / multiple AI windows"
 
-Read `multi-agent/MULTI-AGENT.md`. But don't start there — start with Tier 0 (single agent + diary). Multi-agent is earned through evidence, not configured upfront. The diary tells you when to escalate.
+Read `multi-agent/MULTI-AGENT.md`. But don't start there — start with Tier 0 (single agent + project log). Multi-agent is earned through evidence, not configured upfront. The project log tells you when to escalate.
 
 ### "I just want the worked example"
 
@@ -121,7 +121,7 @@ The methodology orchestrator routes automatically based on phase.
 | SPLIT | Reviewers hit contradictory conclusions — highest-value output, human decides |
 | De-anchoring | Forcing the model past the prompt anchor through framework rotation |
 | Bootstrap gap | The thing that builds the artifact can't be the thing that reviews it |
-| Diary | Auto-collected project log — feeds emergence analysis and retro |
-| Emergence | Multi-agent roles earned through diary data, not assigned upfront |
+| Project Log | System of record — feeds emergence analysis and retro |
+| Emergence | Multi-agent roles earned through log data, not assigned upfront |
 
 Don't explain these unless asked. Route first, educate second.

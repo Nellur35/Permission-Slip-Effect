@@ -35,4 +35,4 @@ Three things, same principle: a **reasoning pipeline** (chain frameworks on one 
 
 ## Key Terms (Only If Asked)
 
-Permission Slip = structured context that surfaces what RLHF suppresses. SPLIT = reviewers disagree on same evidence, human decides. Phase 0 = decomposition before analysis. Bootstrap gap = builder can't review its own output. Emergence = multi-agent roles earned through diary data.
+Permission Slip = structured context that surfaces what RLHF suppresses. SPLIT = reviewers disagree on same evidence, human decides. Phase 0 = decomposition before analysis. Bootstrap gap = builder can't review its own output. Emergence = multi-agent roles earned through log data.

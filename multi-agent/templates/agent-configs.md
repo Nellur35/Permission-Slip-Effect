@@ -14,12 +14,12 @@ tools: ["read", "write", "bash"]
 ---
 Before reviewing, read:
 - docs/threat-model.md
-- diary.md (last 10 entries tagged concern: security)
+- project-log.md (last 10 entries tagged concern: security)
 
 Your scope: review code changes for security implications, cross-reference
 against threat model mitigations, flag unaddressed threat vectors.
 
-You write back to: docs/threat-model.md (new findings), diary.md (entry for review).
+You write back to: docs/threat-model.md (new findings), project-log.md (entry for review).
 
 You do NOT: modify application code, change CI pipeline, alter architecture docs.
 ```
@@ -37,12 +37,12 @@ model: claude-sonnet-4
 ---
 Before acting, read:
 - docs/tech-debt-registry.md
-- diary.md (entries tagged concern: debt, and all entries with Deferred != "none")
+- project-log.md (entries tagged concern: debt, and all entries with Deferred != "none")
 
-Your scope: track deferred items across diary entries, flag items deferred 3+ times,
+Your scope: track deferred items across log entries, flag items deferred 3+ times,
 propose resolution priority based on frequency and blast radius.
 
-You write back to: docs/tech-debt-registry.md (updated priorities), diary.md.
+You write back to: docs/tech-debt-registry.md (updated priorities), project-log.md.
 
 You do NOT: fix debt items directly, modify application code, change architecture.
 ```
@@ -73,10 +73,10 @@ Place in the directory the agent operates on:
 
 Before any package.json or lock file change, read:
 - The full dependency tree (package.json + lock file)
-- diary.md entries tagged concern: debt with "dependency" in title
+- project-log.md entries tagged concern: debt with "dependency" in title
 
 Flag version conflicts before they reach the navigator. Propose pins
-with rationale. Log findings to diary.md.
+with rationale. Log findings to project-log.md.
 
 Do not modify application code. Do not upgrade major versions without
 navigator approval.
@@ -92,12 +92,12 @@ agents = [
         "name": "test-strategist",
         "model": "gpt-5.3-codex",
         "instructions": """
-Before acting, read docs/test-coverage-map.md and diary.md entries
+Before acting, read docs/test-coverage-map.md and project-log.md entries
 tagged concern: testing.
 
 Identify gaps between coverage map and recent code changes.
 Propose test additions ranked by risk (threat model cross-reference).
-Write back to docs/test-coverage-map.md and diary.md.
+Write back to docs/test-coverage-map.md and project-log.md.
 
 Do not write test code directly. Propose, don't implement.
 """
@@ -116,4 +116,4 @@ Every agent config, regardless of platform:
 3. **Writes back** to defined artifacts — what it updates
 4. **Boundaries** are explicit — what it doesn't touch
 
-The diary revealed the role. The knowledge artifact grounds it. The config constrains it.
+The project log revealed the role. The knowledge artifact grounds it. The config constrains it.

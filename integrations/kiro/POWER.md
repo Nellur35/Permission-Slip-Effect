@@ -138,7 +138,7 @@ The genuine disagreements between models are where the real signal lives.
 
 **Trigger:** When the session is ending or a task is completed, offer to run the feedback loop. If the navigator declines, respect that. If work was done, the offer happens — every time.
 
-**Quick filter:** Did this session involve a decision with tradeoffs, something surprising, or a pattern you have seen before? If yes → full loop. If it was routine execution → one-line summary: "What happened. Anything surprising: [yes/no]. Lesson: [one line or none]." Append to `diary.md` and close.
+**Quick filter:** Did this session involve a decision with tradeoffs, something surprising, or a pattern you have seen before? If yes → full loop. If it was routine execution → one-line summary: "What happened. Anything surprising: [yes/no]. Lesson: [one line or none]." Append to `project-log.md` and close.
 
 **Full loop — three stages, strictly sequential:**
 
@@ -148,7 +148,7 @@ For each significant event this session:
 - What caused it? (5 Whys to structural root)
 - What enabled the cause? (process, tooling, knowledge, environment — if this is a restatement of the event, go deeper)
 - Where was the decision point?
-- First time or recurring pattern? (check `diary.md` for history)
+- First time or recurring pattern? (check `project-log.md` for history)
 
 **2. Retrospective**
 Read the RCA outputs. Answer — with equal rigor for successes and problems:
@@ -162,12 +162,12 @@ Read the RCA outputs. Answer — with equal rigor for successes and problems:
 For each finding from the retrospective:
 - Every lesson must be executable: "add check X to gate Y" — not "be more careful about X"
 - If you cannot name a specific target file or rule, it is a strategic finding — log it and schedule it
-- **Conflict check:** Before applying, does this lesson contradict an existing rule, gate, or constraint? If yes — do not apply, do not waive. Escalate to a Graph of Thoughts analysis against `diary.md`. Map the dependency structure of both the rule and the lesson. The resolution comes from the shared root, not from picking one.
+- **Conflict check:** Before applying, does this lesson contradict an existing rule, gate, or constraint? If yes — do not apply, do not waive. Escalate to a Graph of Thoughts analysis against `project-log.md`. Map the dependency structure of both the rule and the lesson. The resolution comes from the shared root, not from picking one.
 - **Scope:** tactical (apply in under 2 minutes) or strategic (informs future planning)
 - **Priority:** do now (tactical only) | next session | backlog
 - **"Do now" tactical lessons get applied before the session ends.** Update the steering file, the power, the spec, or the methodology artifact immediately.
 
-**Diary:** After each run (full or quick), append a diary entry to `diary.md` (the same diary used for agent emergence analysis): date, one-line description, key finding, lessons applied, strategic findings logged, any escalated conflicts. Do not create a separate file.
+**Project Log:** After each run (full or quick), append a log entry to `project-log.md` (the project log used for agent emergence analysis): date, one-line description, key finding, lessons applied, strategic findings logged, any escalated conflicts. Do not create a separate file.
 
 **Where lessons go:** Update the relevant steering file, power section, or methodology artifact directly. The lesson is not done until the target file is changed.
 

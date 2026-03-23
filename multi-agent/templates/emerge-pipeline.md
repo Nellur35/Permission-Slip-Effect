@@ -1,7 +1,7 @@
-# Emerge Pipeline — Diary Analysis Prompt
+# Emerge Pipeline — Project Log Analysis Prompt
 
-> **Usage:** `pipeline.py emerge diary.md`
-> **Purpose:** Analyze the project diary to identify patterns where specialized agents would reduce navigator load.
+> **Usage:** `pipeline.py emerge project-log.md`
+> **Purpose:** Analyze the project log to identify patterns where specialized agents would reduce navigator load.
 > **Method:** Graph of Thoughts — map entries as nodes, concerns and patterns as edges, identify clusters.
 
 ---
@@ -9,13 +9,13 @@
 ## System Prompt for Analysis Model
 
 ```
-You are analyzing a project diary — a structured log of every meaningful change made during AI-assisted development. Each entry records what changed, why, which concern drove it, what was deferred, and how confident the AI was.
+You are analyzing a project log — a structured log of every meaningful change made during AI-assisted development. Each entry records what changed, why, which concern drove it, what was deferred, and how confident the AI was.
 
-Your task: identify where specialized AI agent roles would emerge naturally from the patterns in this diary.
+Your task: identify where specialized AI agent roles would emerge naturally from the patterns in this project log.
 
 ## Method: Graph of Thoughts
 
-1. **Build the graph.** Each diary entry is a node. Edges connect entries that share:
+1. **Build the graph.** Each log entry is a node. Edges connect entries that share:
    - Same concern category (security, architecture, debt, etc.)
    - Same deferred item referenced
    - Explicit pattern markers ([RECURRING], [PATTERN: ID])
@@ -40,7 +40,7 @@ Your task: identify where specialized AI agent roles would emerge naturally from
 
 ## Output Format
 
-### Diary Statistics
+### Project Log Statistics
 - Total entries analyzed: N
 - Date range: [first] to [last]
 - Concern distribution: security X%, architecture Y%, debt Z%, ...
@@ -74,7 +74,7 @@ For each viable candidate (ranked by evidence strength):
 ### Summary
 - Strongest candidate: [role] — [one sentence why]
 - Candidates needing more evidence: [list]
-- No action needed yet: [if diary is too young or patterns aren't strong enough]
+- No action needed yet: [if project log is too young or patterns aren't strong enough]
 ```
 
 ---
@@ -83,20 +83,20 @@ For each viable candidate (ranked by evidence strength):
 
 The `emerge` command is a new pipeline variant that:
 
-1. Reads `diary.md` (or specified path)
-2. Sends the full diary to the analysis model with the prompt above
+1. Reads `project-log.md` (or specified path)
+2. Sends the full project log to the analysis model with the prompt above
 3. Optionally runs a challenger model to question the recommendations
 4. Outputs the structured assessment
 
 ```bash
 # Basic analysis
-pipeline.py emerge diary.md
+pipeline.py emerge project-log.md
 
 # With adversarial challenge (recommended for important decisions)
-pipeline.py emerge diary.md --challenge
+pipeline.py emerge project-log.md --challenge
 
 # Cheap mode — analysis on Haiku, challenge on Sonnet
-pipeline.py emerge diary.md --challenge --cheap
+pipeline.py emerge project-log.md --challenge --cheap
 ```
 
 The `--challenge` flag runs a second model that specifically tries to argue against each recommendation: "Why is this NOT a good agent role? What would go wrong?" This mirrors the methodology's adversarial review principle.
@@ -105,7 +105,7 @@ The `--challenge` flag runs a second model that specifically tries to argue agai
 
 ## When to Run
 
-- **First run:** After ~15-20 diary entries. Earlier runs will likely say "not enough data."
+- **First run:** After ~15-20 log entries. Earlier runs will likely say "not enough data."
 - **Regular cadence:** Every 2-4 weeks, or after a major phase completion.
-- **Triggered:** When the navigator feels overwhelmed by context switching — the diary analysis can validate or invalidate that feeling with data.
+- **Triggered:** When the navigator feels overwhelmed by context switching — the project log analysis can validate or invalidate that feeling with data.
 - **After Tier 2 activation:** Run periodically to evaluate whether activated roles are still justified, whether new ones are emerging, or whether existing ones should be retired.

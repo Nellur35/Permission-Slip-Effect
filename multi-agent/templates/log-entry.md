@@ -1,8 +1,10 @@
-# Project Diary — Entry Format
+# Project Log — Entry Format
+
+The project log is the backbone of the methodology. Every system reads from it: emergence analysis clusters it by concern, the retro interprets it, telemetry writes to it, the Librarian maintains it, conflict resolution traces decisions through it, and automation candidates are identified from it. It is the single source of truth for what happened, why, and what was deferred.
 
 **Written by:** the AI, automatically. The steering file instructs the AI to append an entry after each meaningful change. You don't write, edit, or manage this file.
 
-**Location:** `diary.md` at project root (configurable via steering).
+**Location:** `project-log.md` at project root (configurable via steering).
 
 **Quality:** Good enough, not perfect. Pattern analysis tolerates noise.
 
@@ -49,7 +51,7 @@ Every field is factual and verifiable from the diff. The AI isn't reflecting —
 
 ---
 
-## Example Diary
+## Example Project Log
 
 ```markdown
 ### [S012] 2026-03-15 10:30 — Add rate limiting to API gateway
@@ -110,7 +112,7 @@ Every field is factual and verifiable from the diff. The AI isn't reflecting —
 
 ## What the Analysis Sees
 
-When `pipeline.py emerge diary.md` runs against this diary:
+When `pipeline.py emerge project-log.md` runs against this project log:
 
 **Concern distribution:** security 20%, correctness 20%, debt 20%, architecture 25%, other 15%
 
@@ -120,4 +122,4 @@ When `pipeline.py emerge diary.md` runs against this diary:
 
 **Bottleneck: architecture reviews** — S016 shows 45 minutes for a deferral decision. If this pattern continues, a pre-screening agent could do initial analysis and present the navigator with a summary instead of requiring deep-dive every time.
 
-**All of this is derived from factual data** — files touched, concern tags, deferred items, recurrence markers. No AI self-assessment required. The diary data drives the recommendation. The navigator makes the call.
+**All of this is derived from factual data** — files touched, concern tags, deferred items, recurrence markers. No AI self-assessment required. The log data drives the recommendation. The navigator makes the call.

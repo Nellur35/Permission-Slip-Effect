@@ -46,7 +46,7 @@ ARTIFACT_PATTERNS=(
     "architecture.md"
     "threat_model.md"
     "review-findings.md"
-    "diary.md"
+    "project-log.md"
     "tasks.md"
     "phase-"
 )

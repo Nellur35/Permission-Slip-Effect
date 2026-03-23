@@ -479,20 +479,20 @@ Full reference: [`reasoning-pipeline.md`](../reasoning-pipeline.md). Empirical v
 
 One navigator plus one AI handles most projects. Multi-agent becomes worth it when the project's accumulated knowledge — threat model, architecture decisions, debt items, operational lessons — exceeds what a single agent can hold in context while still making good decisions.
 
-Every session, the AI logs a structured diary entry for each meaningful change: what changed, why, which concern drove it, what was deferred. Steering files and hooks handle collection — you don't write or manage it.
+Every session, the AI logs a structured log entry for each meaningful change: what changed, why, which concern drove it, what was deferred. Steering files and hooks handle collection — you don't write or manage it.
 
-Run `pipeline.py emerge diary.md` when you want to know if multi-agent is justified. The pipeline uses Graph of Thoughts to cluster diary entries by concern, find recurring patterns, and identify where a dedicated agent would actually help. Roles emerge from the data. You decide whether to act.
+Run `pipeline.py emerge project-log.md` when you want to know if multi-agent is justified. The pipeline uses Graph of Thoughts to cluster log entries by concern, find recurring patterns, and identify where a dedicated agent would actually help. Roles emerge from the data. You decide whether to act.
 
 | Tier | What | When |
 |------|------|------|
-| 0: Single Agent | One navigator + one AI. Diary auto-collects. | Default — where the knowledge layer gets built |
+| 0: Single Agent | One navigator + one AI. Project log auto-collects. | Default — where the knowledge layer gets built |
 | 1: Pipeline Mode | Multi-model reasoning via `pipeline.py` | Any time — no threshold needed |
-| 2: Session Subagents | Specialized agents earned through diary evidence | When the analysis shows clear role candidates |
+| 2: Session Subagents | Specialized agents earned through project log evidence | When the analysis shows clear role candidates |
 | 3: Persistent Agents | Autonomous agents across sessions | Rare — multi-repo, decision authority, durable artifacts |
 
-An agent without context is a generic prompt wearing a costume. A "Security Agent" without a populated threat model produces the same output as any model asked to "review this for security." The diary tells you when context is rich enough for specialization to matter.
+An agent without context is a generic prompt wearing a costume. A "Security Agent" without a populated threat model produces the same output as any model asked to "review this for security." The project log tells you when context is rich enough for specialization to matter.
 
-Full reference: [`multi-agent/MULTI-AGENT.md`](../multi-agent/MULTI-AGENT.md). Diary format: [`multi-agent/templates/diary-entry.md`](../multi-agent/templates/diary-entry.md). Platform configs: [`multi-agent/steering/`](../multi-agent/steering/). Hooks: [`multi-agent/hooks/`](../multi-agent/hooks/).
+Full reference: [`multi-agent/MULTI-AGENT.md`](../multi-agent/MULTI-AGENT.md). Log entry format: [`multi-agent/templates/log-entry.md`](../multi-agent/templates/log-entry.md). Platform configs: [`multi-agent/steering/`](../multi-agent/steering/). Hooks: [`multi-agent/hooks/`](../multi-agent/hooks/).
 
 ---
 
@@ -562,7 +562,7 @@ Every work session produces signal. Bug fix, feature, refactor, investigation, t
 
 This section is not part of Phase 8. Phase 8 covers production feedback — failures the pipeline missed, new tests derived from real errors. The session feedback loop wraps all phases. A requirements session, an architecture decision, a threat modeling exercise, an implementation sprint — all of them produce signal that improves the methodology, the tools, and the steering rules.
 
-**When to run the full loop vs. quick summary.** Not every session needs three full stages. If the session involved a decision with tradeoffs, something surprising, or a recognized pattern — run the full loop. If it was routine execution with no decisions or surprises — write a one-line summary ("what happened, anything surprising, any lesson") and append to `diary.md`. If you are not sure, run the full loop. The cost of running it unnecessarily is 10 minutes. The cost of skipping it when it mattered is a lost insight.
+**When to run the full loop vs. quick summary.** Not every session needs three full stages. If the session involved a decision with tradeoffs, something surprising, or a recognized pattern — run the full loop. If it was routine execution with no decisions or surprises — write a one-line summary ("what happened, anything surprising, any lesson") and append to `project-log.md`. If you are not sure, run the full loop. The cost of running it unnecessarily is 10 minutes. The cost of skipping it when it mattered is a lost insight.
 
 **Three stages, strictly sequential. Each feeds the next.**
 
@@ -574,15 +574,15 @@ This section is not part of Phase 8. Phase 8 covers production feedback — fail
 
 Every lesson must be executable — not "be more careful about X" but "add check for X to gate Y" or "update steering rule W with this condition." If you cannot name a specific target file or rule, it is a strategic finding, not a tactical lesson — log it and schedule it concretely.
 
-**Conflict detection.** Before applying any lesson, check: does it contradict an existing rule, gate, or constraint? If yes — do not apply, do not waive. A lesson-rule conflict means either the rule is wrong, the lesson is wrong, or both are symptoms of a deeper structural issue. Escalate to a Graph of Thoughts analysis with `diary.md` as the input corpus. The GoT maps the dependency structure of both — when each was created, what evidence supports each, where their causal chains converge. The resolution comes from the shared root, not from choosing between the leaf nodes. This is not a Waiver Pattern situation — waivers are for consciously skipping a gate you know exists. A conflict is "the system is telling me two contradictory things and I need to find which one is wrong, or whether both are symptoms of something else."
+**Conflict detection.** Before applying any lesson, check: does it contradict an existing rule, gate, or constraint? If yes — do not apply, do not waive. A lesson-rule conflict means either the rule is wrong, the lesson is wrong, or both are symptoms of a deeper structural issue. Escalate to a Graph of Thoughts analysis with `project-log.md` as the input corpus. The GoT maps the dependency structure of both — when each was created, what evidence supports each, where their causal chains converge. The resolution comes from the shared root, not from choosing between the leaf nodes. This is not a Waiver Pattern situation — waivers are for consciously skipping a gate you know exists. A conflict is "the system is telling me two contradictory things and I need to find which one is wrong, or whether both are symptoms of something else."
 
-**Tactical vs. strategic.** Tactical lessons apply in under 2 minutes — a rule addition, a constraint appended, a config change. These get applied before the session ends. Strategic findings inform future planning — an architecture decision, a process restructuring. These get logged in `diary.md` with a scheduled session, not "someday."
+**Tactical vs. strategic.** Tactical lessons apply in under 2 minutes — a rule addition, a constraint appended, a config change. These get applied before the session ends. Strategic findings inform future planning — an architecture decision, a process restructuring. These get logged in `project-log.md` with a scheduled session, not "someday."
 
 **The output is not a document. It is a set of changes to your working system.** A lesson that says "add constraint to the review tool" is not done until the review tool is updated. Lessons that sit in a backlog decay. Apply immediately or schedule concretely.
 
 **Hook trigger.** End of any session where work was produced. When the session is ending, offer to run the feedback loop. If the session was routine with no decisions or surprises, a one-line summary is sufficient. This is a concrete trigger — not a discipline-based rule. Concrete triggers get near-100% compliance. "Remember to check" does not. If you are using Kiro, Claude Code, or Cursor, encode this as a hook or steering rule that activates on session close or task completion.
 
-**Diary.** The methodology already maintains a diary — a structured log auto-collected via steering files and hooks (see Multi-Agent Evolution). After each feedback loop run (full or quick summary), append a diary entry: date, one-line description, key finding, lessons applied, strategic findings logged, any escalated conflicts. The diary is the corpus that Graph of Thoughts runs against — for conflict resolution and for agent emergence. Feedback loop entries become part of that corpus. Do not create a separate file.
+**Project Log.** The methodology already maintains a project log — a structured log auto-collected via steering files and hooks (see Multi-Agent Evolution). After each feedback loop run (full or quick summary), append a log entry: date, one-line description, key finding, lessons applied, strategic findings logged, any escalated conflicts. The project log is the corpus that Graph of Thoughts runs against — for conflict resolution and for agent emergence. Feedback loop entries become part of that corpus. Do not create a separate file.
 
 **What accumulates:** Over time, the lessons modify your methodology, tools, steering rules, and templates. You do not maintain a separate knowledge base — the system you work in *is* the knowledge base, because every session's output changed it. The methodology is a living document not because someone says so, but because there is a mechanism that makes it so.
 

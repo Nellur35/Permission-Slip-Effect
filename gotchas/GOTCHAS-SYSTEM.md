@@ -12,7 +12,7 @@ Known failure modes that span the entire methodology, not individual skills. The
 
 **Why it happens:** The methodology assumes a navigator who can hold the full picture. When the project outgrows one person's cognitive bandwidth, the AI reflects that overload — it starts flattening analysis, skipping areas it "already covered," and producing generic output to cope with context pressure.
 
-**What to do:** This is the Tier 0 → Tier 2 transition point. The diary should show the symptoms: recurring `[BOTTLENECK]` tags, skills reading the same files repeatedly, shallow analysis where earlier sessions produced depth. When you see it — split. Don't push through. Read `multi-agent/MULTI-AGENT.md` and let the diary tell you which domains to separate.
+**What to do:** This is the Tier 0 → Tier 2 transition point. The project log should show the symptoms: recurring `[BOTTLENECK]` tags, skills reading the same files repeatedly, shallow analysis where earlier sessions produced depth. When you see it — split. Don't push through. Read `multi-agent/MULTI-AGENT.md` and let the project log tell you which domains to separate.
 
 **The trap:** The transition is the dangerous moment. Single-agent is visibly breaking but multi-agent feels like overkill. Navigators push through "just one more session" and accumulate degraded output they'll pay for later. The rule: if the gate-check starts rubber-stamping, you've already waited too long.
 
@@ -64,4 +64,4 @@ Known failure modes that span the entire methodology, not individual skills. The
 
 **When it hits:** When tactical lessons require manual file edits and the navigator is already in the next session. Strategic lessons are worse — they require scheduling, and "next session" becomes "someday."
 
-**What to do:** The retro skill already says "tactical lessons get applied before the session ends." Enforce it: if the retro produces a tactical lesson and the session ends without the file edit, the diary hook should flag it. The telemetry system (once installed) tracks whether skill files change after retro sessions — if they don't, the loop is stalled.
+**What to do:** The retro skill already says "tactical lessons get applied before the session ends." Enforce it: if the retro produces a tactical lesson and the session ends without the file edit, the project log hook should flag it. The telemetry system (once installed) tracks whether skill files change after retro sessions — if they don't, the loop is stalled.

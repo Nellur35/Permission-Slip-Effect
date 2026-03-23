@@ -2,7 +2,7 @@
 
 Multi-agent is not a project configuration. It emerges when the project's own history shows it's needed. Roles are earned through evidence, not assigned upfront. An agent without context is a generic prompt wearing a costume.
 
-Entry format: [`templates/diary-entry.md`](templates/diary-entry.md) · Platform configs: [`steering/`](steering/) · Hooks: [`hooks/`](hooks/)
+Entry format: [`templates/log-entry.md`](templates/log-entry.md) · Platform configs: [`steering/`](steering/) · Hooks: [`hooks/`](hooks/)
 
 ---
 
@@ -10,9 +10,9 @@ Entry format: [`templates/diary-entry.md`](templates/diary-entry.md) · Platform
 
 One navigator, one AI. All 8 phases work as documented. Two things from day one:
 
-**The Diary.** Add the diary steering instruction and hook to your project. Auto-collects in the background. Skip this and multi-agent is theater.
+**The Project Log.** The system of record. Everything writes to it — skills, retros, telemetry, feedback loops. Everything reads from it — emergence analysis, conflict resolution, the Librarian, automation decisions. Need to troubleshoot? Check the log. Contradictory skills or steering? The log records the original purpose. Need agents? Analyze the log. Want automation? Analyze the log. Skip this and everything downstream is guesswork.
 
-**The Librarian.** Knowledge management is not a later concern — it's infrastructure. The moment artifacts start accumulating (diary entries, requirements, architecture decisions), someone has to keep them current, prune stale content, flag contradictions, and archive superseded decisions. Every other role produces artifacts. Nobody maintains them. Without the Librarian, downstream quality degrades silently as stale or contradictory artifacts accumulate. This can be a dedicated window, a periodic task, or a steering instruction that triggers cleanup at session start — but it must exist from day one.
+**The Librarian.** Knowledge management is not a later concern — it's infrastructure. The moment artifacts start accumulating (log entries, requirements, architecture decisions), someone has to keep them current, prune stale content, flag contradictions, and archive superseded decisions. Every other role produces artifacts. Nobody maintains them. Without the Librarian, downstream quality degrades silently as stale or contradictory artifacts accumulate. This can be a dedicated window, a periodic task, or a steering instruction that triggers cleanup at session start — but it must exist from day one.
 
 ---
 
@@ -23,25 +23,25 @@ Multi-model reasoning via the CLI. No threshold required.
 ```bash
 pipeline.py review architecture.md          # adversarial review
 pipeline.py reason "Should we migrate?"     # full reasoning pipeline
-pipeline.py emerge diary.md                 # analyze diary for agent emergence
+pipeline.py emerge project-log.md                 # analyze project log for agent emergence
 ```
 
 ---
 
 ## Tier 2: Session Subagents (Earned Through Evidence)
 
-Specialized subagents within a working session. Diary is the message bus. Knowledge artifacts are shared memory. You are the orchestrator.
+Specialized subagents within a working session. Project log is the message bus. Knowledge artifacts are shared memory. You are the orchestrator.
 
 **Readiness signals** (signals, not gates):
 
-- 15+ diary entries with visible concern distribution
+- 15+ log entries with visible concern distribution
 - One concern category in 25%+ of entries
 - 3+ entries with `[RECURRING]` or `[PATTERN]` markers
 - You spend more time loading context than making decisions
 
-**How:** Run `pipeline.py emerge diary.md` → read concern distribution → decide which roles earn a dedicated context window. Every role needs a corresponding knowledge artifact — no artifact, no role.
+**How:** Run `pipeline.py emerge project-log.md` → read concern distribution → decide which roles earn a dedicated context window. Every role needs a corresponding knowledge artifact — no artifact, no role.
 
-| Diary pattern | Implied role | Required artifact |
+| Log pattern | Implied role | Required artifact |
 |---|---|---|
 | Security concerns in 25%+ of entries | Security Reviewer | Threat model |
 | Architecture decisions revisited | Architecture Challenger | ADR log |
@@ -52,7 +52,7 @@ Specialized subagents within a working session. Diary is the message bus. Knowle
 
 ## When a Single Window Breaks: Domain-Split Sessions
 
-*Experimental — design pattern, not yet validated with diary data.*
+*Experimental — design pattern, not yet validated with log data.*
 
 You're already working in multiple windows. This makes it deliberate — each window holds a coherent domain instead of a degraded slice of everything.
 
@@ -61,11 +61,11 @@ You're already working in multiple windows. This makes it deliberate — each wi
 - **Contradictory guidance.** Steering files from different domains conflict.
 - **Context amnesia.** Decisions fall off the context window mid-conversation.
 - **Shallow analysis.** Generic responses where specific ones used to appear.
-- **Decision Surface Area Test.** Load threat model + architecture + current task + diary into one window. If the agent loses coherence — split.
+- **Decision Surface Area Test.** Load threat model + architecture + current task + project log into one window. If the agent loses coherence — split.
 
 ### How to Split
 
-The split follows the same principle as Tier 2 role emergence — the project's own complexity determines the domains, not a predetermined template. Look at where the diary clusters, where context conflicts appear, and where the AI's quality degrades.
+The split follows the same principle as Tier 2 role emergence — the project's own complexity determines the domains, not a predetermined template. Look at where the project log clusters, where context conflicts appear, and where the AI's quality degrades.
 
 Different projects split differently:
 
@@ -77,7 +77,7 @@ Different projects split differently:
 | Infrastructure | IaC · Security policy · Monitoring |
 | Solo CRUD app | Implementation · Review (minimum useful split) |
 
-Each window loads only the steering files and artifacts for its domain. The diary reveals which domains need separation — the same way it reveals which roles need agents in Tier 2. Don't predefine the split. Let the friction tell you.
+Each window loads only the steering files and artifacts for its domain. The project log reveals which domains need separation — the same way it reveals which roles need agents in Tier 2. Don't predefine the split. Let the friction tell you.
 
 ### Cross-Artifact Sync
 
@@ -107,7 +107,7 @@ Active constraints override conversational context. Skip ~~SUPERSEDED~~ entries.
 
 The steering-based version works for projects with <20 active constraints. Build the hardened CLI version when you hit failure modes.
 
-**Fallback:** If your platform doesn't support AI file writes, the Navigator carries constraints manually. Fragile — diary catches drift after the fact, not before.
+**Fallback:** If your platform doesn't support AI file writes, the Navigator carries constraints manually. Fragile — project log catches drift after the fact, not before.
 
 ### Navigator Role
 
@@ -133,8 +133,8 @@ Autonomous agents across sessions — monitoring and acting without you initiati
 
 ### Security Implications
 
-- **Diary as injection surface.** Poisoned entries persist across sessions. Mitigations: diary entries committed via PR, spot-checks, `emerge` runs on a different model than the one that wrote entries.
-- **Privilege escalation.** Tier 2 agent writes diary entries strengthening the case for Tier 3. Mitigation: diary is a factual change log — no self-assessment, all entries verifiable from git diff.
+- **Project log as injection surface.** Poisoned entries persist across sessions. Mitigations: log entries committed via PR, spot-checks, `emerge` runs on a different model than the one that wrote entries.
+- **Privilege escalation.** Tier 2 agent writes log entries strengthening the case for Tier 3. Mitigation: project log is a factual change log — no self-assessment, all entries verifiable from git diff.
 - **Artifact poisoning.** Corrupted threat models cascade through all agent reasoning. Mitigations: PR review, adversarial review on artifacts, periodic `pipeline.py review`.
 - **Steering file supply chain.** Steering files load automatically, modifiable via PR. Treat them as security-critical configuration.
 
@@ -158,7 +158,7 @@ Autonomous agents across sessions — monitoring and acting without you initiati
 
 | Tier | You | The AI |
 |---|---|---|
-| 0: Single Agent | Make all decisions, review output | Produce artifacts, auto-write diary |
+| 0: Single Agent | Make all decisions, review output | Produce artifacts, auto-write project log |
 | 1: Pipeline | Decide when to analyze, evaluate candidates | Run analysis, surface patterns |
 | 2: Session Subagents | Choose roles, define scope, review output | Execute within scope, update artifacts |
 | Domain-Split | Review constraint log, resolve cross-window SPLITs | Reason within domain, sync via cross-artifacts |
