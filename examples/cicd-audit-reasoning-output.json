@@ -1,0 +1,208 @@
+{
+  "pipeline": "Standard Pipeline — FPR opener (5 stages)",
+  "input_summary": "A maintainer has built `cicd-audit`, a zero-dependency CI/CD security auditor with strong README positioning, packaging metadata, tests, and multiple report formats...",
+  "stages": [
+    {
+      "stage": "FPR",
+      "framework": "First Principles",
+      "model": "example-model",
+      "raw": "{\"assumptions\": [{\"assumption\": \"More features will create the most value next\", \"status\": \"unverified\", \"if_wrong\": \"The project could become broader but less trusted\"}], \"framing_valid\": true, \"reframing\": \"The real question is how to compound trust without stalling product momentum.\", \"key_insight\": \"The repo competes on trust and inspectability, not feature maximalism alone.\"}",
+      "parsed": {
+        "assumptions": [
+          {
+            "assumption": "More features will create the most value next",
+            "status": "unverified",
+            "if_wrong": "The project could become broader but less trusted"
+          }
+        ],
+        "framing_valid": true,
+        "reframing": "The real question is how to compound trust without stalling product momentum.",
+        "key_insight": "The repo competes on trust and inspectability, not feature maximalism alone."
+      },
+      "duration_seconds": 0.9,
+      "error": null
+    },
+    {
+      "stage": "RCAR",
+      "framework": "Root Cause Analysis (5 Whys)",
+      "model": "example-model",
+      "raw": "{\"symptom\": \"Pressure to add more scope quickly\", \"why_chain\": [{\"level\": 1, \"why\": \"Broader coverage looks like obvious progress\", \"evidence\": \"Security tools are often compared by rule counts and platform breadth\"}, {\"level\": 2, \"why\": \"External readers see visible features faster than internal quality work\", \"evidence\": \"Docs and packaging improvements are less headline-friendly\"}, {\"level\": 3, \"why\": \"Single-maintainer projects need visible momentum to attract users\", \"evidence\": \"Adoption often follows visible differentiation\"}, {\"level\": 4, \"why\": \"Feature momentum can substitute for trust-building when there is limited time\", \"evidence\": \"Maintenance capacity is finite\"}, {\"level\": 5, \"why\": \"The structural risk is confusing market-visible progress with compounding product quality\", \"evidence\": \"False positives and maintenance load rise faster than README bullets suggest\"}], \"root_cause\": \"The project risks optimizing for visible breadth over compounding trust discipline.\", \"structural_fix\": \"Tie expansion to benchmark fixtures, contributor ergonomics, and tighter release gates.\", \"key_insight\": \"The real bottleneck is maintainable quality control, not missing feature ideas.\"}",
+      "parsed": {
+        "symptom": "Pressure to add more scope quickly",
+        "why_chain": [
+          {
+            "level": 1,
+            "why": "Broader coverage looks like obvious progress",
+            "evidence": "Security tools are often compared by rule counts and platform breadth"
+          },
+          {
+            "level": 2,
+            "why": "External readers see visible features faster than internal quality work",
+            "evidence": "Docs and packaging improvements are less headline-friendly"
+          },
+          {
+            "level": 3,
+            "why": "Single-maintainer projects need visible momentum to attract users",
+            "evidence": "Adoption often follows visible differentiation"
+          },
+          {
+            "level": 4,
+            "why": "Feature momentum can substitute for trust-building when there is limited time",
+            "evidence": "Maintenance capacity is finite"
+          },
+          {
+            "level": 5,
+            "why": "The structural risk is confusing market-visible progress with compounding product quality",
+            "evidence": "False positives and maintenance load rise faster than README bullets suggest"
+          }
+        ],
+        "root_cause": "The project risks optimizing for visible breadth over compounding trust discipline.",
+        "structural_fix": "Tie expansion to benchmark fixtures, contributor ergonomics, and tighter release gates.",
+        "key_insight": "The real bottleneck is maintainable quality control, not missing feature ideas."
+      },
+      "duration_seconds": 1.0,
+      "error": null
+    },
+    {
+      "stage": "AdR",
+      "framework": "Adversarial Reasoning",
+      "model": "example-model",
+      "raw": "{\"hidden_dynamics\": [{\"actor\": \"maintainer\", \"protecting\": \"a high-trust reputation for local inspectable security tooling\", \"at_cost_of\": \"slower feature headline velocity\"}], \"misaligned_incentives\": [{\"between\": [\"user demand\", \"maintainable precision\"], \"conflict\": \"Users ask for more detections, but each rule family expands the calibration burden\"}], \"failure_modes\": [{\"mode\": \"The project becomes impressive to read but noisier to run\", \"likelihood\": \"medium\", \"impact\": \"high\", \"why_ignored\": \"Feature additions feel like obvious progress until signal quality degrades\"}], \"uncomfortable_truths\": [\"The most valuable next work may be less visible than new rules\", \"The README already creates expectations that future releases must now keep earning\"], \"key_insight\": \"The right strategic move is the one that protects signal quality, even if it looks slower from the outside.\"}",
+      "parsed": {
+        "hidden_dynamics": [
+          {
+            "actor": "maintainer",
+            "protecting": "a high-trust reputation for local inspectable security tooling",
+            "at_cost_of": "slower feature headline velocity"
+          }
+        ],
+        "misaligned_incentives": [
+          {
+            "between": [
+              "user demand",
+              "maintainable precision"
+            ],
+            "conflict": "Users ask for more detections, but each rule family expands the calibration burden"
+          }
+        ],
+        "failure_modes": [
+          {
+            "mode": "The project becomes impressive to read but noisier to run",
+            "likelihood": "medium",
+            "impact": "high",
+            "why_ignored": "Feature additions feel like obvious progress until signal quality degrades"
+          }
+        ],
+        "uncomfortable_truths": [
+          "The most valuable next work may be less visible than new rules",
+          "The README already creates expectations that future releases must now keep earning"
+        ],
+        "key_insight": "The right strategic move is the one that protects signal quality, even if it looks slower from the outside."
+      },
+      "duration_seconds": 1.1,
+      "error": null
+    },
+    {
+      "stage": "ToT",
+      "framework": "Tree of Thoughts",
+      "model": "example-model",
+      "raw": "{\"options\": [{\"name\": \"Expand Now\", \"approach\": \"Add more rules and platform coverage in the next cycle\", \"optimizes_for\": \"visible product breadth\", \"sacrifices\": \"calibration and contributor ergonomics\", \"success_probability\": \"medium\", \"risks\": [\"maintenance drag\", \"more suppression pressure\"], \"tradeoffs\": \"higher momentum, weaker trust compounding\"}, {\"name\": \"Trust First\", \"approach\": \"Strengthen benchmarks, examples, contributor workflow, and release discipline first\", \"optimizes_for\": \"durable adoption\", \"sacrifices\": \"short-term feature headlines\", \"success_probability\": \"high\", \"risks\": [\"slower surface expansion\"], \"tradeoffs\": \"less flashy, stronger long-term quality\"}, {\"name\": \"Staged Split\", \"approach\": \"Ship one carefully scoped rule family while simultaneously tightening trust infrastructure\", \"optimizes_for\": \"balance\", \"sacrifices\": \"speed on both fronts\", \"success_probability\": \"high\", \"risks\": [\"context switching\"], \"tradeoffs\": \"best strategic balance if scope stays disciplined\"}], \"comparison\": \"Trust First and Staged Split preserve the repo's strongest differentiator better than pure expansion.\", \"key_insight\": \"A staged split is safest if the maintainer needs visible progress without eroding trust.\"}",
+      "parsed": {
+        "options": [
+          {
+            "name": "Expand Now",
+            "approach": "Add more rules and platform coverage in the next cycle",
+            "optimizes_for": "visible product breadth",
+            "sacrifices": "calibration and contributor ergonomics",
+            "success_probability": "medium",
+            "risks": [
+              "maintenance drag",
+              "more suppression pressure"
+            ],
+            "tradeoffs": "higher momentum, weaker trust compounding"
+          },
+          {
+            "name": "Trust First",
+            "approach": "Strengthen benchmarks, examples, contributor workflow, and release discipline first",
+            "optimizes_for": "durable adoption",
+            "sacrifices": "short-term feature headlines",
+            "success_probability": "high",
+            "risks": [
+              "slower surface expansion"
+            ],
+            "tradeoffs": "less flashy, stronger long-term quality"
+          },
+          {
+            "name": "Staged Split",
+            "approach": "Ship one carefully scoped rule family while simultaneously tightening trust infrastructure",
+            "optimizes_for": "balance",
+            "sacrifices": "speed on both fronts",
+            "success_probability": "high",
+            "risks": [
+              "context switching"
+            ],
+            "tradeoffs": "best strategic balance if scope stays disciplined"
+          }
+        ],
+        "comparison": "Trust First and Staged Split preserve the repo's strongest differentiator better than pure expansion.",
+        "key_insight": "A staged split is safest if the maintainer needs visible progress without eroding trust."
+      },
+      "duration_seconds": 1.1,
+      "error": null
+    },
+    {
+      "stage": "PMR",
+      "framework": "Pre-Mortem",
+      "model": "example-model",
+      "raw": "{\"failure_modes\": [{\"what_failed\": \"Signal quality degraded as scope grew\", \"why\": \"New detections arrived faster than regression discipline\", \"warning_signs\": [\"rising false-positive complaints\", \"benchmark lag\", \"more undocumented edge cases\"], \"could_have_been_prevented_by\": \"locking feature growth to stronger examples, tests, and contributor boundaries\"}], \"most_likely_cause_of_death\": \"Growth without quality gates\", \"design_against\": [\"make fixtures mandatory for new rule families\", \"publish clearer contributor and release standards\"], \"key_insight\": \"The failure mode is strategic drift away from trust as the primary product.\"}",
+      "parsed": {
+        "failure_modes": [
+          {
+            "what_failed": "Signal quality degraded as scope grew",
+            "why": "New detections arrived faster than regression discipline",
+            "warning_signs": [
+              "rising false-positive complaints",
+              "benchmark lag",
+              "more undocumented edge cases"
+            ],
+            "could_have_been_prevented_by": "locking feature growth to stronger examples, tests, and contributor boundaries"
+          }
+        ],
+        "most_likely_cause_of_death": "Growth without quality gates",
+        "design_against": [
+          "make fixtures mandatory for new rule families",
+          "publish clearer contributor and release standards"
+        ],
+        "key_insight": "The failure mode is strategic drift away from trust as the primary product."
+      },
+      "duration_seconds": 1.0,
+      "error": null
+    }
+  ],
+  "convergence": {
+    "result": {
+      "summary": "The next release should prioritize trust-compounding work over pure scope expansion. If visible momentum is necessary, the safest path is a staged split: one narrow feature addition plus stronger examples, benchmarks, and contributor rails.",
+      "key_findings": [
+        "The core product differentiator is trust and inspectability, not only breadth.",
+        "Unbounded scope growth would threaten the tool's strongest quality signal.",
+        "Contributor ergonomics and regression discipline are strategic work, not maintenance overhead."
+      ],
+      "disagreements": [],
+      "risks_ranked": [
+        {
+          "risk": "Feature growth outpaces calibration and contributor support",
+          "likelihood": "medium",
+          "impact": "high",
+          "mitigation": "Tie new scope to fixtures, benchmarks, and stricter contribution gates"
+        }
+      ],
+      "recommended_action": "Choose either Trust First or a tightly scoped staged split rather than feature-maximal expansion.",
+      "navigator_decisions_needed": [
+        "What level of visible release velocity is necessary without weakening trust?",
+        "Which narrow rule family, if any, is worth shipping alongside trust hardening?"
+      ]
+    },
+    "duration_seconds": 0.9
+  },
+  "total_duration_seconds": 5.0
+}

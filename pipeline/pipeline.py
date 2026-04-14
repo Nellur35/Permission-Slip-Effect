@@ -3,9 +3,8 @@
 Security-First AI Dev Methodology — Reasoning Pipeline CLI
 
 Orchestrates multi-model reasoning pipelines and adversarial reviews.
-Ships as a skeleton with an Anthropic provider included. LLMs (or you)
-can add providers for OpenAI, Google, Bedrock, Ollama, etc. by
-implementing the Provider protocol.
+Ships as a reference implementation with an Anthropic provider included.
+Additional providers can be added by implementing the Provider protocol.
 
 Usage:
     # Adversarial review of an artifact
@@ -19,42 +18,29 @@ Usage:
 
     # List available pipelines
     python pipeline.py pipelines
-
-Environment variables:
-    ANTHROPIC_API_KEY   — for Claude models
-    OPENAI_API_KEY      — for GPT models (requires openai provider)
-    GOOGLE_API_KEY      — for Gemini models (requires google provider)
-    PIPELINE_ARCHITECT  — default architect model (default: claude)
-    PIPELINE_CHALLENGER — default challenger model (default: claude)
 """
+
+from __future__ import annotations
 
 import argparse
 import json
 import os
 import sys
 import time
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Protocol, Optional
+from typing import Optional, Protocol
 
-
-# ============================================================
-# Provider Protocol — implement this for any LLM API
-# ============================================================
 
 class Provider(Protocol):
-    """Minimal interface for an LLM provider. Implement complete() and you're done."""
+    """Minimal interface for an LLM provider."""
 
     name: str
+    model: str
 
     def complete(self, system: str, user: str, temperature: float = 0.7) -> str:
-        """Send a prompt, get text back. That's it."""
         ...
 
-
-# ============================================================
-# Anthropic Provider (included — works out of the box)
-# ============================================================
 
 class AnthropicProvider:
     name = "claude"
@@ -66,16 +52,18 @@ class AnthropicProvider:
             raise EnvironmentError("ANTHROPIC_API_KEY not set")
 
     def complete(self, system: str, user: str, temperature: float = 0.7) -> str:
-        import urllib.request
         import urllib.error
+        import urllib.request
 
-        body = json.dumps({
-            "model": self.model,
-            "max_tokens": 4096,
-            "temperature": temperature,
-            "system": system,
-            "messages": [{"role": "user", "content": user}],
-        }).encode()
+        body = json.dumps(
+            {
+                "model": self.model,
+                "max_tokens": 4096,
+                "temperature": temperature,
+                "system": system,
+                "messages": [{"role": "user", "content": user}],
+            }
+        ).encode()
 
         req = urllib.request.Request(
             "https://api.anthropic.com/v1/messages",
@@ -90,18 +78,15 @@ class AnthropicProvider:
         try:
             with urllib.request.urlopen(req) as resp:
                 data = json.loads(resp.read())
-                return "".join(b["text"] for b in data["content"] if b["type"] == "text")
-        except urllib.error.HTTPError as e:
-            error_body = e.read().decode()
-            raise RuntimeError(f"Anthropic API error {e.code}: {error_body}")
+                return "".join(block["text"] for block in data["content"] if block["type"] == "text")
+        except urllib.error.HTTPError as exc:
+            error_body = exc.read().decode()
+            raise RuntimeError(f"Anthropic API error {exc.code}: {error_body}") from exc
 
-
-# ============================================================
-# Skeleton providers — LLMs or users fill these in
-# ============================================================
 
 class OpenAIProvider:
     """Skeleton. pip install openai, then implement complete()."""
+
     name = "openai"
 
     def __init__(self, model: str = "gpt-4o"):
@@ -111,23 +96,12 @@ class OpenAIProvider:
             raise EnvironmentError("OPENAI_API_KEY not set")
 
     def complete(self, system: str, user: str, temperature: float = 0.7) -> str:
-        # Implement:
-        # from openai import OpenAI
-        # client = OpenAI(api_key=self.api_key)
-        # response = client.chat.completions.create(
-        #     model=self.model,
-        #     messages=[
-        #         {"role": "system", "content": system},
-        #         {"role": "user", "content": user},
-        #     ],
-        #     temperature=temperature,
-        # )
-        # return response.choices[0].message.content
-        raise NotImplementedError("OpenAI provider not implemented. See comments above.")
+        raise NotImplementedError("OpenAI provider not implemented. See comments in source.")
 
 
 class GoogleProvider:
     """Skeleton. pip install google-generativeai, then implement complete()."""
+
     name = "google"
 
     def __init__(self, model: str = "gemini-2.5-flash"):
@@ -137,17 +111,12 @@ class GoogleProvider:
             raise EnvironmentError("GOOGLE_API_KEY not set")
 
     def complete(self, system: str, user: str, temperature: float = 0.7) -> str:
-        # Implement:
-        # import google.generativeai as genai
-        # genai.configure(api_key=self.api_key)
-        # model = genai.GenerativeModel(self.model, system_instruction=system)
-        # response = model.generate_content(user, generation_config={"temperature": temperature})
-        # return response.text
-        raise NotImplementedError("Google provider not implemented. See comments above.")
+        raise NotImplementedError("Google provider not implemented. See comments in source.")
 
 
 class BedrockProvider:
     """Skeleton. pip install boto3, then implement complete()."""
+
     name = "bedrock"
 
     def __init__(self, model: str = "anthropic.claude-sonnet-4-20250514-v1:0", region: str = "us-east-1"):
@@ -155,23 +124,9 @@ class BedrockProvider:
         self.region = region
 
     def complete(self, system: str, user: str, temperature: float = 0.7) -> str:
-        # Implement:
-        # import boto3
-        # client = boto3.client("bedrock-runtime", region_name=self.region)
-        # body = json.dumps({
-        #     "anthropic_version": "bedrock-2023-05-31",
-        #     "max_tokens": 4096,
-        #     "temperature": temperature,
-        #     "system": system,
-        #     "messages": [{"role": "user", "content": user}],
-        # })
-        # response = client.invoke_model(modelId=self.model, body=body)
-        # result = json.loads(response["body"].read())
-        # return "".join(b["text"] for b in result["content"] if b["type"] == "text")
-        raise NotImplementedError("Bedrock provider not implemented. See comments above.")
+        raise NotImplementedError("Bedrock provider not implemented. See comments in source.")
 
 
-# Provider registry — add yours here
 PROVIDERS = {
     "claude": AnthropicProvider,
     "openai": OpenAIProvider,
@@ -179,8 +134,6 @@ PROVIDERS = {
     "bedrock": BedrockProvider,
 }
 
-# Cheap model overrides — used with --cheap flag
-# Maps provider name to a cheaper/faster model for analysis stages
 CHEAP_MODELS = {
     "claude": "claude-haiku-4-5-20251001",
     "openai": "gpt-4o-mini",
@@ -188,317 +141,17 @@ CHEAP_MODELS = {
     "bedrock": "anthropic.claude-haiku-4-5-20251001-v1:0",
 }
 
-# Cost estimates per 1K tokens (input, output) — USD, approximate
-# Used for pre-run estimates only, not billing. Update as prices change.
 MODEL_COSTS = {
-    # Anthropic
     "claude-sonnet-4-20250514": (0.003, 0.015),
     "claude-haiku-4-5-20251001": (0.0008, 0.004),
     "claude-opus-4-20250514": (0.015, 0.075),
-    # OpenAI
     "gpt-4o": (0.0025, 0.010),
     "gpt-4o-mini": (0.00015, 0.0006),
     "o1": (0.015, 0.060),
-    # Google
     "gemini-2.5-flash": (0.00015, 0.0006),
     "gemini-2.5-pro": (0.00125, 0.010),
-    # Defaults for unknown models
     "_default": (0.003, 0.015),
 }
-
-
-def estimate_cost(pipeline_key: str, architect_model: str, challenger_model: str = None) -> dict:
-    """Estimate token usage and cost for a pipeline run."""
-    stages = PIPELINES[pipeline_key]["stages"]
-    num_stages = len(stages)
-
-    # Estimates based on typical runs
-    avg_input_per_stage = 800   # grows with accumulated context
-    avg_output_per_stage = 1500
-    context_growth = 1200       # accumulated context grows per stage
-
-    total_input = 0
-    total_output = 0
-    for i in range(num_stages):
-        stage_input = avg_input_per_stage + (context_growth * i)
-        total_input += stage_input
-        total_output += avg_output_per_stage
-
-    # Convergence stage
-    total_input += num_stages * context_growth  # reads all findings
-    total_output += 1500
-
-    # Cost calculation
-    arch_costs = MODEL_COSTS.get(architect_model, MODEL_COSTS["_default"])
-    chal_model = challenger_model or architect_model
-    chal_costs = MODEL_COSTS.get(chal_model, MODEL_COSTS["_default"])
-
-    # Assume challenger handles ~1 stage (AdR), architect handles rest
-    has_challenger = "AdR" in stages and challenger_model
-    if has_challenger:
-        arch_stages = num_stages  # convergence counts as architect
-        chal_stages = 1
-        arch_input = total_input - avg_input_per_stage - (context_growth * stages.index("AdR"))
-        chal_input = total_input - arch_input
-        cost = (
-            (arch_input / 1000 * arch_costs[0]) + (total_output * (arch_stages / (num_stages + 1)) / 1000 * arch_costs[1]) +
-            (chal_input / 1000 * chal_costs[0]) + (total_output * (chal_stages / (num_stages + 1)) / 1000 * chal_costs[1])
-        )
-    else:
-        cost = (total_input / 1000 * arch_costs[0]) + (total_output / 1000 * arch_costs[1])
-
-    return {
-        "stages": num_stages + 1,  # +1 for convergence
-        "estimated_input_tokens": total_input,
-        "estimated_output_tokens": total_output,
-        "estimated_total_tokens": total_input + total_output,
-        "estimated_cost_usd": round(cost, 4),
-        "architect_model": architect_model,
-        "challenger_model": chal_model,
-    }
-
-
-def get_provider(name: str, model_override: str = None) -> Provider:
-    if name not in PROVIDERS:
-        print(f"Unknown provider: {name}. Available: {', '.join(PROVIDERS.keys())}", file=sys.stderr)
-        sys.exit(1)
-    if model_override:
-        return PROVIDERS[name](model=model_override)
-    return PROVIDERS[name]()
-
-
-# ============================================================
-# Framework Prompts — the actual reasoning stages
-# ============================================================
-
-FRAMEWORKS = {
-    "FPR": {
-        "name": "First Principles",
-        "system": "You are a first-principles analyst. Question every assumption.",
-        "prompt": """Analyze this problem using First Principles reasoning.
-
-1. What assumptions are being made? List each one explicitly.
-2. For each assumption: is it verified, plausible, or unverified?
-3. What would change if each unverified assumption is wrong?
-4. Is the framing of this problem itself correct, or is it solving the wrong thing?
-5. What is the actual problem underneath the stated problem?
-
-Respond in JSON:
-{{
-  "assumptions": [
-    {{"assumption": "...", "status": "verified|plausible|unverified", "if_wrong": "..."}}
-  ],
-  "framing_valid": true/false,
-  "reframing": "if framing is invalid, what should the real question be?",
-  "key_insight": "the single most important finding"
-}}
-
-Problem:
-{input}""",
-    },
-    "CoT": {
-        "name": "Chain of Thought",
-        "system": "You are a methodical analyst. Establish facts before conclusions.",
-        "prompt": """Analyze this using Chain of Thought reasoning.
-
-Walk through the problem step by step:
-1. What are the established facts?
-2. What is the sequence of events or dependencies?
-3. What follows logically from each fact?
-4. Where are the gaps in the chain?
-
-Respond in JSON:
-{{
-  "facts": ["..."],
-  "chain": [
-    {{"step": 1, "from": "fact or prior step", "conclusion": "...", "confidence": "high|medium|low"}}
-  ],
-  "gaps": ["where the chain breaks or evidence is missing"],
-  "key_insight": "..."
-}}
-
-Problem:
-{input}""",
-    },
-    "RCAR": {
-        "name": "Root Cause Analysis (5 Whys)",
-        "system": "You are a root cause analyst. Symptoms are not causes. Keep asking why.",
-        "prompt": """Analyze this using Root Cause Analysis (5 Whys).
-
-Start with the visible problem, then ask "why?" at least 5 times:
-1. What is the visible symptom?
-2. Why is this happening? (Level 1)
-3. Why? (Level 2)
-4. Why? (Level 3)
-5. Why? (Level 4)
-6. Why? (Level 5 — this should be structural)
-
-Respond in JSON:
-{{
-  "symptom": "the visible problem",
-  "why_chain": [
-    {{"level": 1, "why": "...", "evidence": "..."}}
-  ],
-  "root_cause": "the structural cause at the bottom",
-  "structural_fix": "what would prevent recurrence",
-  "key_insight": "..."
-}}
-
-Problem:
-{input}""",
-    },
-    "GoT": {
-        "name": "Graph of Thoughts",
-        "system": "You are a systems thinker. Map interconnections and feedback loops.",
-        "prompt": """Analyze this using Graph of Thoughts.
-
-Map the system as interconnected nodes:
-1. What are the key elements (nodes)?
-2. How does each element influence the others (edges)?
-3. Where are the feedback loops (reinforcing or balancing)?
-4. Where are the leverage points — small changes with large effects?
-
-Respond in JSON:
-{{
-  "nodes": [{{"name": "...", "role": "..."}}],
-  "edges": [{{"from": "...", "to": "...", "relationship": "...", "strength": "strong|moderate|weak"}}],
-  "feedback_loops": [{{"type": "reinforcing|balancing", "path": ["A", "B", "C", "A"], "effect": "..."}}],
-  "leverage_points": [{{"point": "...", "why": "...", "intervention": "..."}}],
-  "key_insight": "..."
-}}
-
-Problem:
-{input}""",
-    },
-    "SMR": {
-        "name": "Stakeholder Mapping",
-        "system": "You are an organizational analyst. Map power, interest, and incentives.",
-        "prompt": """Analyze this using Stakeholder Mapping.
-
-For each stakeholder:
-1. Who are they?
-2. What do they want (stated goal)?
-3. What are they actually optimizing for (real goal)?
-4. What is their power to influence the outcome?
-5. What would make them support vs. block this?
-
-Respond in JSON:
-{{
-  "stakeholders": [
-    {{
-      "name": "...",
-      "stated_goal": "...",
-      "real_goal": "...",
-      "power": "high|medium|low",
-      "interest": "high|medium|low",
-      "support_condition": "what would make them support this",
-      "block_condition": "what would make them block this"
-    }}
-  ],
-  "coalitions": [{{"name": "...", "members": ["..."], "shared_interest": "..."}}],
-  "key_insight": "..."
-}}
-
-Problem:
-{input}""",
-    },
-    "AdR": {
-        "name": "Adversarial Reasoning",
-        "system": "You are an adversarial analyst. Your mandate: find why this fails. Find what is being hidden. Find the uncomfortable truths everyone is avoiding. Do not be agreeable.",
-        "prompt": """Analyze this using Adversarial Reasoning.
-
-You have explicit permission to be uncomfortable. Surface what others won't say.
-
-1. What is each party secretly protecting?
-2. What incentives are misaligned?
-3. What is the most likely way this fails?
-4. What is everyone avoiding saying?
-5. What would a hostile adversary exploit?
-
-Respond in JSON:
-{{
-  "hidden_dynamics": [
-    {{"actor": "...", "protecting": "...", "at_cost_of": "..."}}
-  ],
-  "misaligned_incentives": [{{"between": ["A", "B"], "conflict": "..."}}],
-  "failure_modes": [
-    {{"mode": "...", "likelihood": "high|medium|low", "impact": "high|medium|low", "why_ignored": "..."}}
-  ],
-  "uncomfortable_truths": ["things no one wants to say but are probably true"],
-  "key_insight": "..."
-}}
-
-Problem:
-{input}""",
-    },
-    "ToT": {
-        "name": "Tree of Thoughts",
-        "system": "You are a strategic analyst. Generate and compare multiple approaches. Do not recommend one — present tradeoffs.",
-        "prompt": """Analyze this using Tree of Thoughts.
-
-Generate 3-4 distinct strategic options. For each:
-1. What is the approach?
-2. What are the tradeoffs?
-3. What does it optimize for? What does it sacrifice?
-4. Estimated probability of success?
-5. What could go wrong?
-
-Respond in JSON:
-{{
-  "options": [
-    {{
-      "name": "short label",
-      "approach": "...",
-      "optimizes_for": "...",
-      "sacrifices": "...",
-      "success_probability": "high|medium|low",
-      "risks": ["..."],
-      "tradeoffs": "..."
-    }}
-  ],
-  "comparison": "how the options differ on the dimension that matters most",
-  "key_insight": "..."
-}}
-
-Problem (incorporate all prior analysis):
-{input}""",
-    },
-    "PMR": {
-        "name": "Pre-Mortem",
-        "system": "You are a pre-mortem analyst. Assume this has already failed. Your job: explain why it failed. Be specific. Name the failure modes.",
-        "prompt": """Run a Pre-Mortem on this decision.
-
-It is 6 months from now. This has failed. Explain why.
-
-1. What went wrong? (Name 3-5 specific failure modes)
-2. What warning signs existed that were ignored?
-3. Which assumption turned out to be wrong?
-4. What should have been designed against?
-
-Respond in JSON:
-{{
-  "failure_modes": [
-    {{
-      "what_failed": "...",
-      "why": "...",
-      "warning_signs": ["signs that existed but were ignored"],
-      "could_have_been_prevented_by": "..."
-    }}
-  ],
-  "most_likely_cause_of_death": "the single biggest risk",
-  "design_against": ["specific mitigations to implement now"],
-  "key_insight": "..."
-}}
-
-Decision/plan being evaluated:
-{input}""",
-    },
-}
-
-
-# ============================================================
-# Pipeline Definitions
-# ============================================================
 
 PIPELINES = {
     "light": {
@@ -533,10 +186,22 @@ PIPELINES = {
     },
 }
 
+FRAMEWORKS_PATH = Path(__file__).with_name("frameworks.json")
 
-# ============================================================
-# Pipeline Runner
-# ============================================================
+
+def load_frameworks(path: Path = FRAMEWORKS_PATH) -> dict:
+    """Load framework prompts from JSON so prompt changes do not require code edits."""
+    frameworks = json.loads(path.read_text())
+    required_fields = {"name", "system", "prompt"}
+    for key, value in frameworks.items():
+        missing = required_fields - set(value)
+        if missing:
+            raise ValueError(f"Framework {key} is missing required fields: {sorted(missing)}")
+    return frameworks
+
+
+FRAMEWORKS = load_frameworks()
+
 
 @dataclass
 class StageResult:
@@ -558,33 +223,105 @@ class PipelineResult:
     total_duration_seconds: float = 0.0
 
 
-def run_stage(
-    provider: Provider,
-    framework_key: str,
-    accumulated_context: str,
-    problem: str,
-) -> StageResult:
-    """Run a single reasoning stage."""
+def estimate_cost(pipeline_key: str, architect_model: str, challenger_model: str | None = None) -> dict:
+    """Estimate token usage and cost for a pipeline run."""
+    stages = PIPELINES[pipeline_key]["stages"]
+    num_stages = len(stages)
+
+    avg_input_per_stage = 800
+    avg_output_per_stage = 1500
+    context_growth = 1200
+
+    total_input = 0
+    total_output = 0
+    for index in range(num_stages):
+        stage_input = avg_input_per_stage + (context_growth * index)
+        total_input += stage_input
+        total_output += avg_output_per_stage
+
+    total_input += num_stages * context_growth
+    total_output += 1500
+
+    architect_costs = MODEL_COSTS.get(architect_model, MODEL_COSTS["_default"])
+    challenger_model = challenger_model or architect_model
+    challenger_costs = MODEL_COSTS.get(challenger_model, MODEL_COSTS["_default"])
+
+    has_challenger = "AdR" in stages and challenger_model != architect_model
+    if has_challenger:
+        architect_stages = num_stages
+        challenger_stages = 1
+        adversarial_index = stages.index("AdR")
+        architect_input = total_input - avg_input_per_stage - (context_growth * adversarial_index)
+        challenger_input = total_input - architect_input
+        cost = (
+            (architect_input / 1000 * architect_costs[0])
+            + (total_output * (architect_stages / (num_stages + 1)) / 1000 * architect_costs[1])
+            + (challenger_input / 1000 * challenger_costs[0])
+            + (total_output * (challenger_stages / (num_stages + 1)) / 1000 * challenger_costs[1])
+        )
+    else:
+        cost = (total_input / 1000 * architect_costs[0]) + (total_output / 1000 * architect_costs[1])
+
+    return {
+        "stages": num_stages + 1,
+        "estimated_input_tokens": total_input,
+        "estimated_output_tokens": total_output,
+        "estimated_total_tokens": total_input + total_output,
+        "estimated_cost_usd": round(cost, 4),
+        "architect_model": architect_model,
+        "challenger_model": challenger_model,
+    }
+
+
+def get_provider(name: str, model_override: str | None = None) -> Provider:
+    if name not in PROVIDERS:
+        print(f"Unknown provider: {name}. Available: {', '.join(PROVIDERS.keys())}", file=sys.stderr)
+        sys.exit(1)
+    provider_class = PROVIDERS[name]
+    return provider_class(model=model_override) if model_override else provider_class()
+
+
+def strip_fenced_code_block(text: str) -> str:
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        lines = cleaned.splitlines()
+        if lines:
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        cleaned = "\n".join(lines).strip()
+    return cleaned
+
+
+def parse_json_response(raw: str) -> Optional[dict]:
+    try:
+        return json.loads(strip_fenced_code_block(raw))
+    except json.JSONDecodeError:
+        return None
+
+
+def build_stage_input(accumulated_context: str, problem: str) -> str:
+    return f"{accumulated_context}\n\n{problem}" if accumulated_context else problem
+
+
+def build_stage_prompt(framework_key: str, full_input: str) -> str:
+    return FRAMEWORKS[framework_key]["prompt"].replace("{input}", full_input)
+
+
+def framework_temperature(framework_key: str) -> float:
+    return 0.7 if framework_key == "AdR" else 0.3
+
+
+def run_stage(provider: Provider, framework_key: str, accumulated_context: str, problem: str) -> StageResult:
     fw = FRAMEWORKS[framework_key]
-    full_input = accumulated_context + "\n\n" + problem if accumulated_context else problem
-    prompt = fw["prompt"].replace("{input}", full_input)
+    full_input = build_stage_input(accumulated_context, problem)
+    prompt = build_stage_prompt(framework_key, full_input)
 
     start = time.time()
     try:
-        raw = provider.complete(system=fw["system"], user=prompt, temperature=0.7)
+        raw = provider.complete(system=fw["system"], user=prompt, temperature=framework_temperature(framework_key))
         duration = time.time() - start
-
-        # Try to parse JSON from the response
-        parsed = None
-        try:
-            # Handle markdown-wrapped JSON
-            text = raw.strip()
-            if text.startswith("```"):
-                text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-            parsed = json.loads(text)
-        except (json.JSONDecodeError, IndexError):
-            pass
-
+        parsed = parse_json_response(raw)
         return StageResult(
             stage=framework_key,
             framework=fw["name"],
@@ -593,29 +330,30 @@ def run_stage(
             parsed=parsed,
             duration_seconds=round(duration, 2),
         )
-    except Exception as e:
+    except Exception as exc:
         return StageResult(
             stage=framework_key,
             framework=fw["name"],
             model=provider.name,
             raw="",
             duration_seconds=round(time.time() - start, 2),
-            error=str(e),
+            error=str(exc),
         )
 
 
 def run_convergence(provider: Provider, stages: list[StageResult], problem: str) -> dict:
-    """Final convergence stage — synthesize all findings."""
     findings = []
-    for s in stages:
-        if s.parsed:
-            findings.append(f"## {s.framework}\n{json.dumps(s.parsed, indent=2)}")
-        elif s.raw:
-            findings.append(f"## {s.framework}\n{s.raw}")
+    for stage in stages:
+        if stage.parsed:
+            findings.append(f"## {stage.framework}\n{json.dumps(stage.parsed, indent=2)}")
+        elif stage.raw:
+            findings.append(f"## {stage.framework}\n{stage.raw}")
 
-    system = """You are a convergence analyst. Synthesize findings from multiple reasoning stages
-into a final recommendation. Focus on: genuine disagreements between stages, highest-risk items,
-and actionable next steps. Do not repeat analysis — synthesize it."""
+    system = (
+        "You are a convergence analyst. Synthesize findings from multiple reasoning stages "
+        "into a final recommendation. Focus on: genuine disagreements between stages, highest-risk items, "
+        "and actionable next steps. Do not repeat analysis — synthesize it."
+    )
 
     prompt = f"""Synthesize these findings into a final recommendation.
 
@@ -641,14 +379,10 @@ Stage findings:
     start = time.time()
     raw = provider.complete(system=system, user=prompt, temperature=0.3)
     duration = time.time() - start
-
-    try:
-        text = raw.strip()
-        if text.startswith("```"):
-            text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-        return {"result": json.loads(text), "duration_seconds": round(duration, 2)}
-    except (json.JSONDecodeError, IndexError):
-        return {"raw": raw, "duration_seconds": round(duration, 2)}
+    parsed = parse_json_response(raw)
+    if parsed is not None:
+        return {"result": parsed, "duration_seconds": round(duration, 2)}
+    return {"raw": raw, "duration_seconds": round(duration, 2)}
 
 
 def run_pipeline(
@@ -658,11 +392,6 @@ def run_pipeline(
     challenger: Optional[Provider] = None,
     convergence_provider: Optional[Provider] = None,
 ) -> PipelineResult:
-    """Run a full reasoning pipeline.
-    
-    In cheap mode, convergence_provider is the full-price model used only for
-    the final synthesis. Analysis stages use the (cheaper) architect.
-    """
     pipeline_def = PIPELINES[pipeline_key]
     result = PipelineResult(
         pipeline=pipeline_def["name"],
@@ -672,14 +401,12 @@ def run_pipeline(
     start = time.time()
     accumulated = ""
 
-    for i, stage_key in enumerate(pipeline_def["stages"]):
-        # Alternate between architect and challenger for adversarial stages
-        if stage_key == "AdR" and challenger:
-            provider = challenger
-        else:
-            provider = architect
-
-        print(f"  [{i+1}/{len(pipeline_def['stages'])}] {FRAMEWORKS[stage_key]['name']} ({provider.name})...", file=sys.stderr)
+    for index, stage_key in enumerate(pipeline_def["stages"]):
+        provider = challenger if stage_key == "AdR" and challenger else architect
+        print(
+            f"  [{index + 1}/{len(pipeline_def['stages'])}] {FRAMEWORKS[stage_key]['name']} ({provider.name})...",
+            file=sys.stderr,
+        )
         stage_result = run_stage(provider, stage_key, accumulated, problem)
         result.stages.append(stage_result)
 
@@ -687,24 +414,17 @@ def run_pipeline(
             print(f"  ERROR: {stage_result.error}", file=sys.stderr)
             continue
 
-        # Accumulate context for next stage
         if stage_result.parsed:
             accumulated += f"\n\n## {stage_result.framework} findings:\n{json.dumps(stage_result.parsed, indent=2)}"
         elif stage_result.raw:
             accumulated += f"\n\n## {stage_result.framework} findings:\n{stage_result.raw}"
 
-    # Convergence — use full-price model in cheap mode
     synth = convergence_provider or architect
     print(f"  [convergence] Synthesizing ({synth.name}: {synth.model})...", file=sys.stderr)
     result.convergence = run_convergence(synth, result.stages, problem)
     result.total_duration_seconds = round(time.time() - start, 2)
-
     return result
 
-
-# ============================================================
-# Adversarial Review (artifact-focused)
-# ============================================================
 
 def run_review(
     artifact_path: str,
@@ -712,17 +432,15 @@ def run_review(
     challenger: Optional[Provider] = None,
     convergence_provider: Optional[Provider] = None,
 ) -> PipelineResult:
-    """Adversarial review of an existing artifact (architecture.md, threat_model.md, etc.)."""
     artifact = Path(artifact_path).read_text()
-    problem = f"Review this artifact with an adversarial mandate. Find what is wrong, not whether it is good.\n\n{artifact}"
+    problem = (
+        "Review this artifact with an adversarial mandate. Find what is wrong, not whether it is good.\n\n"
+        f"{artifact}"
+    )
     return run_pipeline("review", problem, architect, challenger, convergence_provider)
 
 
-# ============================================================
-# CLI
-# ============================================================
-
-def main():
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Security-First Reasoning Pipeline CLI",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -730,7 +448,6 @@ def main():
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    # -- reason command --
     reason_parser = subparsers.add_parser("reason", help="Run a reasoning pipeline on a problem")
     reason_parser.add_argument("problem", nargs="?", help="Problem statement (or - for stdin)")
     reason_parser.add_argument("--pipeline", "-p", default="standard", choices=PIPELINES.keys())
@@ -740,7 +457,6 @@ def main():
     reason_parser.add_argument("--yes", "-y", action="store_true", help="Skip cost confirmation")
     reason_parser.add_argument("--output", "-o", help="Output file (default: stdout)")
 
-    # -- review command --
     review_parser = subparsers.add_parser("review", help="Adversarial review of an artifact file")
     review_parser.add_argument("file", help="Path to artifact (architecture.md, threat_model.md, etc.)")
     review_parser.add_argument("--architect", "-a", default=os.environ.get("PIPELINE_ARCHITECT", "claude"))
@@ -749,37 +465,34 @@ def main():
     review_parser.add_argument("--yes", "-y", action="store_true", help="Skip cost confirmation")
     review_parser.add_argument("--output", "-o", help="Output file (default: stdout)")
 
-    # -- pipelines command --
     subparsers.add_parser("pipelines", help="List available pipeline variants")
-
-    # -- frameworks command --
     subparsers.add_parser("frameworks", help="List available reasoning frameworks")
+    return parser
 
+
+def main() -> None:
+    parser = build_parser()
     args = parser.parse_args()
 
     if args.command == "pipelines":
-        for key, p in PIPELINES.items():
-            print(f"  {key:16s} {p['name']}")
-            print(f"  {'':16s} Stages: {' → '.join(p['stages'])}")
-            print(f"  {'':16s} Use when: {p['use_when']}")
+        for key, pipeline_def in PIPELINES.items():
+            print(f"  {key:16s} {pipeline_def['name']}")
+            print(f"  {'':16s} Stages: {' → '.join(pipeline_def['stages'])}")
+            print(f"  {'':16s} Use when: {pipeline_def['use_when']}")
             print()
         return
 
     if args.command == "frameworks":
-        for key, f in FRAMEWORKS.items():
-            print(f"  {key:5s} {f['name']}")
+        for key, framework in FRAMEWORKS.items():
+            print(f"  {key:5s} {framework['name']}")
         return
 
-    # Build providers
-    cheap_mode = getattr(args, 'cheap', False)
-    skip_confirm = getattr(args, 'yes', False)
+    cheap_mode = getattr(args, "cheap", False)
+    skip_confirm = getattr(args, "yes", False)
 
-    # In cheap mode: analysis stages use cheap models, convergence uses the full model
     arch_model = CHEAP_MODELS.get(args.architect) if cheap_mode else None
     architect = get_provider(args.architect, model_override=arch_model)
     challenger = get_provider(args.challenger) if args.challenger else None
-
-    # For cheap mode, we also need the full-price architect for convergence
     convergence_provider = get_provider(args.architect) if cheap_mode else None
 
     if args.command == "review":
@@ -791,7 +504,10 @@ def main():
         print(f"Adversarial review: {args.file}", file=sys.stderr)
         print(f"Architect: {architect.model}, Challenger: {(challenger.model if challenger else architect.model)}", file=sys.stderr)
         if cheap_mode:
-            print(f"Cheap mode: analysis on {architect.model}, convergence on {convergence_provider.model}", file=sys.stderr)
+            print(
+                f"Cheap mode: analysis on {architect.model}, convergence on {convergence_provider.model}",
+                file=sys.stderr,
+            )
         print(f"Estimated: ~{est['estimated_total_tokens']:,} tokens, ~${est['estimated_cost_usd']:.4f}", file=sys.stderr)
         if not skip_confirm:
             confirm = input("Proceed? [Y/n] ").strip().lower()
@@ -799,8 +515,7 @@ def main():
                 print("Aborted.", file=sys.stderr)
                 sys.exit(0)
         result = run_review(args.file, architect, challenger, convergence_provider)
-
-    elif args.command == "reason":
+    else:
         problem = args.problem
         if problem == "-" or problem is None:
             print("Reading problem from stdin...", file=sys.stderr)
@@ -814,7 +529,10 @@ def main():
         print(f"Pipeline: {PIPELINES[pipeline_key]['name']}", file=sys.stderr)
         print(f"Architect: {architect.model}, Challenger: {(challenger.model if challenger else architect.model)}", file=sys.stderr)
         if cheap_mode:
-            print(f"Cheap mode: analysis on {architect.model}, convergence on {convergence_provider.model}", file=sys.stderr)
+            print(
+                f"Cheap mode: analysis on {architect.model}, convergence on {convergence_provider.model}",
+                file=sys.stderr,
+            )
         print(f"Estimated: ~{est['estimated_total_tokens']:,} tokens, ~${est['estimated_cost_usd']:.4f}", file=sys.stderr)
         if not skip_confirm:
             confirm = input("Proceed? [Y/n] ").strip().lower()
@@ -823,9 +541,8 @@ def main():
                 sys.exit(0)
         result = run_pipeline(pipeline_key, problem, architect, challenger, convergence_provider)
 
-    # Output JSON
     output = json.dumps(asdict(result), indent=2, default=str)
-    if hasattr(args, 'output') and args.output:
+    if hasattr(args, "output") and args.output:
         Path(args.output).write_text(output)
         print(f"Output written to {args.output}", file=sys.stderr)
     else:

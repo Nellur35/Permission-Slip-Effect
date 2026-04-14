@@ -1,0 +1,42 @@
+{
+  "FPR": {
+    "name": "First Principles",
+    "system": "You are a first-principles analyst. Question every assumption.",
+    "prompt": "Analyze this problem using First Principles reasoning.\n\n1. What assumptions are being made? List each one explicitly.\n2. For each assumption: is it verified, plausible, or unverified?\n3. What would change if each unverified assumption is wrong?\n4. Is the framing of this problem itself correct, or is it solving the wrong thing?\n5. What is the actual problem underneath the stated problem?\n\nRespond in JSON:\n{{\n  \"assumptions\": [\n    {{\"assumption\": \"...\", \"status\": \"verified|plausible|unverified\", \"if_wrong\": \"...\"}}\n  ],\n  \"framing_valid\": true/false,\n  \"reframing\": \"if framing is invalid, what should the real question be?\",\n  \"key_insight\": \"the single most important finding\"\n}}\n\nProblem:\n{input}"
+  },
+  "CoT": {
+    "name": "Chain of Thought",
+    "system": "You are a methodical analyst. Establish facts before conclusions.",
+    "prompt": "Analyze this using Chain of Thought reasoning.\n\nWalk through the problem step by step:\n1. What are the established facts?\n2. What is the sequence of events or dependencies?\n3. What follows logically from each fact?\n4. Where are the gaps in the chain?\n\nRespond in JSON:\n{{\n  \"facts\": [\"...\"],\n  \"chain\": [\n    {{\"step\": 1, \"from\": \"fact or prior step\", \"conclusion\": \"...\", \"confidence\": \"high|medium|low\"}}\n  ],\n  \"gaps\": [\"where the chain breaks or evidence is missing\"],\n  \"key_insight\": \"...\"\n}}\n\nProblem:\n{input}"
+  },
+  "RCAR": {
+    "name": "Root Cause Analysis (5 Whys)",
+    "system": "You are a root cause analyst. Symptoms are not causes. Keep asking why.",
+    "prompt": "Analyze this using Root Cause Analysis (5 Whys).\n\nStart with the visible problem, then ask \"why?\" at least 5 times:\n1. What is the visible symptom?\n2. Why is this happening? (Level 1)\n3. Why? (Level 2)\n4. Why? (Level 3)\n5. Why? (Level 4)\n6. Why? (Level 5 — this should be structural)\n\nRespond in JSON:\n{{\n  \"symptom\": \"the visible problem\",\n  \"why_chain\": [\n    {{\"level\": 1, \"why\": \"...\", \"evidence\": \"...\"}}\n  ],\n  \"root_cause\": \"the structural cause at the bottom\",\n  \"structural_fix\": \"what would prevent recurrence\",\n  \"key_insight\": \"...\"\n}}\n\nProblem:\n{input}"
+  },
+  "GoT": {
+    "name": "Graph of Thoughts",
+    "system": "You are a systems thinker. Map interconnections and feedback loops.",
+    "prompt": "Analyze this using Graph of Thoughts.\n\nMap the system as interconnected nodes:\n1. What are the key elements (nodes)?\n2. How does each element influence the others (edges)?\n3. Where are the feedback loops (reinforcing or balancing)?\n4. Where are the leverage points — small changes with large effects?\n\nRespond in JSON:\n{{\n  \"nodes\": [{{\"name\": \"...\", \"role\": \"...\"}}],\n  \"edges\": [{{\"from\": \"...\", \"to\": \"...\", \"relationship\": \"...\", \"strength\": \"strong|moderate|weak\"}}],\n  \"feedback_loops\": [{{\"type\": \"reinforcing|balancing\", \"path\": [\"A\", \"B\", \"C\", \"A\"], \"effect\": \"...\"}}],\n  \"leverage_points\": [{{\"point\": \"...\", \"why\": \"...\", \"intervention\": \"...\"}}],\n  \"key_insight\": \"...\"\n}}\n\nProblem:\n{input}"
+  },
+  "SMR": {
+    "name": "Stakeholder Mapping",
+    "system": "You are an organizational analyst. Map power, interest, and incentives.",
+    "prompt": "Analyze this using Stakeholder Mapping.\n\nFor each stakeholder:\n1. Who are they?\n2. What do they want (stated goal)?\n3. What are they actually optimizing for (real goal)?\n4. What is their power to influence the outcome?\n5. What would make them support vs. block this?\n\nRespond in JSON:\n{{\n  \"stakeholders\": [\n    {{\n      \"name\": \"...\",\n      \"stated_goal\": \"...\",\n      \"real_goal\": \"...\",\n      \"power\": \"high|medium|low\",\n      \"interest\": \"high|medium|low\",\n      \"support_condition\": \"what would make them support this\",\n      \"block_condition\": \"what would make them block this\"\n    }}\n  ],\n  \"coalitions\": [{{\"name\": \"...\", \"members\": [\"...\"], \"shared_interest\": \"...\"}}],\n  \"key_insight\": \"...\"\n}}\n\nProblem:\n{input}"
+  },
+  "AdR": {
+    "name": "Adversarial Reasoning",
+    "system": "You are an adversarial analyst. Your mandate: find why this fails. Find what is being hidden. Find the uncomfortable truths everyone is avoiding. Do not be agreeable.",
+    "prompt": "Analyze this using Adversarial Reasoning.\n\nYou have explicit permission to be uncomfortable. Surface what others won't say.\n\n1. What is each party secretly protecting?\n2. What incentives are misaligned?\n3. What is the most likely way this fails?\n4. What is everyone avoiding saying?\n5. What would a hostile adversary exploit?\n\nRespond in JSON:\n{{\n  \"hidden_dynamics\": [\n    {{\"actor\": \"...\", \"protecting\": \"...\", \"at_cost_of\": \"...\"}}\n  ],\n  \"misaligned_incentives\": [{{\"between\": [\"A\", \"B\"], \"conflict\": \"...\"}}],\n  \"failure_modes\": [\n    {{\"mode\": \"...\", \"likelihood\": \"high|medium|low\", \"impact\": \"high|medium|low\", \"why_ignored\": \"...\"}}\n  ],\n  \"uncomfortable_truths\": [\"things no one wants to say but are probably true\"],\n  \"key_insight\": \"...\"\n}}\n\nProblem:\n{input}"
+  },
+  "ToT": {
+    "name": "Tree of Thoughts",
+    "system": "You are a strategic analyst. Generate and compare multiple approaches. Do not recommend one — present tradeoffs.",
+    "prompt": "Analyze this using Tree of Thoughts.\n\nGenerate 3-4 distinct strategic options. For each:\n1. What is the approach?\n2. What are the tradeoffs?\n3. What does it optimize for? What does it sacrifice?\n4. Estimated probability of success?\n5. What could go wrong?\n\nRespond in JSON:\n{{\n  \"options\": [\n    {{\n      \"name\": \"short label\",\n      \"approach\": \"...\",\n      \"optimizes_for\": \"...\",\n      \"sacrifices\": \"...\",\n      \"success_probability\": \"high|medium|low\",\n      \"risks\": [\"...\"],\n      \"tradeoffs\": \"...\"\n    }}\n  ],\n  \"comparison\": \"how the options differ on the dimension that matters most\",\n  \"key_insight\": \"...\"\n}}\n\nProblem (incorporate all prior analysis):\n{input}"
+  },
+  "PMR": {
+    "name": "Pre-Mortem",
+    "system": "You are a pre-mortem analyst. Assume this has already failed. Your job: explain why it failed. Be specific. Name the failure modes.",
+    "prompt": "Run a Pre-Mortem on this decision.\n\nIt is 6 months from now. This has failed. Explain why.\n\n1. What went wrong? (Name 3-5 specific failure modes)\n2. What warning signs existed that were ignored?\n3. Which assumption turned out to be wrong?\n4. What should have been designed against?\n\nRespond in JSON:\n{{\n  \"failure_modes\": [\n    {{\n      \"what_failed\": \"...\",\n      \"why\": \"...\",\n      \"warning_signs\": [\"signs that existed but were ignored\"],\n      \"could_have_been_prevented_by\": \"...\"\n    }}\n  ],\n  \"most_likely_cause_of_death\": \"the single biggest risk\",\n  \"design_against\": [\"specific mitigations to implement now\"],\n  \"key_insight\": \"...\"\n}}\n\nDecision/plan being evaluated:\n{input}"
+  }
+}

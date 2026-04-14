@@ -1,131 +1,133 @@
-# The Permission Slip Effect
+# Permission Slip Effect
 
-*Structured reasoning that forces AI past its default safe answer — for engineers and analysts making decisions where being wrong is expensive.*
+*Structured prompts, methodology, and a reference CLI for getting more critical, less agreeable analysis from LLMs when being wrong is expensive.*
 
-Models know more than they say. RLHF training optimizes for the statistically agreeable answer, not the factually complete one — models soften, hedge, and flatten their analysis when the blunt version might score lower on a preference rating. Chain reasoning frameworks into a pipeline, force the model through angles it wouldn't take on its own, and the suppressed signal comes out.
+`Permission-Slip-Effect` is **not primarily a software product**. It is a **practical operating model** for using AI more rigorously in architecture review, threat modeling, code audit, and ambiguous technical decisions.
 
----
+The repository has three layers.
 
-## Try it in 5 minutes
+| Layer | What it is | Best for |
+|------|------|------|
+| `tools/` | Paste-in prompts for review, threat modeling, audits, gate checks, intake, and retrospectives | Immediate use in any AI chat |
+| `methodology/` | An 8-phase security-first AI-assisted development method with gates, templates, and worked examples | Teams building real systems |
+| `pipeline/` | A reference Python CLI that automates multi-stage reasoning pipelines | Advanced users who want structured runs |
 
-**Paste one of these into any AI conversation** with whatever you want reviewed:
+## Why this exists
 
-- [`tools/review.md`](tools/review.md) — adversarial review of any artifact
-- [`tools/threat-model.md`](tools/threat-model.md) — threat model from architecture
-- [`tools/audit.md`](tools/audit.md) — codebase and CI/CD gap analysis
+LLMs often stop at the first plausible, agreeable answer. That is fine for low-stakes tasks. It is dangerous for architecture, security, and decisions where the cost of being wrong is high.
 
-No setup. No CLI. One model, one prompt, one artifact.
+This repository is built around one practical idea.
 
-**With an AI coding tool** (Claude Code, Kiro, Cursor, anything):
+> If you force the model through structured adversarial, failure-oriented, and de-anchoring frames, it will often surface risks and contradictions that baseline prompting suppresses.
 
-```
-Read https://raw.githubusercontent.com/Nellur35/permission-slip-effect/main/FULL-CONTEXT.md
-```
+The project packages that idea as **portable prompts**, a **development methodology**, and a **reference implementation**.
 
-That single file has everything — methodology, tools, templates, worked example. The AI reads it and has the full system.
+## Start in 5 minutes
 
-**Starting a new project from scratch:**
+Choose the entry point that matches your intent.
 
-[`methodology/METHODOLOGY.md`](methodology/METHODOLOGY.md) — 8 phases, sequential, with gate checks between each.
-
----
-
-## What this is
-
-One idea at three zoom levels.
-
-The **pipeline** chains reasoning frameworks — First Principles, Pre-Mortem, Adversarial, Game Theory — on a single problem. Each stage builds on the last. The structure creates contexts where the expected output is facts and analysis, not the statistically safe answer. That's the permission slip.
-
-The **tools** are single-file prompts you paste into any AI conversation. Adversarial review, threat model, codebase audit, gate checks. No multi-model requirement.
-
-The **methodology** is an 8-phase security-first development process — problem definition through production feedback — with gate checks, templates, and a worked example.
-
-Pipeline manages reasoning context. Methodology manages project context. Tools work at the artifact level. Same principle, different scale.
-
----
-
-## When to use it — and when not to
-
-**Use it for:** Architecture reviews, security decisions, multi-stakeholder problems, complex decisions with ambiguity, anything where being wrong is expensive.
-
-**Don't use it for:** Simple well-defined tasks, time-sensitive decisions where speed beats depth, problems where the path forward is already clear. The pipeline gives you the same answer as "think step by step" on easy problems — but costs 3x more.
-
----
-
-## What the data shows
-
-Results are empirical — observed in controlled testing. Caveats upfront: N=1 codebase, Bedrock-only (GPT and Gemini untested), quality scoring is keyword matching not human expert review, the entire research program cost ~$5 in API calls. The RLHF sycophancy explanation is the hypothesis that fits the data. It's not independently proven.
-
-**The pipeline surfaces what baseline buries.** Three problems, four pipeline variants, Sonnet 4.5 runs scored by Opus 4.6. Findings like "the mandate itself is contradictory" and "maybe this platform should not exist" showed up only in variants with Adversarial or Pre-Mortem stages. Baseline suppressed all of them.
-
-**Phase 0 + temperature profiles interact. Neither works alone.**
-
-| Configuration | SPLITs |
-|---------------|--------|
-| v3 baseline (no Phase 0, uniform temp) | 5 |
-| Phase 0 only | 6 |
-| Temperature only | 6 |
-| Both (v4) | **0** |
-
-Temperature alone made things worse. Phase 0 alone didn't fix SPLITs — but it doubled MAJOR findings (4→8) and increased CONSENSUS (9→12). Only the combination eliminated SPLITs: Phase 0 aligns reviewers on shared interpretation, temperature gives them distinct analysis angles. Without shared interpretation, distinct angles create more disagreement. Without distinct angles, shared interpretation doesn't resolve existing disagreements.
-
-**RLHF depth predicts pipeline engagement better than model size or origin.** Models with heavy instruction-following training (Haiku, Kimi K2.5, Mistral Large) engage each pipeline stage. Generation-optimized models without deep RLHF (Llama 4, DeepSeek) collapse stages and produce surface-level output. The primary predictor is whether the model can follow structured multi-step prompts without flattening them.
-
-**Domain boundary exists.** Pipeline killed SPLITs on code review. Did nothing on strategic/policy docs — 6 SPLITs in both v3 and v4. This is a real limitation: Phase 0 helps when disagreements come from parsing the same code differently. It doesn't help when people genuinely disagree on strategy.
-
-**Bootstrap gap is real.** The pipeline that generates an artifact can't be the same pipeline that reviews it. Property-based testing on generated code found 4 bugs across ~30 measured properties. Every tool in this project was built to compensate for a known weakness — and the weakness persists when the tool isn't applied to itself.
-
-Full experiment data: [`experiments/`](experiments/) — model shootout, v3 vs v4 A/B comparison, v4 architecture, research synthesis.
-
----
-
-## What's in the repo
-
-**Start here:**
-
-| Path | What |
+| If you want to... | Start here |
 |------|------|
-| [`FULL-CONTEXT.md`](FULL-CONTEXT.md) | Single file with everything. Give this to AI tools. |
-| [`tools/`](tools/) | Standalone prompts — paste and go. Audit, review, gate-check, threat model, intake, session retro |
-| [`methodology/`](methodology/) | 8-phase security-first methodology, templates, URL shortener worked example |
+| Review a design or document | [`tools/review.md`](tools/review.md) |
+| Threat model an architecture | [`tools/threat-model.md`](tools/threat-model.md) |
+| Audit an existing codebase or CI/CD setup | [`tools/audit.md`](tools/audit.md) |
+| Start a new project with the full method | [`methodology/METHODOLOGY.md`](methodology/METHODOLOGY.md) |
+| Run the automated reasoning pipeline | [`pipeline/README.md`](pipeline/README.md) |
+| Load the whole system into an AI tool | [`FULL-CONTEXT.md`](FULL-CONTEXT.md) |
 
-**Go deeper:**
+If you are new to the project, start with **one prompt file** in `tools/`. If that immediately improves the sharpness of your review, then adopt selected parts of the methodology. Use the CLI only if you specifically want structured, repeatable pipeline runs.
 
-| Path | What |
+## What this repository is — and is not
+
+| It is | It is not |
 |------|------|
-| [`pipeline/`](pipeline/) | CLI for multi-model reasoning and adversarial review |
-| [`integrations/`](integrations/) | Claude Code, Kiro, Cursor, Antigravity setups |
-| [`multi-agent/`](multi-agent/) | Earned multi-agent emergence — project log, hooks, telemetry, domain-split sessions |
-| [`gotchas/`](gotchas/) | Known failure modes — system-level and per-skill. Where Claude breaks and how to catch it |
-| [`experiments/`](experiments/) | Validation data — model shootout, v3 vs v4 A/B, research synthesis |
-| [`reasoning-pipeline.md`](reasoning-pipeline.md) | Framework reference — variants, selection logic, when to use which |
+| A methodology for AI-assisted engineering rigor | A polished end-to-end platform |
+| A prompt library you can use immediately | A replacement for engineering judgment |
+| A reference implementation of a reasoning pipeline | Proof that one pipeline is optimal for every domain |
+| A practitioner-tested system | A peer-reviewed scientific result |
 
-Not sure where to start? See [`START-HERE.md`](START-HERE.md).
+That distinction matters. The repository’s strongest value is the **thinking model and review discipline**, not a large automation layer.
 
----
+## When to use it
 
-## How it works (theory)
+Use this repository when the problem is ambiguous, when multiple stakeholders or hidden incentives matter, when you need stronger threat modeling or adversarial review, or when being wrong is expensive.
 
-The pipeline doesn't make models smarter. It changes what they're willing to say.
+Do **not** use the full pipeline for simple, well-defined, or speed-critical tasks. On easy work, direct prompting is usually cheaper and good enough.
 
-Models anchor their analysis to the prompt — your framing, your assumptions, your vocabulary. The pipeline de-anchors by forcing the model through frameworks that pull away from that gravity. First Principles says "forget the framing, what's actually true." Pre-Mortem says "assume the conclusion is wrong." Each stage is a different escape vector from the prompt anchor.
+## Evidence and caveats
 
-These aren't three separate products. They're the same principle applied at different scales. The methodology structures *project* context — each phase produces a specific artifact that becomes the scaffold the AI works against in the next phase. A threat model from Phase 4 creates constraints the model has to address in Phase 7, closing off the vague open-ended space where models default to safe, generic output. The tools do the same thing at the artifact level — a review prompt forces the model to argue against the work instead of nodding along. The session feedback loop keeps context alive by feeding operational lessons back into the system.
+The project includes experiments, worked examples, and a reference CLI, but the evidence base is still **practitioner-level**, not formal scientific validation.
 
-Multi-model setups add a second layer — different training data means different default anchors — but a single ChatGPT or Claude session running the pipeline already surfaces things baseline prompting won't.
+Read the current claims as:
 
-**Key concepts:**
+| Claim type | Current status |
+|------|------|
+| Practical usefulness | Strong enough to operationalize |
+| Repeated observation | Present in the included experiments and examples |
+| General scientific proof | Not established |
+| Optimality across domains | Not claimed |
 
-| Term | What it means |
-|------|---------------|
-| **SPLIT** | Reviewers hit contradictory conclusions on the same evidence. Highest-value output — means a human needs to decide. |
-| **Phase 0** | Structured decomposition before analysis. Facts, constraints, stakeholders, unknowns. Everyone starts from the same reading. |
-| **De-anchoring** | Forcing the model past the prompt anchor through framework rotation. |
-| **Bootstrap gap** | AI can't reliably review its own output. The builder shouldn't be the reviewer. |
-| **Residual injection** | Raw original input fed back into later stages so analysis doesn't drift. |
-| **Drift gate** | Checkpoint between stages — did the model wander off the problem? |
-| **Marginal value audit** | Did this pipeline stage actually add signal? If not, cut it. |
+The project is intentionally explicit about limitations. Prompt structure can improve analysis quality, but it does not remove the need for human judgment, domain expertise, or independent verification.
 
----
+## Repository map
+
+| Path | Purpose | Status |
+|------|------|------|
+| [`FULL-CONTEXT.md`](FULL-CONTEXT.md) | Single-file context dump for AI tools | Stable |
+| [`tools/`](tools/) | Low-friction prompts | Stable |
+| [`methodology/`](methodology/) | Full development methodology | Stable |
+| [`pipeline/`](pipeline/) | Reference automation layer | Beta |
+| [`examples/`](examples/) | Example inputs and expected outputs | Beta |
+| [`experiments/`](experiments/) | Validation notes and comparisons | Experimental |
+| [`integrations/`](integrations/) | Tool-specific workflows | Experimental |
+| [`multi-agent/`](multi-agent/) | Multi-agent operating patterns | Experimental |
+| [`gotchas/`](gotchas/) | Known failure modes and limits | Stable |
+| [`STATUS.md`](STATUS.md) | Project surface-area status definitions | Stable |
+
+Not sure where to begin? Read [`START-HERE.md`](START-HERE.md).
+
+## What to adopt first
+
+If you want the highest return for the least process overhead, adopt these pieces in order.
+
+| Order | Recommended first move | Why |
+|------|------|------|
+| 1 | Use one prompt from `tools/` | Fastest path to value |
+| 2 | Add a gate question from the methodology | Improves review rigor without major ceremony |
+| 3 | Use the reasoning pipeline on one high-stakes decision | Good fit for ambiguous, expensive mistakes |
+| 4 | Standardize selected artifacts in your team | Turns the method into a repeatable habit |
+| 5 | Extend the CLI only if you need structured automation | The automation layer is supportive, not primary |
+
+## Example run
+
+The repository now includes an example review flow based on [`cicd-audit`](https://github.com/Nellur35/cicd-audit), a concrete project built with this methodology.
+
+| Example file | Purpose |
+|------|------|
+| [`examples/cicd-audit-artifact.md`](examples/cicd-audit-artifact.md) | Input artifact excerpt used for review |
+| [`examples/cicd-audit-review-output.json`](examples/cicd-audit-review-output.json) | Curated example of a review pipeline result |
+| [`examples/cicd-audit-reasoning-problem.md`](examples/cicd-audit-reasoning-problem.md) | Example decision/problem statement |
+| [`examples/cicd-audit-reasoning-output.json`](examples/cicd-audit-reasoning-output.json) | Curated example of a reasoning pipeline result |
+
+These are **expected-output examples**, not benchmark truth. Their purpose is to show contributors what a good structured output looks like.
+
+## Development and contribution
+
+If you want to contribute, read these in order.
+
+| File | Why it matters |
+|------|------|
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution workflow and expectations |
+| [`STATUS.md`](STATUS.md) | What is stable, beta, and experimental |
+| [`pipeline/frameworks.json`](pipeline/frameworks.json) | External prompt catalog for the CLI |
+| [`tests/test_pipeline.py`](tests/test_pipeline.py) | Baseline regression coverage for the reference CLI |
+
+## Bottom line
+
+This repository helps teams use AI with more friction, more skepticism, and more decision discipline.
+
+If your work is low-stakes or routine, this is overkill.
+
+If your work is expensive to get wrong, it may be exactly the right kind of overkill.
 
 MIT · [Asaf Yashayev](https://github.com/Nellur35) · Security hobbyist
