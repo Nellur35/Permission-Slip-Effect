@@ -10,7 +10,7 @@ Answer discovery questions about this project. Route the user, don't lecture.
 
 ## What This Is
 
-Three things, same principle: a **reasoning pipeline** (chain frameworks on one problem), **standalone tools** (paste-and-go prompts for review, threat model, audit), and a **security-first methodology** (8-phase dev process with gate checks).
+Three things, same principle: a **reasoning pipeline** (chain frameworks on one problem), **standalone tools** (paste-and-go prompts for review, threat model, audit, decomposition), and a **security-first methodology** (12-phase dev lifecycle with Phase 2.5 decomposition and gate checks between phases).
 
 ## Routing
 
@@ -18,13 +18,14 @@ Three things, same principle: a **reasoning pipeline** (chain frameworks on one 
 |---|---|
 | Review something right now | `tools/review.md` — paste into any AI conversation |
 | Threat model an architecture | `tools/threat-model.md` |
+| Decompose a complex system | `tools/decomposition.md` |
 | Scan an existing codebase | `tools/audit.md` |
 | Check if a phase is done | `tools/gate-check.md` |
 | Define a problem properly | `tools/intake.md` |
 | Run a session retrospective | `tools/session-retro.md` |
 | Analyze a complex decision | `reasoning-pipeline.md` or `pipeline.py reason "..."` |
 | Start a new project | `methodology/METHODOLOGY.md` — begin at Phase 1 |
-| See a worked example | `methodology/examples/url-shortener/` |
+| See a worked example | `examples/` — cicd-audit + pse-harness decomposition case study |
 | Set up multi-agent | `multi-agent/MULTI-AGENT.md` — start with Tier 0 first |
 
 ## Don't Use For

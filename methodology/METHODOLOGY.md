@@ -79,7 +79,7 @@ The AI produces `threat_model.md`. You review findings, challenge anything too o
 
 The AI produces pipeline config + dummy product. You verify the gates match the threats.
 
-**Result:** Problem statement, requirements, architecture, threat model, pipeline, and dummy product — all in 15 minutes. You wrote 5 sentences. The AI wrote everything else. See [`examples/url-shortener/`](examples/url-shortener/) for what the actual outputs look like.
+**Result:** Problem statement, requirements, architecture, threat model, pipeline, and dummy product — all in 15 minutes. You wrote 5 sentences. The AI wrote everything else. See [`examples/`](../examples/) for worked examples including cicd-audit review outputs and a pse-harness decomposition case study.
 
 ---
 

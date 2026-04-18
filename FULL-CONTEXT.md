@@ -2369,7 +2369,7 @@ Three things, same principle:
 
 1. **Reasoning pipeline** — chain frameworks (First Principles → Pre-Mortem → Adversarial → Game Theory) on one problem. Forces the model past the statistically safe answer. Works with one model. Better with several.
 2. **Standalone tools** — single-file prompts. Paste into any AI conversation. No setup.
-3. **Security-first methodology** — 8-phase dev process. Problem definition through production feedback. Gate checks between phases. Templates for every artifact.
+3. **Security-first methodology** — 12-phase dev lifecycle. Problem definition (Phase 1) through decommissioning (Phase 12), with Phase 2.5 decomposition when triggered. Gate checks between phases. Templates for every artifact. Four cross-cutting concerns run continuously.
 
 They're the same idea at different scales. The pipeline manages reasoning context. The methodology manages project context. The tools work at the artifact level.
 
@@ -2520,7 +2520,7 @@ Setup: `multi-agent/hooks/telemetry.md`. Analysis feeds into session retro Stage
 
 *Full taxonomy of QA/CI disciplines for AI-assisted development. Use this when designing Phase 5 gates, reviewing CI architecture, or assigning testing domains per sub-project in Phase 2.5.*
 
-The full testing domains reference is maintained in `methodology/testing-domains-reference.md`. Below is the complete content.
+The full testing domains reference is maintained in `methodology/testing-domains-reference.md`. Below is a condensed summary; full reference in `methodology/testing-domains-reference.md`.
 
 ---
 

@@ -25,9 +25,11 @@ Copy `methodology/CLAUDE-skill.md` to your project root alongside your existing 
 | Skill | Purpose |
 |-------|---------|
 | `methodology/SKILL.md` | Orchestrator — routes to the right skill per phase |
+| `guide/SKILL.md` | Explains what's in the repo and which skill/tool fits a situation |
 | `intake/SKILL.md` | `/intake` — interactive Phase 1 problem definition |
+| `decomposition/SKILL.md` | `/decompose` — Phase 2.5 project decomposition (greenfield + brownfield) |
+| `threat-model/SKILL.md` | `/threat-model` — Phase 4 threat modeling |
 | `review/SKILL.md` | `/review` — adversarial review at any phase |
 | `gate-check/SKILL.md` | `/gate-check` — verify phase exit criteria |
-| `threat-model/SKILL.md` | `/threat-model` — Phase 4 threat modeling |
 | `audit/SKILL.md` | `/audit` — scan existing codebase and CI/CD |
-| `decomposition/SKILL.md` | `/decompose` — Phase 2.5 project decomposition (greenfield + brownfield) |
+| `session-retro/SKILL.md` | Structured RCA + retrospective + lessons learned for any session |

@@ -153,4 +153,4 @@ See `METHODOLOGY.md` for rationale, worked examples, the reasoning pipeline, and
 
 **Doesn't enforce the handoff artifact.** The skill says "if it's not in the output file, it doesn't carry forward." But the model frequently carries context from the conversation that isn't in the artifact. Phase 3 discussions influence Phase 4 work even when they weren't captured in `architecture.md`. The discipline is: re-read the artifact at the start of each phase. If it's not in the file, it doesn't exist.
 
-**Full methodology on trivial changes.** A one-function bug fix does not need 8 phases. If the navigator describes a fix, not a feature, acknowledge it and skip to the relevant phase (usually Phase 7 with a focused gate check). Running Phase 1 intake on a bug report is cost discipline failure.
+**Full methodology on trivial changes.** A one-function bug fix does not need the full 12-phase lifecycle. If the navigator describes a fix, not a feature, acknowledge it and skip to the relevant phase (usually Phase 7 with a focused gate check). Running Phase 1 intake on a bug report is cost discipline failure.

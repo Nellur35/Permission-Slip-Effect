@@ -19,7 +19,7 @@ What do you want to do?
 | **Install in Claude Code** | [`integrations/claude-code/README.md`](integrations/claude-code/README.md) |
 | **Install in Kiro** | [`integrations/kiro/README.md`](integrations/kiro/README.md) |
 | **Install in Cursor** | [`integrations/cursor/README.md`](integrations/cursor/README.md) |
-| **See a worked example** | [`methodology/examples/url-shortener/`](methodology/examples/url-shortener/) |
+| **See a worked example** | [`examples/`](examples/) — cicd-audit review + reasoning outputs, pse-harness decomposition case study |
 | **Set up multi-agent** | [`multi-agent/MULTI-AGENT.md`](multi-agent/MULTI-AGENT.md) — start with Tier 0 first |
 | **See the evidence** | [`experiments/`](experiments/) — model shootout, v3 vs v4 A/B, research synthesis |
 | **See where Claude breaks** | [`gotchas/`](gotchas/) — system-level and per-skill failure modes |

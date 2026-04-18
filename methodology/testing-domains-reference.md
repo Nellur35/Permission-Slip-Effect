@@ -850,7 +850,7 @@ Is this a pure library?
 ├── Yes → Domain 1-3 required; Domain 4-8 as needed
 │
 └── No → Is it an HTTP service?
-         ├── Yes → Domain 1-5 required; add Domain 3.2 (DAST), 3.8 (container)
+         ├── Yes → Domain 1-5 required; add Domain 3 (DAST), Domain 3 (Container and IaC Scanning)
          │
          └── No → Is it an LLM/agent system?
                   ├── Yes → Domain 1-4, 6, 9 required; Domain 9 is critical
@@ -952,10 +952,10 @@ For each sub-project in `decomposition-map.md`:
 
 The integration sub-project (required when N > 1) always includes:
 
-- **Integration testing (Domain 1.2):** Seam-level tests for every pair of communicating sub-projects
+- **Integration testing (Domain 1 — Integration Testing):** Seam-level tests for every pair of communicating sub-projects
 - **Contract testing:** Verify each sub-project honors its declared interface
 - **Seam security testing (Domain 3):** Security tests focused specifically on data crossing seam boundaries — trust assumptions, input validation at boundaries, authentication between components
-- **Failure injection (Domain 4.1):** What happens when one sub-project fails? Does the other degrade gracefully or cascade?
+- **Failure injection (Domain 4 — Failure Injection Testing):** What happens when one sub-project fails? Does the other degrade gracefully or cascade?
 
 ### 15.3 Seam-Specific Testing Guidance
 
@@ -963,11 +963,11 @@ For each seam in the seam inventory:
 
 | Question | Testing Domain |
 |----------|---------------|
-| What data crosses this seam? | Serialization round-trip (Domain 6.3) |
-| What trust assumptions exist? | Seam security testing (Domain 3) |
-| What happens when one side fails? | Failure injection (Domain 4.1) |
-| Is the interface versioned? | Schema evolution (Domain 6.2) |
-| Can the seam be fuzzed? | Fuzzing (Domain 3.7) |
+| What data crosses this seam? | Domain 6 — Serialization Round-Trip Testing |
+| What trust assumptions exist? | Domain 3 — Seam Security Testing |
+| What happens when one side fails? | Domain 4 — Failure Injection Testing |
+| Is the interface versioned? | Domain 6 — Schema Evolution Testing |
+| Can the seam be fuzzed? | Domain 3 — Fuzzing |
 
 ---
 
