@@ -13,6 +13,7 @@ What do you want to do?
 | **Define a problem properly** | Paste [`tools/intake.md`](tools/intake.md) |
 | **Run a session retrospective** | Paste [`tools/session-retro.md`](tools/session-retro.md) |
 | **Analyze a complex decision** | [`reasoning-pipeline.md`](reasoning-pipeline.md) or `python pipeline.py reason "..."` |
+| **Plan operations and deployment** | [`methodology/lifecycle-phases-8-12.md`](methodology/lifecycle-phases-8-12.md) |
 | **Start a new project** | [`methodology/METHODOLOGY.md`](methodology/METHODOLOGY.md) — begin at Phase 1 |
 | **Give everything to an AI tool** | `Read https://raw.githubusercontent.com/Nellur35/permission-slip-effect/main/FULL-CONTEXT.md` |
 | **Install in Claude Code** | [`integrations/claude-code/README.md`](integrations/claude-code/README.md) |

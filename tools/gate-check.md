@@ -112,11 +112,77 @@ Verify you have met the exit criteria for any phase before moving forward.
 ## Phase 8 — Production Feedback Loop
 
 - [ ] Are production failures being captured and converted into new tests?
+- [ ] Are all five feedback streams represented (failure, performance, user, security, cost) — or intentionally deferred?
 - [ ] Are new tests being added to the pipeline?
 - [ ] Is the pipeline becoming more comprehensive over time?
+- [ ] Is there a triage process appropriate to the project stage?
 
 **Proves:** The system learns from production and the pipeline evolves.
-**Does not catch:** Failures that have not happened yet. The feedback loop is reactive by design -- it closes gaps as they appear.
+**Does not catch:** Failures that have not happened yet. The feedback loop is reactive by design — it closes gaps as they appear.
+
+**Required output:** `production-feedback-log.md` (ongoing).
+
+## Phase 9 — Operations & Incident Response
+
+- [ ] For each component that can fail, is there a runbook?
+- [ ] Is there a documented escalation path?
+- [ ] Has disaster recovery been tested (not just documented)?
+- [ ] Are backups tested for restore, not just existence?
+- [ ] Is there a defined incident severity classification?
+
+**Proves:** The system has defined procedures for when things go wrong.
+**Does not catch:** Novel failure modes not yet encountered. Runbooks evolve from incidents.
+
+**Required output:** `runbooks/` directory + `incident-response.md`. Depth matches maturity level (see `methodology/lifecycle-phases-8-12.md`).
+
+## Phase 10 — Observability
+
+- [ ] Does every significant operation emit a trace?
+- [ ] Are there dashboards showing key health metrics?
+- [ ] Is there alerting on SLO breach, not just crashes?
+- [ ] Is there an error taxonomy with every exception classified?
+- [ ] [AI systems] Can a navigator reproduce a user-reported issue from traces alone?
+
+**Proves:** The system is debuggable from outside.
+**Does not catch:** Whether the right things are being measured — that comes from production experience.
+
+**Required output:** `observability-design.md` + `sli-slo-definitions.md`.
+
+## Phase 11 — Iteration & Evolution
+
+- [ ] Does every change have a clear triggering input?
+- [ ] Does the change use Phase 2.5 brownfield decomposition?
+- [ ] Is technical debt being tracked and addressed?
+- [ ] Are breaking changes communicated with migration paths?
+- [ ] Are version numbers meaningful?
+
+**Proves:** Changes are intentional, traceable, and managed.
+**Does not catch:** Whether the right changes are being made — that's a strategy question.
+
+**Required output:** `technical-debt.md` + `CHANGELOG.md`.
+
+## Phase 12 — Decommissioning (when applicable)
+
+- [ ] Has every user/consumer been notified?
+- [ ] Has every dependency been identified and rerouted?
+- [ ] Is data preserved as required (regulatory, historical)?
+- [ ] Are credentials revoked?
+- [ ] Is post-decommission audit planned?
+
+**Proves:** Removal is clean and nothing is left behind.
+**Does not catch:** Dependencies you didn't know about. Monitor logs for 30 days post-shutdown.
+
+**Required output:** `decommission-plan.md`.
+
+## Cross-Cutting Concerns (continuous)
+
+- [ ] Documentation has owners and review cadence (CC1)
+- [ ] Knowledge transfer is at a sustainable bus-factor (CC2)
+- [ ] Dependencies are inventoried and monitored (CC3)
+- [ ] Cost is projected, tracked, and aligned (CC4)
+
+**Proves:** Continuous practices are being maintained.
+**Does not catch:** Whether the practices are at the right depth — use the maturity staging from `methodology/lifecycle-phases-8-12.md`.
 
 ---
 

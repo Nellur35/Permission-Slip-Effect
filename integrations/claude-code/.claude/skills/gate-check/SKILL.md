@@ -148,10 +148,47 @@ Read the artifact for the detected phase.
 
 ### Phase 8 — Production
 - [ ] Are production failures being captured and converted into new tests?
-- [ ] Are new tests being added to the pipeline?
+- [ ] Are all five feedback streams represented (or intentionally deferred)?
 - [ ] Is the pipeline becoming more comprehensive over time?
 
 **Proves:** The system learns from production.
+
+### Phase 9 — Operations (if applicable)
+- [ ] Runbooks exist for known failure modes?
+- [ ] Escalation path documented?
+- [ ] Disaster recovery tested?
+
+**Proves:** System has defined procedures for failure.
+
+### Phase 10 — Observability (if applicable)
+- [ ] Every significant operation traced?
+- [ ] Dashboards for key health metrics?
+- [ ] SLO alerting (not just crash alerting)?
+
+**Proves:** System is debuggable from outside.
+
+### Phase 11 — Iteration (if applicable)
+- [ ] Changes use Phase 2.5 brownfield decomposition?
+- [ ] Technical debt tracked?
+- [ ] Breaking changes communicated?
+
+**Proves:** Changes are intentional and managed.
+
+### Phase 12 — Decommissioning (when applicable)
+- [ ] All users/consumers notified?
+- [ ] All dependencies rerouted?
+- [ ] Data preserved per requirements?
+- [ ] Credentials revoked?
+
+**Proves:** Removal is clean.
+
+### Cross-Cutting Concerns (continuous)
+- [ ] Documentation has owners and review cadence (CC1)
+- [ ] Knowledge transfer sustainable (CC2)
+- [ ] Dependencies inventoried and monitored (CC3)
+- [ ] Cost tracked against projections (CC4)
+
+**Note:** Phase 8+ gate depth matches project maturity level (0-3). See `methodology/lifecycle-phases-8-12.md`.
 
 ## Step 4: Output
 

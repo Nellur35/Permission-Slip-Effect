@@ -20,8 +20,12 @@
 | 6. Tasks | Breaks work into pipeline-validatable units | Confirm task order and dependencies | `tasks.md` | Which gate validates each task? |
 | 7. Implementation | Resolves debt first, writes code + tests | Review, steer, approve | Working code | Does the full pipeline pass? Zero critical debt? |
 | 8. Production | Deploys, monitors, generates new tests from failures | Retro the methodology, update steering | Live system + new tests + updated steering | What did production catch? What should the process change? |
+| 9. Operations | Writes runbooks, defines incident response | Review procedures, test DR | `runbooks/` + `incident-response.md` | Is there a runbook for each failure mode? |
+| 10. Observability | Designs logs, metrics, traces, SLIs/SLOs | Verify debugging surface exists | `observability-design.md` + `sli-slo-definitions.md` | Can you debug from traces alone? |
+| 11. Iteration | Tracks debt, manages versions, plans changes | Prioritize debt vs. features | `technical-debt.md` + `CHANGELOG.md` | Is every change using brownfield decomposition? |
+| 12. Decommission | Plans safe removal when system retires | Verify nothing is missed | `decommission-plan.md` | Are all dependencies rerouted and credentials revoked? |
 
-Phases 1-5 are sequential and non-negotiable. Phase 6 onwards is Agile. The output file from each phase is the only context that carries forward. Phase re-entry is the norm — going back is the process working, not failing. Some rules are waivable with documentation; safety invariants (CI before deploy, no hardcoded secrets, gates never weakened, destructive actions need human confirmation) are never waivable.
+Phases 1-5 are sequential and non-negotiable. Phase 6 onwards is Agile. Phases 8-11 run in parallel after first production deployment; Phase 12 runs when the system retires. The output file from each phase is the only context that carries forward. Phase re-entry is the norm — going back is the process working, not failing. Some rules are waivable with documentation; safety invariants (CI before deploy, no hardcoded secrets, gates never weakened, destructive actions need human confirmation) are never waivable.
 
 **Artifacts are living documents.** Every phase produces an artifact. No phase maintains previous artifacts. Without deliberate upkeep, requirements drift from architecture, architecture drifts from threat model, and downstream phases operate on stale context. At every phase transition: verify that upstream artifacts still reflect current decisions. If they don't, update them before moving forward. This is not optional housekeeping — stale artifacts cascade errors through every subsequent phase.
 
@@ -547,6 +551,114 @@ Pipeline gate: [which gate gets this new test]
 ```
 
 Do this. The tests you write before production will never be as good as the tests derived from real failure modes.
+
+### Five Feedback Streams
+
+Production feedback is richer than just test generation. Five distinct streams feed back into different phases:
+
+1. **Failure feedback** → CI as new tests (Phase 5)
+2. **Performance feedback** → architecture as bottleneck identification (Phase 3)
+3. **User feedback** → requirements as new inputs (Phase 2)
+4. **Security feedback** → threat model updates (Phase 4)
+5. **Cost feedback** → cost management (CC4)
+
+**Output:** `production-feedback-log.md` — ongoing document, not one-time output. See [lifecycle-phases-8-12.md](lifecycle-phases-8-12.md) for maturity-staged guidance.
+
+---
+
+## Phase 9 — Operations & Incident Response
+
+Define how the system behaves when something goes wrong in production. Who responds, how, and what the response procedure is. At minimum: runbooks for known failure modes, an escalation path, and disaster recovery.
+
+**Gate questions:**
+- For each component that can fail, is there a runbook?
+- Is there a documented escalation path?
+- Has disaster recovery been tested (not just documented)?
+
+**Output:** `runbooks/` directory + `incident-response.md` + `disaster-recovery.md`
+
+Phase 9 connects to Phase 4 (each threat mitigation should have a runbook for "what if the mitigation fails") and Phase 8 (incidents feed back as test cases). See [lifecycle-phases-8-12.md](lifecycle-phases-8-12.md) for full specification and maturity staging.
+
+---
+
+## Phase 10 — Observability
+
+Make the running system understandable from outside. Three pillars: logs, metrics, traces. Plus: dashboards, alerting, SLIs, SLOs, error taxonomy.
+
+**Critical for AI systems:** An LLM conversation cannot be re-run deterministically. Without traces and logs captured at the time, you have no debugging surface. Observability for AI systems is not optional.
+
+**Gate questions:**
+- Does every significant operation emit a trace?
+- Are there dashboards showing key health metrics?
+- Is there alerting on SLO breach, not just crashes?
+- Can a navigator reproduce a user-reported issue from traces alone?
+
+**Output:** `observability-design.md` + `sli-slo-definitions.md` + `error-taxonomy.md`
+
+Phase 10 connects to Phase 5 (Domain 9 testing from the [Testing Domains Reference](testing-domains-reference.md) maps directly here) and Phase 9 (incidents require observability to diagnose). See [lifecycle-phases-8-12.md](lifecycle-phases-8-12.md) for full specification.
+
+---
+
+## Phase 11 — Iteration & Evolution
+
+PSE already has phase re-entry as a core concept. Phase 11 makes it explicit as a lifecycle stage. Feature iteration, technical debt reduction, refactoring, migration, version management, change management.
+
+**Gate questions:**
+- Does every change use Phase 2.5 brownfield decomposition?
+- Is technical debt being tracked and addressed, not just accumulated?
+- Are breaking changes communicated with migration paths?
+
+**Output:** `iteration-log.md` + `technical-debt.md` + `CHANGELOG.md`
+
+See [lifecycle-phases-8-12.md](lifecycle-phases-8-12.md) for full specification and maturity staging.
+
+---
+
+## Phase 12 — Decommissioning
+
+Remove the system safely when it's no longer needed. Decommission planning, dependency analysis, user migration, data disposition, credential revocation, clean removal.
+
+**Gate questions:**
+- Has every user/consumer been notified?
+- Has every dependency been identified and rerouted?
+- Is data preserved as required (regulatory, historical)?
+- Are credentials revoked?
+
+**Output:** `decommission-plan.md` + `data-disposition.md`
+
+See [lifecycle-phases-8-12.md](lifecycle-phases-8-12.md) for full specification.
+
+---
+
+## Cross-Cutting Concerns
+
+Four continuous practices that run alongside all phases, not as sequential steps:
+
+| Concern | Purpose | Key Artifact |
+|---------|---------|-------------|
+| CC1 — Documentation Lifecycle | Docs stay current, owned, and discoverable | `docs/README.md` |
+| CC2 — Knowledge Transfer | Project survives navigator changes | `ONBOARDING.md` |
+| CC3 — Dependency Management | Dependencies don't rot silently | `dependencies.md` |
+| CC4 — Cost Management | Token/compute costs tracked against projections | `cost-model.md` |
+
+All follow the same Level 0-3 maturity staging as Phases 8-12. See [cross-cutting-concerns.md](cross-cutting-concerns.md) for full specification.
+
+---
+
+## Maturity Staging for Phases 8-12
+
+Ops artifacts should match project maturity, not aspirational completeness. Four levels:
+
+| Level | Name | When | Time Budget |
+|-------|------|------|-------------|
+| 0 | Seed | First deployment | 30 minutes total |
+| 1 | Running | Stable, some users | 4-8 hours to level up |
+| 2 | Growing | Real users, real stakes | 10-20% of dev time |
+| 3 | Production | Mature, dependable | 20-30% of dev time |
+
+A Level 0 project gets a restart script and structured logs. A Level 3 project gets full runbook discipline, SLO alerting, and disaster recovery testing. Don't over-engineer for the current stage.
+
+See [lifecycle-phases-8-12.md](lifecycle-phases-8-12.md) for the stage assessment matrix and level-up decision criteria.
 
 ---
 

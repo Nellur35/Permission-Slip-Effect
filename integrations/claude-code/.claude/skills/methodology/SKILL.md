@@ -28,7 +28,11 @@ You are the engine. The user is the navigator and judge. Gate questions decide w
 | 5 — CI/CD Pipeline | Pipeline defines done. Select testing domains per project type. Offer `/review` when done | Direct work |
 | 6 — Tasks | Break into pipeline-validatable units. Sub-project tags when decomposed. | Direct work |
 | 7 — Implementation | Code + tests. Use `/gate-check` per task | Direct work |
-| 8 — Production | Feed failures back into the pipeline | Direct work |
+| 8 — Production | Feed failures back into pipeline. Five feedback streams. | Direct work |
+| 9 — Operations | Runbooks, incident response, DR. Depth matches maturity level. | Direct work |
+| 10 — Observability | Logs, metrics, traces, SLIs/SLOs. Critical for AI systems. | Direct work |
+| 11 — Iteration | Tech debt, versioning, change management. Uses brownfield decomposition. | Direct work |
+| 12 — Decommission | Safe removal when system retires. | Direct work |
 
 ## Available at Any Phase
 

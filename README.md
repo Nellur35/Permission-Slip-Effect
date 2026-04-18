@@ -9,7 +9,7 @@ The repository has three layers.
 | Layer | What it is | Best for |
 |------|------|------|
 | `tools/` | Paste-in prompts for review, threat modeling, audits, gate checks, intake, and retrospectives | Immediate use in any AI chat |
-| `methodology/` | A security-first AI-assisted development method (Phases 1-8 + Phase 2.5 Decomposition) with gates, templates, testing domains reference, and worked examples | Teams building real systems |
+| `methodology/` | A security-first AI-assisted development method (Phases 1-12 + Phase 2.5 Decomposition) with gates, templates, testing domains reference, lifecycle coverage, and worked examples | Teams building real systems |
 | `pipeline/` | A reference Python CLI that automates multi-stage reasoning pipelines | Advanced users who want structured runs |
 
 ## Why this exists
