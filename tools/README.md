@@ -57,7 +57,7 @@ Adversarial review of any development artifact. Finds what is wrong, not whether
 **Output:** Structured findings with severity, impact, and recommended actions
 
 ### `gate-check.md`
-Exit criteria checklist for all 12 phases plus Phase 2.5 Decomposition and the cross-cutting concerns. Each gate lists what it proves and what it doesn't catch. Use it to verify you've met the bar before moving forward.
+Exit criteria checklist for all 8 phases plus Phase 2.5 Decomposition. Each gate lists what it proves and what it doesn't catch. Use it to verify you've met the bar before moving forward.
 
 **Input:** The phase number you are checking
 **Output:** Pass/fail for each gate question, with gaps identified
@@ -78,4 +78,4 @@ Same capabilities, different delivery. Skills add auto-detection and file I/O. T
 
 ## Relationship to the Full Methodology
 
-These tools extract focused capabilities from the [Security-First AI Dev Methodology](../methodology/METHODOLOGY.md). They are the executables; the methodology is the operating manual. Use any tool independently, or use them together as part of the full 12-phase lifecycle (Phases 1-7 build, Phases 8-12 operate, Phase 2.5 decomposes when triggered).
+These tools extract focused capabilities from the [Security-First AI Dev Methodology](../methodology/METHODOLOGY.md). They are the executables; the methodology is the operating manual. Use any tool independently, or use them together as part of the full 8-phase lifecycle with Phase 2.5 decomposition when triggered.

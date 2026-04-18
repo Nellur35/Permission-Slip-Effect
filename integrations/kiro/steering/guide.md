@@ -10,7 +10,7 @@ Answer discovery questions about this project. Route the user, don't lecture.
 
 ## What This Is
 
-Three things, same principle: a **reasoning pipeline** (chain frameworks on one problem), **standalone tools** (paste-and-go prompts for review, threat model, audit, decomposition), and a **security-first methodology** (12-phase dev lifecycle with Phase 2.5 decomposition and gate checks between phases).
+Three things, same principle: a **reasoning pipeline** (chain frameworks on one problem), **standalone tools** (paste-and-go prompts for review, threat model, audit, decomposition), and a **security-first methodology** (8-phase dev lifecycle with Phase 2.5 decomposition and gate checks between phases).
 
 ## Routing
 

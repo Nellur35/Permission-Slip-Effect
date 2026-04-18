@@ -8,7 +8,7 @@ Entry format: [`templates/log-entry.md`](templates/log-entry.md) · Platform con
 
 ## Tier 0: Single Agent (Default)
 
-One navigator, one AI. All 12 phases work as documented (with Phase 2.5 decomposition when triggered). Two things from day one:
+One navigator, one AI. All 8 phases work as documented (with Phase 2.5 decomposition when triggered). Two things from day one:
 
 **The Project Log.** The system of record. Everything writes to it — skills, retros, telemetry, feedback loops. Everything reads from it — emergence analysis, conflict resolution, the Librarian, automation decisions. Need to troubleshoot? Check the log. Contradictory skills or steering? The log records the original purpose. Need agents? Analyze the log. Want automation? Analyze the log. Skip this and everything downstream is guesswork.
 
