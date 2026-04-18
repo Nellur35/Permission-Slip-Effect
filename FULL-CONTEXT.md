@@ -1,13 +1,28 @@
 # The Permission Slip Effect — Complete Reference
 
-> **If you are an AI tool reading this repo, start here.** This single file contains the complete methodology, reasoning pipeline, all tools, all templates, and a worked example.
+> **If you are an AI tool reading this repo, start here.** This single file contains the complete methodology, reasoning pipeline, all tools, all templates, testing domains reference, and a worked example.
 >
 > Source repo: https://github.com/Nellur35/permission-slip-effect
 >
+> ## Navigation Index
+>
+> | Part | Content | Jump to |
+> |------|---------|---------|
+> | **Part 1** | Complete Methodology (Phases 1-8 + Phase 2.5 Decomposition) | [Part 1](#part-1-complete-methodology) |
+> | **Part 2** | Reasoning Pipeline | [Part 2](#part-2-reasoning-pipeline) |
+> | **Part 3** | Tools (standalone prompts) | [Part 3](#part-3-tools) |
+> | **Part 4** | Phase Templates | [Part 4](#part-4-phase-templates) |
+> | **Part 5** | Worked Example | [Part 5](#part-5-worked-example) |
+> | **Part 6** | Guide (routing) | [Part 6](#part-6-guide) |
+> | **Part 7** | Known Gotchas | [Part 7](#part-7-known-gotchas) |
+> | **Part 8** | Testing Domains Reference (9-domain taxonomy) | [Part 8](#part-8-testing-domains-reference) |
+>
 > **New to this repo?** Start with Part 6 (guide) — it routes you to the right entry point.
-> **Building a new project or feature:** Start with Part 1 (methodology) — follow phases 1-8.
+> **Building a new project or feature:** Start with Part 1 (methodology) — follow phases 1-8. Phase 2.5 handles project decomposition.
+> **Decomposing a complex system:** Part 1, Phase 2.5 — or the decomposition tool in Part 3.
+> **Selecting testing domains for CI/CD:** Part 8 — full taxonomy with project-type guidance.
 > **Analyzing a complex decision (not code):** Skip to Part 2 (reasoning pipeline) — chain frameworks into structured analysis.
-> **Reviewing or auditing existing code:** Skip to Part 3 (tools) — standalone prompts for audit, review, threat model.
+> **Reviewing or auditing existing code:** Skip to Part 3 (tools) — standalone prompts for audit, review, threat model, decomposition.
 > **Phase output templates:** Part 4.
 > **Worked example:** Part 5.
 > **Known failure modes:** Part 7 (gotchas) — where Claude breaks and how to catch it.
@@ -68,7 +83,64 @@ Cover:
 
 If requirements are unclear, stop and resolve them. You'll pay for it later. You always do.
 
-**Handoff artifact:** `requirements.md` → Phase 3.
+**Handoff artifact:** `requirements.md` → Phase 2.5 (if triggered) or Phase 3.
+
+---
+
+## Phase 2.5 — Project Decomposition
+
+Most non-trivial systems are structurally multiple sub-projects. Phase 2.5 asks: is this one project or N projects, and if N > 1, what are the seams?
+
+**Activation Triggers** (union — either fires Phase 2.5):
+1. Complexity score >= 15 out of 25
+2. `requirements.md` spans 3+ distinct subsystem domains (auth, storage, UI, APIs, infra, queues, security, observability)
+
+If neither trigger fires, skip to Phase 3.
+
+**60-Second Exit:** "Could this be built by one team as one integrated codebase without coordination overhead?" If yes → single-project verdict, one paragraph, proceed to Phase 3.
+
+**Core Questions** (yes to any 3 = separate sub-project):
+1. **Team independence** — Could a different team build this with only the interface as contract?
+2. **Threat surface** — Does this component's threat model differ materially from the rest?
+3. **Failure mode** — Is the failure class distinct from the rest of the system?
+4. **Consumer** — Does it face a distinct consumer with its own contract?
+5. **Release cycle** — Could it be versioned and released independently?
+
+**Output artifact:** `decomposition-map.md` with per-sub-project: scope, interfaces, dependencies, threat surface, **recommended testing domains** (from Part 8), methodology track, sequencing, independence evidence.
+
+**Integration Sub-project** (required when N > 1): Covers seams between sub-projects — wiring, composition, end-to-end flow. Includes seam inventory, seam testing domains (integration testing, contract testing, seam security, failure injection).
+
+**Handoff behavior when N > 1:**
+- Phase 3 (Architecture) runs N+1 times
+- Phase 4 (Threat Model) runs N+1 times — seam threat model is mandatory
+- Phase 5 (CI/CD) can fan out or consolidate — navigator decision
+- Phase 6 (Tasks) consolidates with sub-project tags
+- Phase 7 (Implementation) fans out; integration last
+
+### Brownfield Mode (Changes to Existing Systems)
+
+For changes to existing systems, Phase 2.5 asks: "Does this change touch one sub-project or N? What seams does it cross?"
+
+**Brownfield triggers:** Change crosses sub-project boundary, introduces new external dependency, modifies existing seam, or navigator invokes `/decompose`.
+
+**Three outcomes:**
+1. Change stays within one sub-project → scoped methodology on that sub-project only
+2. Change crosses existing seam → scoped methodology + seam threat model for crossed seam
+3. Change creates new seam → scoped methodology + full seam threat model for new seam
+
+**Output:** `change-decomposition.md` listing affected sub-projects, crossed seams, brownfield outcome classification, seam threat model requirements.
+
+**Stale map detection:** "Does this change touch a component not in the existing `decomposition-map.md`?" If yes, update the map first.
+
+**Gate questions:**
+- Is the decomposition the simplest that could work?
+- Does every sub-project have an identifiable consumer?
+- If N > 1, does the integration sub-project have explicit seam boundaries?
+- Does every sub-project have recommended testing domains assigned?
+
+**Failure modes:** Over-decomposition (merge candidates with identical threat surfaces), missing integration sub-project, decomposition drift, premature decomposition (use the 60-second exit).
+
+**Handoff artifact:** `decomposition-map.md` or `change-decomposition.md` → Phase 3.
 
 ---
 
@@ -186,7 +258,9 @@ Design the pipeline before any implementation. The pipeline is the formal defini
 | Property-Based Tests | Correctness properties hold across random inputs — finds edge cases example-based tests miss |
 | Dummy Product | Reference implementation that runs through ALL tests |
 
-For security-critical logic (auth, input validation, access control), define correctness properties and test with PBT, not just examples.
+For security-critical logic (auth, input validation, access control), define correctness properties and test with PBT, not just examples. Empirical research (Goldstein et al., OOPSLA 2025) found PBT is **52x more likely** to catch mutations than unit tests.
+
+**Testing Domain Selection:** Testing has fragmented into 9 distinct domains (see Part 8). The normative process: load threat model → identify which domain catches each threat → require at least one gate per threat → select domains by project type. When Phase 2.5 assigned per-sub-project testing domains, verify each is covered.
 
 **Security Gates — generate from context, not a generic list:**
 
@@ -312,11 +386,12 @@ The output file from each phase is the handoff artifact. The tool manages contex
 | Phase | Handoff Artifact |
 |-------|-----------------|
 | 1 → 2 | Problem statement |
-| 2 → 3 | `requirements.md` |
-| 3 → 4 | `architecture.md` |
-| 4 → 5 | `threat_model.md` |
+| 2 → 2.5 | `requirements.md` |
+| 2.5 → 3 | `decomposition-map.md` (or single-project verdict). If Phase 2.5 skipped, `requirements.md` passes directly. |
+| 3 → 4 | `architecture.md`. Runs N+1 times if decomposition produced N > 1 sub-projects. |
+| 4 → 5 | `threat_model.md`. Seam threat model is a separate artifact when N > 1. |
 | 5 → 6 | Pipeline config + dummy product + `requirements.md` + `threat_model.md` |
-| 6 → 7 | `tasks.md` |
+| 6 → 7 | `tasks.md` (with sub-project tags when decomposed) |
 | 7 → 8 | Working code + test results |
 
 Phase 6 takes multiple inputs — task acceptance criteria must trace back to requirements and threat model risks.
@@ -336,11 +411,20 @@ When any phase surfaces an upstream flaw:
 
 Document what triggered the re-entry and what changed — one sentence is enough.
 
-### Scoped Mode (Brownfield)
+### Brownfield Mode (Phase 2.5 for Existing Systems)
 
-When the intake produces `change-surface.md` instead of `problem_statement.md` or `reconstruction_assessment.md`, the methodology runs in scoped mode. Same phases, same gates, same adversarial stance — narrower aperture. Only the components in the change surface map are in scope. Threat model covers only the areas the change touches. Review focuses on the seam between new and existing code. Gate checks verify the change surface, not the full system.
+When the intake detects a scoped change to an existing system, Phase 2.5 runs in brownfield mode. This replaces the previous "scoped mode" concept with richer decomposition-based scoping. The output is `change-decomposition.md` — listing affected sub-projects, crossed seams, and brownfield outcome classification.
 
-**Scope expansion rule:** If any phase reveals the change affects more components than `change-surface.md` lists, update the map. If the scope doubles, switch to full mode. Scoped mode should be easy to widen and hard to narrow.
+**Three outcomes drive different overhead:**
+1. **Change stays within one sub-project** → scoped methodology on that sub-project only
+2. **Change crosses an existing seam** → scoped methodology + seam threat model for crossed seam
+3. **Change creates a new seam** → scoped methodology + full seam threat model for new seam
+
+Same phases, same gates, same adversarial stance — narrower aperture, but now with explicit seam modeling. Threat model covers only the areas the change touches, plus seam threat models for any crossed seams. Review focuses on the seam between new and existing code. Gate checks verify the change decomposition, not the full system.
+
+**Scope expansion rule:** If any phase reveals the change affects more sub-projects or seams than `change-decomposition.md` lists, update the decomposition. If the scope doubles, switch to full mode. Brownfield mode should be easy to widen and hard to narrow.
+
+**Stale map detection:** If the change touches a component not in the existing `decomposition-map.md`, the map is stale — update it first.
 
 ---
 
@@ -2223,9 +2307,11 @@ They're the same idea at different scales. The pipeline manages reasoning contex
 |---|---|
 | Review something right now | Part 3 → Tool: review |
 | Threat model an architecture | Part 3 → Tool: threat-model |
+| Decompose a complex system | Part 3 → Tool: decomposition, or Part 1 → Phase 2.5 |
 | Scan an existing codebase | Part 3 → Tool: audit |
 | Check if a phase is done | Part 3 → Tool: gate-check |
 | Define a problem properly | Part 3 → Tool: intake |
+| Select testing domains for CI/CD | Part 8 → Testing Domains Reference |
 | Run a session retrospective | Part 3 → Tool: session-retro |
 | Analyze a complex decision | Part 2 → Reasoning Pipeline |
 | Start a new project | Part 1 → Phase 1 |
@@ -2319,8 +2405,9 @@ The retro produces lessons. The lessons say "update SKILL.md with X." Nobody upd
 - Generates textbook threats that don't apply to the actual system
 - Misses LLM-specific area even when the project is built with AI tools
 - Trust boundary diagram doesn't match the threat analysis table
-- Scoped mode excludes too aggressively — adding auth implies secrets, IAM, token storage
-- Full 14-area treatment on scoped changes — cover only relevant areas, one-line exclusions for the rest
+- Brownfield mode excludes too aggressively — adding auth implies secrets, IAM, token storage
+- Full 14-area treatment on brownfield changes — cover only relevant areas, one-line exclusions for the rest
+- Misses seam threat model when decomposition exists — seam threat model is mandatory, not optional
 
 ### gate-check
 
@@ -2329,7 +2416,8 @@ The retro produces lessons. The lessons say "update SKILL.md with X." Nobody upd
 - Doesn't read upstream artifacts for cross-phase verification
 - Non-actionable FAILs ("requirements need more detail")
 - Skips Phase 3.5 even when architecture contains unverified assumptions
-- Runs full gate verification on minor scoped phase transitions
+- Runs full gate verification on minor brownfield phase transitions
+- Skips Phase 2.5 gates when decomposition artifacts exist
 
 ### audit
 
@@ -2353,5 +2441,114 @@ The retro produces lessons. The lessons say "update SKILL.md with X." Nobody upd
 Telemetry hooks log which skills fire, how often, and what happens after. The project log captures what the navigator noticed. Telemetry captures what actually happened. Diff the two and you find blind spots.
 
 Setup: `multi-agent/hooks/telemetry.md`. Analysis feeds into session retro Stage 2.5.
+
+---
+
+# Part 8: Testing Domains Reference
+
+*Full taxonomy of QA/CI disciplines for AI-assisted development. Use this when designing Phase 5 gates, reviewing CI architecture, or assigning testing domains per sub-project in Phase 2.5.*
+
+The full testing domains reference is maintained in `methodology/testing-domains-reference.md`. Below is the complete content.
+
+---
+
+## Why This Reference Exists
+
+Phase 5 requires designing CI/CD pipelines that map gates to specific failure modes. This reference makes "what gates exist" explicit rather than relying on implicit practitioner knowledge. Testing has fragmented into 9 distinct domains, each catching different bug classes.
+
+## The 9 Testing Domains
+
+| Domain | What It Catches | Key Tools |
+|--------|----------------|-----------|
+| 1. Correctness | Does it do what it should? | pytest, jest, Hypothesis (PBT), mutmut |
+| 2. Type Safety & Static Analysis | Is the code internally consistent? | mypy, ruff, semgrep |
+| 3. Security | Can an adversary exploit this? | bandit, OWASP ZAP, gitleaks, pip-audit |
+| 4. Reliability | Does it work when things break? | Failure injection, chaos engineering |
+| 5. Performance | Is it fast enough? | pytest-benchmark, k6, Locust |
+| 6. Data Integrity | Does data survive operations? | Migration tests, round-trip tests |
+| 7. Documentation | Does documentation match code? | doctest, link-check |
+| 8. Process & Meta | Is the team following its rules? | commitlint, CODEOWNERS |
+| 9. Observability & AI Testing | Can we debug it? Does AI output quality hold? | promptfoo, DeepEval, Langfuse |
+
+## Key Empirical Finding
+
+**Property-based tests are 52x more likely to catch mutations than unit tests** (Goldstein et al., OOPSLA 2025, odds ratio 51.91, p < 0.0001). This is the strongest empirical finding in 2025 testing research.
+
+## Domain Selection by Project Type
+
+**Python library / CLI:** Must: 1, 2, 3.1/3.5/3.6. Should: 4. Skip: DAST, containers, load testing.
+
+**Web app / API:** Must: all above + DAST, IAST, containers. Should: 5, 6.
+
+**LLM agent / AI system:** Must: all library + 9. Should: adversarial prompts, cost regression. Critical: trace completeness.
+
+**Microservice:** Must: 1 (heavy integration), 2, 3, 4 (chaos-lite). Should: 6, 10.
+
+**Data pipeline:** Must: 1, 2, 6, 8. Should: 4, 7.
+
+## Testing Strategy Shapes
+
+- **Pyramid** (Cohn 2009): many unit, fewer integration, few E2E. Best for monoliths.
+- **Trophy** (Dodds 2018): static foundation, heavy integration. Best for modern web.
+- **Honeycomb** (Spotify): thick integration, thin unit. Best for microservices.
+- **Diamond**: balanced unit/integration/E2E. Best for domain services.
+- **Vase** (WireMock 2025): integration through public API. Best for service-oriented.
+
+For LLM/agent systems, none of the traditional shapes apply directly — use the three-layer model: deterministic logic (traditional tests), semi-deterministic behavior (structural assertions), non-deterministic output (LLM-as-judge).
+
+## Phase 5 Gate Selection Process
+
+1. Load threat model (Phase 4 output)
+2. For each threat, identify which domain's tests catch it
+3. Require at least one gate per threat
+4. Select domains based on project type
+5. Skip domains that don't apply
+
+## Decision Tree
+
+```
+Is this a pure library?
+├── Yes → Domain 1-3 required; 4-8 as needed
+└── No → Is it an HTTP service?
+         ├── Yes → Domain 1-5 required; add DAST, container scanning
+         └── No → Is it an LLM/agent system?
+                  ├── Yes → Domain 1-4, 6, 9 required; Domain 9 is critical
+                  └── No → Is it a data pipeline?
+                           ├── Yes → Domain 1, 2, 6, 8 required
+                           └── No → Classify narrowly; consult full reference
+```
+
+## Defense-in-Depth Maturity
+
+| Domain Count | Maturity |
+|-------------|----------|
+| 1-2 | Early / prototype |
+| 3-4 | Functional but incomplete |
+| 5-6 | Production-ready |
+| 7-8 | Mature |
+| 9 | Research-grade |
+
+## Phase 2.5 Integration
+
+When Phase 2.5 produces a decomposition map, each sub-project gets recommended testing domains based on its type and threat surface. The integration sub-project always includes: integration testing (seam-level), contract testing, seam security testing, failure injection.
+
+## Common Pitfalls
+
+- **Coverage theater**: 95% coverage means nothing if tests don't assert behavior. Use mutation score.
+- **Test-pyramid religion**: Select shape by where bugs occur, not by dogma.
+- **Tool-driven CI growth**: Bug class first, tool second.
+- **Suppression proliferation**: Every `# noqa` needs a reason comment.
+- **Flaky test tolerance**: Quarantine immediately, fix within 7 days, or delete.
+- **LLM eval as vibes-check**: Use LLM-as-judge with threshold gates, not manual review.
+
+## Empirical Evidence Summary
+
+- **PBT 52x finding** (OOPSLA 2025): strongest evidence for any testing practice
+- **Mutation testing at scale** (Meta ICST 2025): 73% acceptance rate from engineers
+- **Shift-left economics** (2024-2025): 100x cost reduction catching vulns at PR vs. prod
+- **LLM agent reliability** (arXiv 2025): variance matters as much as mean quality
+- **LLM-powered SAST** (2026): finds bugs traditional pattern-matching misses
+
+*For the full reference with all sub-sections, tool lists, and detailed guidance, see `methodology/testing-domains-reference.md`.*
 
 ---

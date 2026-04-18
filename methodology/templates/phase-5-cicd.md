@@ -4,15 +4,16 @@
 
 ## Pipeline Overview
 
-| Job | Purpose | Blocks Merge? | Mapped Threat |
-|-----|---------|--------------|---------------|
-| Lint + Type Check | Code quality, catch obvious errors | Yes | — |
-| Unit Tests | Verify component behavior in isolation | Yes | — |
-| Security Scan (SAST) | Static analysis for vulnerabilities | Yes | Trust boundaries 1-3 |
-| Dependency Scan (SCA) | Known CVEs in dependencies | Yes | Supply chain |
-| Secret Scan | Detect hardcoded credentials | Yes | Information leakage |
-| [IaC Scan] | [Misconfigurations in Terraform/CFN] | [Yes] | [Trust boundary 3] |
-| [Integration Tests] | [Components working together] | [Yes] | [Trust boundary 2] |
+| Job | Purpose | Blocks Merge? | Mapped Threat | Testing Domain |
+|-----|---------|--------------|---------------|----------------|
+| Lint + Type Check | Code quality, catch obvious errors | Yes | — | Domain 2: Type Safety |
+| Unit Tests | Verify component behavior in isolation | Yes | — | Domain 1: Correctness |
+| Property-Based Tests | Correctness properties across random inputs | Yes | Logic flaws in security code | Domain 1: Correctness (PBT) |
+| Security Scan (SAST) | Static analysis for vulnerabilities | Yes | Trust boundaries 1-3 | Domain 3: Security |
+| Dependency Scan (SCA) | Known CVEs in dependencies | Yes | Supply chain | Domain 3: Security (SCA) |
+| Secret Scan | Detect hardcoded credentials | Yes | Information leakage | Domain 3: Security |
+| [IaC Scan] | [Misconfigurations in Terraform/CFN] | [Yes] | [Trust boundary 3] | Domain 3: Security (IaC) |
+| [Integration Tests] | [Components working together] | [Yes] | [Trust boundary 2] | Domain 1: Correctness (Integration) |
 
 ## Job Details
 
@@ -86,11 +87,35 @@
 |------|-----|--------------|------------|-------|--------|
 | [e.g., pip-audit continue-on-error] | [e.g., Upstream boto3 CVE has no fix] | [e.g., Known CVE, no exploit path in our usage] | [e.g., Monitor upstream, upgrade immediately on fix] | [Name] | [Date] |
 
+## Testing Domain Coverage
+
+**Project type:** [e.g., Python library / Web service / LLM agent / Microservice / Data pipeline]
+
+**Applicable domains** (from [Testing Domains Reference](../testing-domains-reference.md), Section 12.2):
+
+| Domain | Applicable? | Gate(s) Above | Gap? |
+|--------|------------|---------------|------|
+| 1. Correctness | [Yes/No] | [e.g., Unit Tests, Integration Tests] | [e.g., No PBT yet] |
+| 2. Type Safety | [Yes/No] | [e.g., Lint + Type Check] | — |
+| 3. Security | [Yes/No] | [e.g., SAST, SCA, Secret Scan] | [e.g., No DAST] |
+| 4. Reliability | [Yes/No] | [e.g., —] | [e.g., No timeout verification] |
+| 5. Performance | [Yes/No] | [e.g., —] | [e.g., Not applicable for library] |
+| 6. Data Integrity | [Yes/No] | [e.g., —] | — |
+| 7. Documentation | [Yes/No] | [e.g., —] | — |
+| 8. Process | [Yes/No] | [e.g., —] | — |
+| 9. Observability / AI | [Yes/No] | [e.g., —] | [e.g., Critical for agent systems] |
+
+**Defense-in-depth assessment:** [X] domains covered out of 9. [Maturity level per Section 12.3].
+
+**Phase 2.5 alignment:** [If decomposition assigned per-sub-project domains, verify each is covered here. List any gaps.]
+
 ## Gate Questions
 
 - [ ] What does a passing pipeline actually prove?
 - [ ] Which gate catches which failure mode?
 - [ ] Does the dummy product exercise every component?
+- [ ] Does every threat mitigation map to a testing domain?
+- [ ] Are all applicable testing domains for this project type covered?
 
 ---
 

@@ -12,6 +12,7 @@
 |-------|-----------------|------------|--------|---------------|
 | 1. Problem | Probes assumptions, surfaces edge cases | State the real-world need | Problem statement (2-3 sentences) | What breaks if this isn't built? Why is code the right solution? |
 | 2. Requirements | Generates requirements, identifies scope gaps | Review, adjust, confirm scope | `requirements.md` | Is every requirement testable? What is out of scope? |
+| 2.5 Decomposition | Decomposes into sub-projects + seams (if triggered) | Confirm decomposition is simplest that works | `decomposition-map.md` | Does every sub-project pass 3 of 5 independence tests? |
 | 3. Architecture | Designs components, boundaries, interfaces | Evaluate design tradeoffs | `architecture.md` | Can every component be tested in isolation? |
 | 3.5 Spike | Builds throwaway test of assumptions (optional) | Read the result, update architecture | Updated `architecture.md` | Was the assumption validated or disproven? |
 | 4. Threat Model | Attacks every trust boundary, maps blast radius | Review findings, accept or challenge | `threat_model.md` | What is the worst an adversary can do here? |
@@ -34,6 +35,7 @@ Not every project needs all eight phases at full depth. This is the 20% that del
 |------|--------------------------|----------------|
 | Problem Statement | Without this the model optimizes for the wrong thing | 2-3 sentences: what breaks without this, why code solves it |
 | `requirements.md` | Without this "done" has no definition | Bullet list of what the system does and does not do |
+| Decomposition Check | Without this multi-component systems get built as monoliths | Single-project verdict or sub-project list with seams |
 | Architecture Sketch | Without this the code has no structure to test against | Component diagram or description of boundaries |
 | 1-2 CI/CD Gates | Without this "passing" means nothing | Unit tests pass, no hardcoded secrets |
 | Dummy Product | Without this the gates are never verified end to end | Minimal implementation that passes every gate |
@@ -155,6 +157,136 @@ Every requirement that is missing or ambiguous becomes a bug later. If requireme
 
 ---
 
+## Phase 2.5 — Project Decomposition
+
+Most non-trivial systems are structurally multiple sub-projects. The methodology assumes the navigator has already correctly decomposed their problem before invoking Phase 1. This assumption fails for architectural thinkers who see whole systems and don't instinctively split them into independently-executable sub-projects. The result: projects that are structurally N sub-projects get built as one system, integration bugs proliferate, sub-components couple tightly, and threat models miss seams because there's no explicit seam to model.
+
+Phase 2.5 fixes this by inserting an explicit decomposition step between Phase 2 and Phase 3. It asks: is this one project or N projects, and if N > 1, what are the seams?
+
+### Position in Methodology
+
+Between Phase 2 (Requirements) and Phase 3 (Architecture). Mirrors the structural position of Phase 3.5 (Discovery Spike): optional when not needed, but gated by specific triggers so it actually runs when it should.
+
+### Activation Triggers
+
+Phase 2.5 runs when EITHER condition is met (union semantics):
+
+1. **Complexity threshold.** Phase 0 complexity score is >= 15 out of 25 (existing complexity-scoring rubric from the reasoning pipeline).
+
+2. **Multi-domain requirements.** `requirements.md` contains language spanning 3 or more distinct subsystem domains from this list:
+   - Authentication / identity
+   - Data storage / persistence
+   - User interface / frontend
+   - External integrations / APIs
+   - Infrastructure / deployment
+   - Background processing / queues
+   - Security / policy enforcement
+   - Observability / telemetry
+
+If NEITHER trigger fires, skip Phase 2.5 and proceed to Phase 3.
+
+### 60-Second Exit Path
+
+For projects that trigger Phase 2.5 but are genuinely single-project on inspection, Phase 2.5 must complete quickly with a "single project" verdict. This is not a failure path — it's the correct outcome when the triggers fire on a complex-but-unified problem (e.g., a sophisticated algorithm implementation).
+
+The exit requires one answer: "Could this system be built by a single team treating the whole thing as one integrated codebase without coordination overhead, and still ship on budget?" If yes, single-project. Document the decision in one paragraph and proceed to Phase 3.
+
+### Core Questions
+
+For each candidate component in the system, ask the following. A "yes" to any three questions indicates the component is a separate sub-project.
+
+1. **Team independence test.** Could a different team build and ship this component with only the defined interface as the contract? No daily coordination required?
+
+2. **Threat surface test.** Does this component's threat model differ materially from the rest of the system? Different adversaries, different trust boundaries, different attack surfaces?
+
+3. **Failure mode test.** When this component fails, is the failure class distinct from the rest of the system? (e.g., provider timeout vs. parser malformed-input vs. gate misconfiguration)
+
+4. **Consumer test.** Does this component face a distinct consumer (external API, human user, another service) with its own contract?
+
+5. **Release-cycle test.** Could this component be versioned and released independently of the others, or does it only make sense in lockstep?
+
+### Greenfield vs. Brownfield
+
+Phase 2.5 works for both greenfield (new systems) and brownfield (changes to existing systems). The question shape is identical; only the scope differs.
+
+**Greenfield Phase 2.5:** "We're building a new system. Is it one project or N?" The output is `decomposition-map.md` listing sub-projects, their seams, and their recommended testing domains.
+
+**Brownfield Phase 2.5:** "We're changing an existing system. Does the change touch one sub-project or N? And what seams does the change cross?" The output is `change-decomposition.md` listing affected sub-projects, crossed seams, and seam threat model requirements.
+
+#### Brownfield Activation Triggers
+
+Brownfield Phase 2.5 runs when any of these conditions are met:
+
+- Change crosses an existing sub-project boundary
+- Change introduces a new external dependency
+- Change modifies an existing seam (interface between sub-projects)
+- Navigator explicitly invokes `/decompose`
+
+#### Brownfield Outcomes
+
+Three outcomes drive different overhead:
+
+1. **Change stays within one sub-project.** Run scoped methodology on that sub-project only. Low overhead.
+
+2. **Change crosses an existing seam.** Run scoped methodology on each affected sub-project PLUS run the seam threat model for the seam being crossed. Medium overhead, but now the cross-cutting concerns are explicit.
+
+3. **Change creates a new seam (new integration point, new dependency).** Run scoped methodology on affected sub-projects PLUS full seam threat model for the new seam. Higher overhead, but now the integration risk is modeled rather than discovered in production.
+
+#### Stale Map Detection
+
+Gate question for brownfield: "Does this change touch a component not in the existing `decomposition-map.md`?" If yes, the map is stale and must be updated before proceeding.
+
+### Output Artifact
+
+A new file: `decomposition-map.md` (greenfield) or `change-decomposition.md` (brownfield).
+
+For each sub-project:
+
+- **Scope** — bounded description of what it does
+- **External interfaces** — what it exposes
+- **External dependencies** — what it consumes
+- **Threat surface** — what an adversary sees at its boundaries
+- **Recommended testing domains** — which domains from the [Testing Domains Reference](testing-domains-reference.md) apply to this sub-project, based on its threat surface and architecture
+- **Methodology track** — full | scoped | minimal viable
+- **Sequencing** — blocking / dependent / parallel-safe
+- **Independence evidence** — which of the 5 questions it passed
+
+When N > 1, an **Integration Sub-project** is required:
+
+- **Scope** — the seams between sub-projects: wiring, composition, end-to-end flow
+- **Seam inventory** — every pair of sub-projects that communicate
+- **Seam testing domains** — integration testing, contract testing, and seam-specific security testing from the [Testing Domains Reference](testing-domains-reference.md)
+- **Methodology track** — scoped mode, focused on integration concerns
+
+### Handoff Behavior
+
+When Phase 2.5 produces N > 1 sub-projects:
+
+- **Phase 3 (Architecture)** runs N+1 times: once per sub-project + once for integration (the composition architecture).
+- **Phase 4 (Threat Model)** runs N+1 times: once per sub-project + once specifically for the SEAMS. The seam threat model is mandatory, not optional.
+- **Phase 5 (CI/CD)** can either fan out per sub-project or consolidate — navigator decision based on release independence. Testing domain selection (see [Testing Domains Reference](testing-domains-reference.md)) runs per sub-project.
+- **Phase 6 (Tasks)** consolidates with sub-project tags on each task.
+- **Phase 7 (Implementation)** fans out; each sub-project is implemented independently, integration work happens last.
+
+### Gate Questions — Do Not Proceed Until Answered
+
+- Does the decomposition have a crisp answer to "what is the seam threat model going to cover"?
+- Does every sub-project have an identifiable consumer (human, other sub-project, or external system)?
+- Does the integration sub-project have explicit boundaries? (Not "wire things together" but "these specific interfaces, these specific failure modes.")
+- Is the decomposition the simplest that could work? (Defense against over-decomposition: if any two sub-projects have identical threat surfaces and consumers, they should probably be merged.)
+- Does every sub-project have recommended testing domains assigned?
+
+### Failure Modes to Guard Against
+
+- **Over-decomposition.** Splitting too aggressively creates coordination overhead. Team-independence test is the defense; if you can't imagine a different team building the sub-project, it's not a sub-project.
+- **Missing integration sub-project.** When N > 1, integration work becomes everyone's implicit responsibility and nobody's explicit one. The integration sub-project is REQUIRED when N > 1.
+- **Decomposition drift.** Sub-projects evolve; the map becomes a lie. Defense: `decomposition-map.md` is a handoff artifact consumed by Phase 3-7. If it drifts, downstream phases produce visibly wrong output.
+- **Premature decomposition.** Forcing decomposition on work that isn't actually N projects. Defense: the 60-second exit path for single-project verdicts.
+
+**Output:** `decomposition-map.md` (greenfield) or `change-decomposition.md` (brownfield) with sub-project definitions, seam inventory, recommended testing domains, and independence evidence.
+
+---
+
 ## Phase 3 — Architecture & Design
 
 The AI designs the system architecture from `requirements.md` — component boundaries, interfaces, dependencies, and injection points. Your job: evaluate whether the design reflects the problem domain or just what was easy to build. Check that every component can be tested in isolation.
@@ -269,7 +401,19 @@ These risks exist *because* you're using AI to write the code. A methodology for
 
 The AI builds the pipeline before any implementation begins — security gates derived from the threat model, quality gates from the architecture, and a dummy product that proves the pipeline works end-to-end. Your job: verify that the gates actually catch what they claim to catch, and that the pipeline shape matches your specific architecture, not a generic template.
 
-### Test Strategy
+### Test Strategy and Testing Domains
+
+Testing has fragmented into at least nine distinct domains, each catching different bug classes at different points in the development lifecycle. No single testing strategy (pyramid, trophy, honeycomb) covers all of them. The right gates follow from your architecture (Phase 3), threat model (Phase 4), and — when Phase 2.5 produced a decomposition — the recommended testing domains per sub-project.
+
+**The normative process for selecting Phase 5 gates:**
+
+1. Load the threat model (Phase 4 output)
+2. For each threat, identify which testing domain's tests catch it
+3. Require at least one gate per threat
+4. Select domains based on project type and threat surface
+5. Skip domains that don't apply (e.g., DAST for a pure library)
+
+For the full taxonomy of testing domains — including correctness testing, type safety, security testing, reliability, performance, data integrity, documentation integrity, process gates, and observability/AI-system testing — see the [Testing Domains Reference](testing-domains-reference.md). That document provides domain-selection guidance by project type, a decision tree for gate selection, and empirical research backing each domain.
 
 | Level | What it Tests | Tools |
 |-------|--------------|-------|
@@ -279,7 +423,7 @@ The AI builds the pipeline before any implementation begins — security gates d
 | Property-Based Tests | Correctness properties hold across random inputs — finds edge cases example-based tests miss | Hypothesis (Python), fast-check (JS/TS), gopter (Go) |
 | Dummy Product | A reference implementation that runs through ALL tests | Same stack as production |
 
-For security-critical logic (auth, input validation, cryptography, access control), define correctness properties and test them with property-based testing, not just example cases. Example: "for any input string, the sanitizer output never contains executable SQL." PBT finds the edge cases that hand-picked examples miss.
+For security-critical logic (auth, input validation, cryptography, access control), define correctness properties and test them with property-based testing, not just example cases. Example: "for any input string, the sanitizer output never contains executable SQL." PBT finds the edge cases that hand-picked examples miss. Empirical research (Goldstein et al., OOPSLA 2025) found property-based tests are **52 times more likely** to catch mutations than unit tests — the strongest empirical finding in 2025 testing research.
 
 ### Security Gates
 
@@ -515,14 +659,15 @@ Store this in your tool's native persistent context: `CLAUDE.md` (Claude Code), 
 | Phase | Handoff Artifact |
 |-------|-----------------|
 | Problem → Requirements | Problem statement |
-| Requirements → Architecture | `requirements.md` |
-| Architecture → Threat Model | `architecture.md` |
-| Threat Model → CI/CD | `threat_model.md` |
+| Requirements → Decomposition (2.5) | `requirements.md` |
+| Decomposition → Architecture | `decomposition-map.md` (or single-project verdict paragraph). If Phase 2.5 was skipped, `requirements.md` passes directly to Phase 3. |
+| Architecture → Threat Model | `architecture.md`. Runs N+1 times if `decomposition-map.md` specifies N > 1 sub-projects, plus integration architecture. |
+| Threat Model → CI/CD | `threat_model.md`. Seam threat model is a separate artifact when N > 1. |
 | CI/CD → Tasks | Pipeline config + dummy product + `requirements.md` + `threat_model.md` |
 | Tasks → Implementation | `tasks.md` |
 | Implementation → Production | Working code + test results |
 
-Phase 6 takes multiple inputs because task acceptance criteria must trace back to requirements and threat model risks.
+Phase 6 takes multiple inputs because task acceptance criteria must trace back to requirements and threat model risks. When Phase 2.5 produced a decomposition, tasks carry sub-project tags.
 
 ### Phase Re-entry
 
@@ -660,7 +805,7 @@ If using Claude Code, the `/audit` skill automates steps 1-5 below. Otherwise, w
 | Good documentation exists | Use it as the starting point, verify it against the actual code |
 | No documentation | The model reconstructs it — slower but doable |
 | Modular architecture | Work component by component, the methodology applies cleanly |
-| Monolith | Map it first, identify seams where components could be separated, work within constraints |
+| Monolith | Map it first with Phase 2.5 brownfield decomposition, identify seams where components could be separated, work within constraints |
 | No CI/CD at all | Build it from scratch using the current codebase as the dummy product |
 
 The feedback loop still applies. Production failures still generate new tests. The difference is you're inheriting someone else's decisions, not designing from a clean slate. Understand before you touch.

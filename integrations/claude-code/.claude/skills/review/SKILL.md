@@ -48,16 +48,26 @@ Does the code match the architecture doc? Are there hardcoded dependencies that 
 ### General (anything else)
 What assumptions does this make? Which are unverified? What happens when this fails? What's missing? What would an adversary exploit?
 
-### Scoped Review (Brownfield)
+### Brownfield Review (Phase 2.5)
 
-If `change-surface.md` exists, the review focuses on the **seam** — where new code meets existing code.
+If `change-decomposition.md` exists, the review focuses on **seams** — where the change crosses sub-project boundaries.
 
-Priority findings for scoped reviews:
-1. **Interface mismatches** — does the new code assume something about the existing system that isn't true?
-2. **Assumption violations** — does the existing system behave differently than the new code expects?
-3. **Trust boundary changes** — did the change move, add, or weaken a trust boundary?
-4. **Scope creep** — does the implementation touch components not listed in `change-surface.md`? If yes, the scope expanded without the threat model expanding with it.
-5. **Regression risk** — what existing behavior could this change break?
+Priority findings for brownfield reviews:
+1. **Seam violations** — does the change cross seams not listed in `change-decomposition.md`? If yes, the decomposition is stale.
+2. **Interface mismatches** — does the new code assume something about other sub-projects that isn't true?
+3. **Assumption violations** — does the existing system behave differently than the new code expects?
+4. **Trust boundary changes** — did the change move, add, or weaken a trust boundary at a seam?
+5. **Scope creep** — does the implementation touch sub-projects not listed in `change-decomposition.md`? If yes, the scope expanded without the threat model expanding with it.
+6. **Missing seam threat model** — if the change crosses a seam, was the seam threat model updated?
+7. **Regression risk** — what existing behavior could this change break?
+
+### Decomposition Review
+
+If `decomposition-map.md` exists and is the artifact being reviewed:
+1. **Over-decomposition** — are any two sub-projects identical in threat surface and consumer? They should be merged.
+2. **Missing integration sub-project** — if N > 1, does the integration sub-project exist with explicit seam boundaries?
+3. **Testing domain gaps** — does every sub-project have recommended testing domains? Are they appropriate for the sub-project's type and threat surface?
+4. **Seam completeness** — does the seam inventory cover every pair of communicating sub-projects?
 
 The adversarial mandate is the same. The aperture is narrower. Don't review the entire codebase — review the change and its contact points with the existing system.
 

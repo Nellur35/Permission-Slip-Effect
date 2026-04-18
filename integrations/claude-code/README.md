@@ -30,3 +30,4 @@ Copy `methodology/CLAUDE-skill.md` to your project root alongside your existing 
 | `gate-check/SKILL.md` | `/gate-check` — verify phase exit criteria |
 | `threat-model/SKILL.md` | `/threat-model` — Phase 4 threat modeling |
 | `audit/SKILL.md` | `/audit` — scan existing codebase and CI/CD |
+| `decomposition/SKILL.md` | `/decompose` — Phase 2.5 project decomposition (greenfield + brownfield) |

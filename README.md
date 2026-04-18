@@ -9,7 +9,7 @@ The repository has three layers.
 | Layer | What it is | Best for |
 |------|------|------|
 | `tools/` | Paste-in prompts for review, threat modeling, audits, gate checks, intake, and retrospectives | Immediate use in any AI chat |
-| `methodology/` | An 8-phase security-first AI-assisted development method with gates, templates, and worked examples | Teams building real systems |
+| `methodology/` | A security-first AI-assisted development method (Phases 1-8 + Phase 2.5 Decomposition) with gates, templates, testing domains reference, and worked examples | Teams building real systems |
 | `pipeline/` | A reference Python CLI that automates multi-stage reasoning pipelines | Advanced users who want structured runs |
 
 ## Why this exists
@@ -30,6 +30,8 @@ Choose the entry point that matches your intent.
 |------|------|
 | Review a design or document | [`tools/review.md`](tools/review.md) |
 | Threat model an architecture | [`tools/threat-model.md`](tools/threat-model.md) |
+| Decompose a complex multi-component system | [`tools/decomposition.md`](tools/decomposition.md) |
+| Design test coverage for CI/CD | [`methodology/testing-domains-reference.md`](methodology/testing-domains-reference.md) |
 | Audit an existing codebase or CI/CD setup | [`tools/audit.md`](tools/audit.md) |
 | Start a new project with the full method | [`methodology/METHODOLOGY.md`](methodology/METHODOLOGY.md) |
 | Run the automated reasoning pipeline | [`pipeline/README.md`](pipeline/README.md) |
@@ -75,7 +77,7 @@ The project is intentionally explicit about limitations. Prompt structure can im
 |------|------|------|
 | [`FULL-CONTEXT.md`](FULL-CONTEXT.md) | Single-file context dump for AI tools | Stable |
 | [`tools/`](tools/) | Low-friction prompts | Stable |
-| [`methodology/`](methodology/) | Full development methodology | Stable |
+| [`methodology/`](methodology/) | Full development methodology + testing domains reference | Stable |
 | [`pipeline/`](pipeline/) | Reference automation layer | Beta |
 | [`examples/`](examples/) | Example inputs and expected outputs | Beta |
 | [`experiments/`](experiments/) | Validation notes and comparisons | Experimental |

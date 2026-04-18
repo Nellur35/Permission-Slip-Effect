@@ -32,25 +32,22 @@ Read the architecture document.
 
 ## Step 1.5: Detect Scope Mode
 
-Glob for `change-surface.md` at project root.
+Glob for `change-decomposition.md` or `decomposition-map.md` at project root. Also check for legacy `change-surface.md`.
 
-**If `change-surface.md` exists → Scoped Mode.** Read it. The threat model covers only the areas the change surface touches.
+**If `change-decomposition.md` exists → Brownfield Mode.** Read it. The threat model covers only the areas the change touches, PLUS a seam threat model for any seams the change crosses.
 
-From the change surface map, identify which of the 14 areas are relevant:
-- Trust boundaries crossed → Trust Boundaries, Authentication, Authorization
-- New external dependencies → External Dependencies, Supply Chain
-- New secrets or credentials → Secrets Lifecycle
-- New data handling → Data Flows, Data Lifecycle
-- Infrastructure changes → Infrastructure & Cloud, IAM Blast Radius, IaC & Configuration
-- New runtime components → Runtime Security
-- New error paths → Error Handling
-- AI-assisted development → LLM-Specific (always relevant if using this methodology)
+From the change decomposition, identify:
+- Which sub-projects are affected → run threat model scoped to those sub-projects
+- Which seams are crossed → run seam threat model for each crossed seam (what data crosses, what trust assumptions exist, what happens when one side fails)
+- Which of the 14 areas are relevant based on the affected sub-projects
 
 For areas not touched by the change: one line — "Not affected by this change. Verify if scope expands." Do not fill boilerplate.
 
-**If no `change-surface.md` → Full Mode.** Proceed to Step 2 as normal — all 14 areas.
+**If `decomposition-map.md` exists (greenfield with decomposition) → Per-Sub-project Mode.** The threat model runs N+1 times: once per sub-project + once for seams. Each sub-project's threat model focuses on its specific threat surface. The seam threat model covers every pair of communicating sub-projects from the seam inventory.
 
-**Scope expansion trigger:** If examining the relevant areas reveals risks in areas you initially excluded, add them. The change surface map is the starting scope, not the final scope.
+**If neither exists → Full Mode.** Proceed to Step 2 as normal — all 14 areas.
+
+**Scope expansion trigger:** If examining the relevant areas reveals risks in areas you initially excluded, add them. The decomposition is the starting scope, not the final scope.
 
 ## Step 2: Examine Every Area
 
@@ -159,6 +156,8 @@ If any answer is missing or vague, go back and fill it in.
 
 **Trust boundary diagram is decorative.** The ASCII diagram often doesn't match the threat analysis that follows. Components appear in the diagram but not the threat table, or vice versa. The diagram should be the source of truth — every component and boundary in the diagram gets a row in the threat analysis. If the counts don't match, something was skipped.
 
-**Scoped mode excludes too aggressively.** The change surface says "authentication" so the model only examines authentication. But adding auth introduces secrets (Secrets Lifecycle), changes IAM roles (IAM Blast Radius), and adds a token store (Data Lifecycle). Each area the model excludes is an area an attacker might find first. When in doubt, include the area with a brief analysis rather than exclude it.
+**Brownfield mode excludes too aggressively.** The change decomposition says "authentication" so the model only examines authentication. But adding auth introduces secrets (Secrets Lifecycle), changes IAM roles (IAM Blast Radius), and adds a token store (Data Lifecycle). Each area the model excludes is an area an attacker might find first. When in doubt, include the area with a brief analysis rather than exclude it. Phase 2.5 brownfield's seam identification helps here — crossed seams force examination of adjacent areas.
 
-**Full 14-area treatment on scoped changes.** The change touches authentication but the model fills all 14 areas anyway, most with "low risk — standard mitigations." This wastes tokens and dilutes the real findings. In scoped mode, cover only the areas the change surface identifies. Mark excluded areas with "not affected by this change" — one line, not a paragraph.
+**Full 14-area treatment on brownfield changes.** The change touches authentication but the model fills all 14 areas anyway, most with "low risk — standard mitigations." This wastes tokens and dilutes the real findings. In brownfield mode, cover only the areas the change decomposition identifies. Mark excluded areas with "not affected by this change" — one line, not a paragraph.
+
+**Misses seam threat model when decomposition exists.** When `decomposition-map.md` or `change-decomposition.md` specifies seams, the seam threat model is mandatory — not optional. The model sometimes produces per-sub-project threat models but skips the seam-specific analysis. Seam bugs are where most integration failures live.

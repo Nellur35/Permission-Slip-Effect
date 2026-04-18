@@ -28,6 +28,21 @@ Verify you have met the exit criteria for any phase before moving forward.
 
 **Required output:** `requirements.md` with Decisions & Rejected Alternatives section.
 
+## Phase 2.5 — Project Decomposition (if activated)
+
+- [ ] Is the decomposition the simplest that could work? (If any two sub-projects have identical threat surfaces and consumers, they should be merged.)
+- [ ] Does every sub-project pass at least 3 of 5 independence tests?
+- [ ] If N > 1, does the integration sub-project have explicit seam boundaries?
+- [ ] Does the seam threat model plan cover every pair of communicating sub-projects?
+- [ ] Does every sub-project have recommended testing domains assigned?
+- [ ] [Brownfield] Does this change touch a component not in the existing `decomposition-map.md`? If yes, the map is stale — update it first.
+- [ ] [Brownfield] Does the existing seam threat model cover the seam(s) this change crosses?
+
+**Proves:** Decomposition is principled, not arbitrary. Seams are explicitly identified and will be threat-modeled. Testing domains are assigned before architecture begins.
+**Does not catch:** Whether the decomposition is optimal — only whether it's defensible. Optimality emerges during implementation.
+
+**Required output:** `decomposition-map.md` (greenfield) or `change-decomposition.md` (brownfield) with sub-project definitions, seam inventory, and testing domain assignments.
+
 ## Phase 3 — Architecture & Design
 
 - [ ] Can every component be tested in isolation?
@@ -64,8 +79,11 @@ Verify you have met the exit criteria for any phase before moving forward.
 - [ ] What does a passing pipeline actually prove?
 - [ ] Which gate catches which failure mode?
 - [ ] Does the dummy product exercise every component?
+- [ ] Does every threat mitigation map to a specific testing domain? (See [Testing Domains Reference](../methodology/testing-domains-reference.md))
+- [ ] Are all applicable testing domains for this project type covered? (Consult Section 12.2 of the reference)
+- [ ] If Phase 2.5 assigned per-sub-project testing domains, does the pipeline cover all of them?
 
-**Proves:** The pipeline is intentionally designed to verify requirements and mitigate identified threats.
+**Proves:** The pipeline is intentionally designed to verify requirements and mitigate identified threats, with testing domain coverage grounded in project type and threat surface.
 **Does not catch:** Whether the gates are correctly implemented (that is verified when the pipeline runs), or failure modes not in the threat model.
 
 **Required output:** Pipeline config files + dummy product + all gate definitions.

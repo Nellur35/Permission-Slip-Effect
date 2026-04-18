@@ -22,10 +22,11 @@ You are the engine. The user is the navigator and judge. Gate questions decide w
 |-------|-----------|-------|
 | 1 — Problem | Define the real-world need | `/intake` |
 | 2 — Requirements | Define what, not how. Use `templates/phase-2-requirements.md` | Direct work |
-| 3 — Architecture | Design for testability. Offer `/review` when done | Direct work |
-| 4 — Threat Model | Attack every trust boundary | `/threat-model` |
-| 5 — CI/CD Pipeline | Pipeline defines done. Offer `/review` when done | Direct work |
-| 6 — Tasks | Break into pipeline-validatable units | Direct work |
+| 2.5 — Decomposition | Decompose into sub-projects + seams (if triggered). Use `templates/phase-2.5-decomposition.md` | `/decompose` |
+| 3 — Architecture | Design for testability. Offer `/review` when done. Runs N+1 times if decomposition produced N > 1 sub-projects. | Direct work |
+| 4 — Threat Model | Attack every trust boundary. Seam threat model mandatory when N > 1. | `/threat-model` |
+| 5 — CI/CD Pipeline | Pipeline defines done. Select testing domains per project type. Offer `/review` when done | Direct work |
+| 6 — Tasks | Break into pipeline-validatable units. Sub-project tags when decomposed. | Direct work |
 | 7 — Implementation | Code + tests. Use `/gate-check` per task | Direct work |
 | 8 — Production | Feed failures back into the pipeline | Direct work |
 
@@ -36,15 +37,17 @@ You are the engine. The user is the navigator and judge. Gate questions decide w
 | Check exit criteria before moving on | `/gate-check` |
 | Adversarial review of any artifact | `/review` |
 | Scan an existing codebase or CI/CD | `/audit` |
+| Decompose a system into sub-projects | `/decompose` |
 
 ## Context Handoff
 
 | Phase | Handoff Artifact |
 |-------|-----------------|
 | 1 -> 2 | `problem_statement.md` or `reconstruction_assessment.md` |
-| 2 -> 3 | `requirements.md` |
-| 3 -> 4 | `architecture.md` |
-| 4 -> 5 | `threat_model.md` |
+| 2 -> 2.5 | `requirements.md` |
+| 2.5 -> 3 | `decomposition-map.md` (or single-project verdict). If Phase 2.5 skipped, `requirements.md` passes directly to Phase 3. |
+| 3 -> 4 | `architecture.md`. Runs N+1 times if decomposition produced N > 1 sub-projects. |
+| 4 -> 5 | `threat_model.md`. Seam threat model is a separate artifact when N > 1. |
 | 5 -> 6 | Pipeline config + dummy product + `requirements.md` + `threat_model.md` |
 | 6 -> 7 | `tasks.md` |
 | 7 -> 8 | Working code + test results |
@@ -55,37 +58,38 @@ If it's not in the output file, it doesn't carry forward.
 
 Implementation will reveal upstream flaws. That's the process working. Identify which phase owns the flaw, re-run it with the current output + the finding, propagate changes forward.
 
-## Scoped Mode
+## Brownfield Mode (Phase 2.5 for Existing Systems)
 
-When the intake produces `change-surface.md` instead of `problem_statement.md` or `reconstruction_assessment.md`, the methodology runs in scoped mode. Same phases, same gates, same adversarial stance — narrower aperture.
+When the intake detects a scoped change to an existing system, Phase 2.5 runs in brownfield mode. This replaces the previous "scoped mode" concept with a richer decomposition-based approach.
 
-### Scoped Phase Routing
+### Brownfield Phase Routing
 
-| Phase | Full Mode | Scoped Mode |
-|-------|----------|-------------|
-| 1 — Problem | `/intake` → `problem_statement.md` | `/intake` → `change-surface.md` |
+| Phase | Full Mode | Brownfield Mode |
+|-------|----------|----------------|
+| 1 — Problem | `/intake` → `problem_statement.md` | `/intake` → `change-decomposition.md` (via Phase 2.5 brownfield) |
 | 2 — Requirements | Full system requirements | Requirements for the change only |
-| 3 — Architecture | Full system architecture | Architecture of affected components + interfaces to existing system |
-| 4 — Threat Model | All 14 areas | Only areas the change surface touches |
-| 5 — CI/CD | Full pipeline design | Pipeline gates for the change — what tests prove this change is safe |
-| 6 — Tasks | Full task breakdown | Tasks scoped to change-surface.md components |
+| 2.5 — Decomposition | Greenfield: produce `decomposition-map.md` | Brownfield: produce `change-decomposition.md` — which sub-projects are affected, which seams are crossed |
+| 3 — Architecture | Full system architecture | Architecture of affected sub-projects + interfaces to existing system |
+| 4 — Threat Model | All 14 areas + seam threat model | Only areas the change touches + seam threat model for any crossed seams |
+| 5 — CI/CD | Full pipeline design | Pipeline gates for the change — testing domains per affected sub-project |
+| 6 — Tasks | Full task breakdown | Tasks scoped to affected sub-projects with sub-project tags |
 | 7 — Implementation | Full implementation | Implementation within scope boundary |
 | 8 — Production | System-wide feedback | Feedback on the change's behavior in production |
 
-### Scoped Handoff Chain
+### Brownfield Handoff Chain
 
 | Phase | Handoff Artifact |
 |-------|-----------------|
-| 1 -> 2 | `change-surface.md` |
-| 2 -> 3 | `requirements.md` (scoped) |
-| 3 -> 4 | `architecture.md` (scoped — affected components + interfaces) |
-| 4 -> 5 | `threat_model.md` (scoped — change surface areas only) |
+| 1 -> 2.5 | Problem description + existing `decomposition-map.md` (if available) |
+| 2.5 -> 3 | `change-decomposition.md` (affected sub-projects + crossed seams) |
+| 3 -> 4 | `architecture.md` (scoped — affected sub-projects + seam interfaces) |
+| 4 -> 5 | `threat_model.md` (scoped — affected areas + seam threat model) |
 | 5 -> 6 | Pipeline config for the change |
-| 6 -> 7 | `tasks.md` (scoped) |
+| 6 -> 7 | `tasks.md` (scoped, sub-project-tagged) |
 
 ### Scope Expansion
 
-If any phase reveals the change affects more components than `change-surface.md` lists, STOP. Update the change surface map. Re-evaluate whether scoped mode is still appropriate. If the scope has doubled, switch to full mode with the Existing Project Path.
+If any phase reveals the change affects more sub-projects or seams than `change-decomposition.md` lists, STOP. Update the decomposition. Re-evaluate whether brownfield mode is still appropriate. If the scope has doubled, switch to full mode with the Existing Project Path.
 
 ## Three Unbreakable Rules
 
@@ -105,12 +109,12 @@ AI time is a budget, not infinite. These constraints apply to every skill:
 
 **Match effort to scope:**
 
-| Scope | Intake | Threat Model | Review | Gate Check |
-|-------|--------|-------------|--------|------------|
-| Single function/fix | Skip — state the problem directly | Skip — unless it touches auth/secrets | 3-5 findings max | 2-3 gates |
-| Single feature (scoped) | Scoped Change Path (6 questions) | Scoped — relevant areas only | Focus on seam + change surface | Scoped gates |
-| Multi-component feature | Existing Project Path (6 questions) | Full — all 14 areas | Full review | Full gates |
-| New system | Greenfield Path (8 questions) | Full — all 14 areas | Full review | Full gates |
+| Scope | Intake | Decomposition (2.5) | Threat Model | Review | Gate Check |
+|-------|--------|-------------------|-------------|--------|------------|
+| Single function/fix | Skip — state the problem directly | Skip | Skip — unless it touches auth/secrets | 3-5 findings max | 2-3 gates |
+| Single feature (brownfield) | Scoped Change Path (6 questions) | Brownfield — affected sub-projects + crossed seams | Scoped — affected areas + seam threat model | Focus on seam + change boundary | Scoped gates + Phase 2.5 gates |
+| Multi-component feature | Existing Project Path (6 questions) | Full — decompose if 3+ domains | Full — all 14 areas | Full review | Full gates |
+| New system | Greenfield Path (8 questions) | Full — decompose if triggered | Full — all 14 areas + seam threat model | Full review | Full gates |
 
 **Agent rules:**
 - Max 3 sentences of instruction before code. Skip preamble.

@@ -92,13 +92,25 @@ For each trust boundary, a table:
 |----------------|------|------------|
 | [packages/images/actions/IaC modules/LLM code] | [specific risk] | [pinning, scanning, review] |
 
-### 10. Gate Verification
+### 10. Mitigation-to-Testing-Domain Mapping
 
-Before finalizing, answer these three questions explicitly:
+For every mitigation in the threat analysis, identify which testing domain catches it. Use the [Testing Domains Reference](../methodology/testing-domains-reference.md) for the full taxonomy.
+
+| Mitigation | Testing Domain | Specific Gate/Tool |
+|-----------|---------------|-------------------|
+| [e.g., Input validation on all API endpoints] | [e.g., Security (SAST) + Correctness (PBT)] | [e.g., semgrep rules + Hypothesis property tests] |
+| [e.g., Token expiry enforced at 15 min] | [e.g., Correctness (integration) + Security] | [e.g., Integration test: expired token rejected] |
+
+A mitigation without a corresponding testing domain is documentation without enforcement.
+
+### 11. Gate Verification
+
+Before finalizing, answer these questions explicitly:
 
 - [ ] What is the worst thing an adversary can do at each trust boundary?
 - [ ] If the execution role is compromised, what is the blast radius?
 - [ ] Does the infrastructure have the same threat coverage as the application code?
+- [ ] Does every mitigation map to a testing domain and a specific gate?
 
 If any answer is missing or vague, go back and fill it in. These are the exit criteria.
 

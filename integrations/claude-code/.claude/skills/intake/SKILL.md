@@ -168,18 +168,25 @@ Write this to `problem_statement.md` using the Write tool.
 
 Write this to `reconstruction_assessment.md` using the Write tool.
 
-### Scoped Change -> `change-surface.md`
+### Scoped Change -> `change-decomposition.md`
+
+This artifact feeds Phase 2.5 brownfield mode. It identifies which sub-projects the change touches and which seams it crosses, replacing the previous `change-surface.md` concept with richer decomposition-aware scoping.
 
 ```markdown
-# Change Surface Map
+# Change Decomposition
 
 ## The Change
 [What's being changed, from Q1. One sentence.]
 
 ## Components Affected
-| Component | How It's Affected | Exists Today? |
-|-----------|------------------|--------------|
-| [from Q2] | [added / modified / replaced / removed] | [yes / new] |
+| Component | How It's Affected | Exists Today? | Sub-project (if decomposition-map.md exists) |
+|-----------|------------------|--------------|----------------------------------------------|
+| [from Q2] | [added / modified / replaced / removed] | [yes / new] | [e.g., Provider / Gate / Tools / unknown] |
+
+## Seams Crossed
+| Sub-project A | Sub-project B | What Crosses the Seam | Impact on Existing Seam |
+|--------------|--------------|----------------------|------------------------|
+| [from Q2/Q3] | [from Q2/Q3] | [data / control / auth] | [modified / new / unchanged] |
 
 ## Trust Boundaries Crossed
 | Boundary | What Crosses It | Direction |
@@ -195,28 +202,36 @@ Write this to `reconstruction_assessment.md` using the Write tool.
 ## Constraints
 [From Q6. What can't change, timeline, team.]
 
+## Brownfield Outcome Classification
+[One of:]
+1. **Change stays within one sub-project** → Scoped methodology on that sub-project only
+2. **Change crosses an existing seam** → Scoped methodology on each affected sub-project + seam threat model
+3. **Change creates a new seam** → Scoped methodology on affected sub-projects + full seam threat model for new seam
+
 ## Scope Boundary
-**In scope:** [components listed above]
-**Out of scope:** Everything else in the existing system. If the change expands beyond these components, re-run intake with the Existing Project Path.
+**In scope:** [sub-projects and seams listed above]
+**Out of scope:** Everything else in the existing system. If the change expands beyond these sub-projects, re-run intake with the Existing Project Path.
 
 ## Second-Order Effects Check
-- [ ] Does this change affect components not listed above? If uncertain, list candidates.
-- [ ] Does this change modify a trust boundary that other components depend on?
+- [ ] Does this change affect sub-projects not listed above? If uncertain, list candidates.
+- [ ] Does this change modify a seam that other sub-projects depend on?
 - [ ] Does this change introduce a new dependency that the existing system doesn't have?
+- [ ] Does this change touch a component not in the existing `decomposition-map.md`? (If yes, the map is stale — update it first.)
 
-If any answer is "yes" or "uncertain" — expand the scope. Add the affected components to the table above. Scoped mode should be easy to widen and hard to narrow.
+If any answer is "yes" or "uncertain" — expand the scope. Add the affected sub-projects to the table above. Brownfield mode should be easy to widen and hard to narrow.
 
 ## Gate Check
 - [ ] Change is specific enough to scope (not "improve the system")
-- [ ] At least one trust boundary identified or explicitly none
+- [ ] At least one seam or trust boundary identified or explicitly none
 - [ ] Blast radius is concrete, not vague
 - [ ] Second-order effects checked
+- [ ] Brownfield outcome classified (1, 2, or 3)
 
 ---
-*This file is the handoff artifact for scoped methodology phases. Only components in this map are in scope. Everything not here does not carry forward.*
+*This file is the handoff artifact for Phase 2.5 brownfield mode. Only sub-projects and seams in this map are in scope. Everything not here does not carry forward.*
 ```
 
-Write this to `change-surface.md` using the Write tool.
+Write this to `change-decomposition.md` using the Write tool.
 
 ## Auto Gate Check
 
@@ -235,7 +250,7 @@ Once the artifact passes the gate check, tell the user:
 
 - For greenfield: "Your problem statement is written to `problem_statement.md`. This is the handoff artifact for Phase 2 (Requirements). Feed it into Phase 2 to define what the system must do."
 - For existing projects: "Your reconstruction assessment is written to `reconstruction_assessment.md`. Based on what exists, your recommended entry point is Phase [N]. Feed this artifact into that phase. Run `/audit` for a deeper scan of the existing codebase and CI/CD."
-- For scoped changes: "Your change surface map is written to `change-surface.md`. The methodology runs in scoped mode — only the components in this map are in scope. Threat model covers only the trust boundaries this change crosses. Review focuses on the seam between new and existing code. Gate checks verify the change surface, not the full system."
+- For scoped changes: "Your change decomposition is written to `change-decomposition.md`. The methodology runs in brownfield mode (Phase 2.5) — only the sub-projects and seams in this map are in scope. Threat model covers only the areas the change touches, plus seam threat models for any crossed seams. Review focuses on the seam between new and existing code. Gate checks verify the change decomposition, not the full system."
 
 ## Style Rules
 

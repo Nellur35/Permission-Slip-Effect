@@ -6,6 +6,8 @@ What do you want to do?
 |---|---|
 | **Review something right now** | Paste [`tools/review.md`](tools/review.md) into any AI conversation |
 | **Threat model an architecture** | Paste [`tools/threat-model.md`](tools/threat-model.md) |
+| **Decompose a complex multi-component system** | Paste [`tools/decomposition.md`](tools/decomposition.md) or Phase 2.5 in methodology |
+| **Design test coverage for CI/CD** | [`methodology/testing-domains-reference.md`](methodology/testing-domains-reference.md) |
 | **Scan an existing codebase** | Paste [`tools/audit.md`](tools/audit.md) |
 | **Check if a phase is done** | Paste [`tools/gate-check.md`](tools/gate-check.md) |
 | **Define a problem properly** | Paste [`tools/intake.md`](tools/intake.md) |
