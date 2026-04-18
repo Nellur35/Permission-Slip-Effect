@@ -8,7 +8,7 @@
 >
 > | Part | Content | Jump to |
 > |------|---------|---------|
-> | **Part 1** | Complete Methodology (Phases 1-12 + Phase 2.5 Decomposition + Cross-Cutting Concerns) | [Part 1](#part-1-complete-methodology) |
+> | **Part 1** | Complete Methodology (Phases 1-8 + Phase 2.5 Decomposition) | [Part 1](#part-1-complete-methodology) |
 > | **Part 2** | Reasoning Pipeline | [Part 2](#part-2-reasoning-pipeline) |
 > | **Part 3** | Tools (standalone prompts) | [Part 3](#part-3-tools) |
 > | **Part 4** | Phase Templates | [Part 4](#part-4-phase-templates) |
@@ -374,78 +374,6 @@ Pipeline gate: [which gate gets this new test]
 ```
 
 The tests derived from real failure modes will always be better than tests written before production.
-
-### Five Feedback Streams
-
-1. **Failure feedback** → CI as new tests (Phase 5)
-2. **Performance feedback** → architecture as bottleneck identification (Phase 3)
-3. **User feedback** → requirements as new inputs (Phase 2)
-4. **Security feedback** → threat model updates (Phase 4)
-5. **Cost feedback** → cost management (CC4)
-
----
-
-## Phase 9 — Operations & Incident Response
-
-Define how the system behaves when something goes wrong. Runbooks for known failure modes, escalation path, disaster recovery. Depth matches project maturity (Level 0-3).
-
-**Gate questions:** Runbook for each failure mode? Escalation path documented? DR tested?
-
-**Output:** `runbooks/` + `incident-response.md` + `disaster-recovery.md`
-
----
-
-## Phase 10 — Observability
-
-Three pillars: logs, metrics, traces. Plus dashboards, alerting, SLIs/SLOs, error taxonomy. Critical for AI systems — LLM conversations can't be re-run deterministically.
-
-**Gate questions:** Every operation traced? Dashboards exist? SLO alerting? Error taxonomy? Debug from traces alone?
-
-**Output:** `observability-design.md` + `sli-slo-definitions.md` + `error-taxonomy.md`
-
----
-
-## Phase 11 — Iteration & Evolution
-
-Formalizes phase re-entry as a lifecycle stage. Feature iteration, tech debt reduction, refactoring, migration, versioning, change management. Every change runs through Phase 2.5 brownfield decomposition.
-
-**Gate questions:** Changes use brownfield decomposition? Debt tracked? Breaking changes communicated?
-
-**Output:** `iteration-log.md` + `technical-debt.md` + `CHANGELOG.md`
-
----
-
-## Phase 12 — Decommissioning
-
-Remove the system safely. Dependency analysis, user migration, data disposition, credential revocation, clean removal.
-
-**Gate questions:** All users notified? Dependencies rerouted? Data preserved? Credentials revoked?
-
-**Output:** `decommission-plan.md` + `data-disposition.md`
-
----
-
-## Maturity Staging for Phases 8-12
-
-| Level | Name | Time Budget | Trigger to Level Up |
-|-------|------|-------------|-------------------|
-| 0 — Seed | First deployment | 30 min total | Real production issue, or second user |
-| 1 — Running | Stable, some users | 4-8 hours | Spending time on ops instead of dev |
-| 2 — Growing | Real users, real stakes | 10-20% of dev time | Downtime has business consequence |
-| 3 — Production | Mature, dependable | 20-30% of dev time | Steady state |
-
-Full reference: `methodology/lifecycle-phases-8-12.md`
-
-## Cross-Cutting Concerns
-
-Four continuous practices across all phases:
-
-- **CC1 — Documentation Lifecycle:** Docs have owners, review cadence, sunset discipline
-- **CC2 — Knowledge Transfer:** ONBOARDING.md, tacit knowledge capture, bus-factor >= 2
-- **CC3 — Dependency Management:** Inventory, CVE monitoring, freshness tracking
-- **CC4 — Cost Management:** Projection, tracking, allocation, alerting (critical for AI systems)
-
-All follow the same Level 0-3 maturity staging. Full reference: `methodology/cross-cutting-concerns.md`
 
 ---
 
@@ -2369,7 +2297,7 @@ Three things, same principle:
 
 1. **Reasoning pipeline** — chain frameworks (First Principles → Pre-Mortem → Adversarial → Game Theory) on one problem. Forces the model past the statistically safe answer. Works with one model. Better with several.
 2. **Standalone tools** — single-file prompts. Paste into any AI conversation. No setup.
-3. **Security-first methodology** — 12-phase dev lifecycle. Problem definition (Phase 1) through decommissioning (Phase 12), with Phase 2.5 decomposition when triggered. Gate checks between phases. Templates for every artifact. Four cross-cutting concerns run continuously.
+3. **Security-first methodology** — 8-phase dev lifecycle. Problem definition (Phase 1) through production feedback (Phase 8), with Phase 2.5 decomposition when triggered. Gate checks between phases. Templates for every artifact.
 
 They're the same idea at different scales. The pipeline manages reasoning context. The methodology manages project context. The tools work at the artifact level.
 

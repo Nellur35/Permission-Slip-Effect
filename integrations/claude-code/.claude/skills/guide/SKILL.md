@@ -22,7 +22,7 @@ Three things, same principle:
 
 1. **Reasoning pipeline** — chain frameworks (First Principles → Pre-Mortem → Adversarial → Game Theory) on one problem. Forces the model past the statistically safe answer. Works with one model. Better with several.
 2. **Standalone tools** — single-file prompts. Paste into any AI conversation. No setup.
-3. **Security-first methodology** — 12-phase dev lifecycle. Problem definition (Phase 1) through decommissioning (Phase 12), with Phase 2.5 decomposition when triggered. Gate checks between phases. Templates for every artifact. Four cross-cutting concerns (docs, knowledge transfer, dependencies, cost) run continuously.
+3. **Security-first methodology** — 8-phase dev lifecycle. Problem definition (Phase 1) through production feedback (Phase 8), with Phase 2.5 decomposition when triggered. Gate checks between phases. Templates for every artifact.
 
 They're the same idea at different scales. The pipeline manages reasoning context. The methodology manages project context. The tools work at the artifact level.
 
@@ -111,7 +111,7 @@ The methodology orchestrator routes automatically based on phase.
 
 - Simple tasks. If "think step by step" gets you the answer, the pipeline is overkill.
 - Tasks where being wrong is cheap. The methodology adds overhead. It pays for itself when mistakes are expensive.
-- Solo throwaway scripts. Use the tools (review, audit) standalone. Don't run the full 12-phase lifecycle on a script you'll delete tomorrow.
+- Solo throwaway scripts. Use the tools (review, audit) standalone. Don't run the full 8-phase lifecycle on a script you'll delete tomorrow.
 
 ## Key Concepts (If They Ask)
 

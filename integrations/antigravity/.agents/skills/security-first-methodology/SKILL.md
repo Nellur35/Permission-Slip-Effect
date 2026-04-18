@@ -82,7 +82,7 @@ For the full pipeline, assign additional roles: **Debugger** (implementation-lev
 
 ## Reference
 
-Full methodology with all 12 phases plus Phase 2.5 decomposition, templates, worked examples, testing domains reference, and reasoning pipeline:
+Full methodology with all 8 phases plus Phase 2.5 decomposition, templates, worked examples, testing domains reference, and reasoning pipeline:
 https://raw.githubusercontent.com/Nellur35/permission-slip-effect/main/FULL-CONTEXT.md
 
 Individual tools:

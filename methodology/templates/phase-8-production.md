@@ -4,15 +4,10 @@
 
 ## Production Findings
 
-**Maturity level:** [Level 0 / 1 / 2 / 3 — see lifecycle-phases-8-12.md]
-
 ### Finding 1: [What happened]
 **Date:** [When observed]
-**Stream:** [failure | performance | user | security | cost]
 **Failure mode:** [What the pipeline missed and why]
 **Impact:** [What broke, who was affected]
-**Root cause:** [After investigation]
-**Feed-back target:** [Which phase gets this finding — e.g., Phase 5 for new test, Phase 2 for new requirement]
 **New test:** [Test case that would have caught this]
 **Pipeline gate:** [Which gate gets this new test — e.g., integration tests, E2E, custom gate]
 **Status:** [ ] Test added to pipeline
@@ -21,11 +16,8 @@
 
 ### Finding 2: [What happened]
 **Date:** [When observed]
-**Stream:** [failure | performance | user | security | cost]
 **Failure mode:** [What the pipeline missed and why]
 **Impact:** [What broke, who was affected]
-**Root cause:** [After investigation]
-**Feed-back target:** [Which phase gets this finding]
 **New test:** [Test case that would have caught this]
 **Pipeline gate:** [Which gate gets this new test]
 **Status:** [ ] Test added to pipeline
