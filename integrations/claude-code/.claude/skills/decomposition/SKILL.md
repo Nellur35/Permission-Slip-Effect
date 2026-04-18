@@ -6,7 +6,7 @@ description: >
   decomposition-map.md plus a change description (brownfield), applies
   activation triggers, and produces decomposition-map.md or
   change-decomposition.md. Activates when the user enters Phase 2.5,
-  asks to decompose a system, runs /decompose, or when the methodology
+  asks to decompose a system, runs /decomposition, or when the methodology
   skill routes here because complexity thresholds fired.
 allowed-tools:
   - Read
@@ -156,7 +156,7 @@ Run Phase 2.5 in brownfield mode when any of these apply:
 - Change crosses an existing sub-project boundary
 - Change introduces a new external dependency
 - Change modifies an existing seam (interface between sub-projects)
-- Navigator explicitly invoked `/decompose`
+- Navigator explicitly invoked `/decomposition`
 
 If none apply and the change is contained within a single sub-project, state: "Change stays within [sub-project name]. Brownfield Phase 2.5 not needed. Run scoped methodology on [sub-project]." Done.
 

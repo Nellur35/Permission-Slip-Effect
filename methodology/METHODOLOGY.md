@@ -224,7 +224,7 @@ Brownfield Phase 2.5 runs when any of these conditions are met:
 - Change crosses an existing sub-project boundary
 - Change introduces a new external dependency
 - Change modifies an existing seam (interface between sub-projects)
-- Navigator explicitly invokes `/decompose`
+- Navigator explicitly invokes `/decomposition`
 
 #### Brownfield Outcomes
 

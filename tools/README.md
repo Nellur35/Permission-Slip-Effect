@@ -70,7 +70,7 @@ Structured feedback loop for any work session. Three stages: root cause analysis
 
 ## Skills vs Tools
 
-**Skills** (`.claude/skills/`) are Claude Code commands: `/intake`, `/decompose`, `/threat-model`, `/review`, `/gate-check`, `/audit`, plus `guide` (repo navigation) and `session-retro` (post-session RCA). They auto-detect context, read project files, and generate output directly. Use these if you work in Claude Code.
+**Skills** (`.claude/skills/`) are Claude Code commands: `/intake`, `/decomposition`, `/threat-model`, `/review`, `/gate-check`, `/audit`, plus `guide` (repo navigation) and `session-retro` (post-session RCA). They auto-detect context, read project files, and generate output directly. Use these if you work in Claude Code.
 
 **Tools** (`tools/`) work in any AI model. Point the AI at this repo and tell it which tool to use, or paste the tool contents manually if your AI can't read URLs. Use these if you work in Kiro, Cursor, ChatGPT, Gemini, or any other tool.
 

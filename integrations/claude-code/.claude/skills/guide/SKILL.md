@@ -98,12 +98,12 @@ If Claude Code skills are present:
 | Command | What it does |
 |---------|-------------|
 | `/intake` | Phase 1 — interactive problem definition |
-| `/decompose` | Phase 2.5 — decompose into sub-projects + seams (greenfield + brownfield) |
+| `/decomposition` | Phase 2.5 — decompose into sub-projects + seams (greenfield + brownfield) |
 | `/threat-model` | Phase 4 — threat model from architecture |
 | `/review` | Any phase — adversarial review |
 | `/gate-check` | Any phase — verify exit criteria |
 | `/audit` | Any time — scan existing codebase |
-| `/retro` | Session end — structured feedback loop |
+| `/session-retro` | Session end — structured feedback loop |
 
 The methodology orchestrator routes automatically based on phase.
 

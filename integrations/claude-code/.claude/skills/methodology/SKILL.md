@@ -22,7 +22,7 @@ You are the engine. The user is the navigator and judge. Gate questions decide w
 |-------|-----------|-------|
 | 1 — Problem | Define the real-world need | `/intake` |
 | 2 — Requirements | Define what, not how. Use `templates/phase-2-requirements.md` | Direct work |
-| 2.5 — Decomposition | Decompose into sub-projects + seams (if triggered). Use `templates/phase-2.5-decomposition.md` | `/decompose` |
+| 2.5 — Decomposition | Decompose into sub-projects + seams (if triggered). Use `templates/phase-2.5-decomposition.md` | `/decomposition` |
 | 3 — Architecture | Design for testability. Offer `/review` when done. Runs N+1 times if decomposition produced N > 1 sub-projects. | Direct work |
 | 4 — Threat Model | Attack every trust boundary. Seam threat model mandatory when N > 1. | `/threat-model` |
 | 5 — CI/CD Pipeline | Pipeline defines done. Select testing domains per project type. Offer `/review` when done | Direct work |
@@ -41,7 +41,7 @@ You are the engine. The user is the navigator and judge. Gate questions decide w
 | Check exit criteria before moving on | `/gate-check` |
 | Adversarial review of any artifact | `/review` |
 | Scan an existing codebase or CI/CD | `/audit` |
-| Decompose a system into sub-projects | `/decompose` |
+| Decompose a system into sub-projects | `/decomposition` |
 
 ## Context Handoff
 

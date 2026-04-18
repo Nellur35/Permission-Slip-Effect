@@ -121,7 +121,7 @@ If neither trigger fires, skip to Phase 3.
 
 For changes to existing systems, Phase 2.5 asks: "Does this change touch one sub-project or N? What seams does it cross?"
 
-**Brownfield triggers:** Change crosses sub-project boundary, introduces new external dependency, modifies existing seam, or navigator invokes `/decompose`.
+**Brownfield triggers:** Change crosses sub-project boundary, introduces new external dependency, modifies existing seam, or navigator invokes `/decomposition`.
 
 **Three outcomes:**
 1. Change stays within one sub-project → scoped methodology on that sub-project only
