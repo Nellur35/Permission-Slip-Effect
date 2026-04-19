@@ -4,6 +4,20 @@
 
 `Permission-Slip-Effect` is **not primarily a software product**. It is a **practical operating model** for using AI more rigorously in architecture review, threat modeling, code audit, and ambiguous technical decisions.
 
+---
+
+## Scope
+
+This repository currently contains two interrelated projects:
+
+1. **The Permission Slip Effect (PSE)** — a prompt-engineering insight and reasoning pipeline that is domain-agnostic. See `tools/`, `pipeline/`, and `experiments/`. Works in any analysis-heavy discipline where ambiguity is the main cost: security review, pharmacy, UX decisions, HR, legal analysis, medical diagnosis, product strategy, policy design.
+
+2. **A security-first AI-assisted development methodology** — an 8-phase discipline that uses PSE as a prompting substrate and adds the software-engineering scaffolding needed to build security-critical systems with AI. See `methodology/`, `integrations/`, and `case-studies/`. The methodology produced [`cicd-audit`](https://github.com/Nellur35/cicd-audit) (a 50-rule CI/CD security auditor) as its first full-cycle output. **This project is migrating to its own repository: [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology).**
+
+These projects evolved together and currently share a repo. Contributors and readers should consume whichever layer matches their use case; each has its own evidence base and defensible claims.
+
+---
+
 The repository has three layers.
 
 | Layer | What it is | Best for |
@@ -56,25 +70,29 @@ Use this repository when the problem is ambiguous, when multiple stakeholders or
 
 Do **not** use the full pipeline for simple, well-defined, or speed-critical tasks. On easy work, direct prompting is usually cheaper and good enough.
 
-## Evidence and caveats
+## Evidence
 
-The project includes experiments, worked examples, and a reference CLI, but the evidence base is still **practitioner-level**, not formal scientific validation.
+Two experimental programs (~$11 total, 30+ runs) stress-tested PSE's claims. Both corrected earlier overconfident claims. The corrected evidence supports a narrower, sharper thesis:
 
-Read the current claims as:
-
-| Claim type | Current status |
+| Finding | Source |
 |------|------|
-| Practical usefulness | Strong enough to operationalize |
-| Repeated observation | Present in the included experiments and examples |
-| General scientific proof | Not established |
-| Optimality across domains | Not claimed |
+| Pipeline + competent analyst wins 4/4 decisions, +3 mean on 25-point rubric | Program B |
+| Mechanism is model diversity under structure, not adversarial framing | Program A |
+| Effect is domain-sensitive: strongest where models have training depth | Program A |
+| Cross-domain generalization confirmed by independent pharmacist adoption | External validation |
+| Original v4 "zero-SPLIT" claim was within natural variance — corrected | Program A |
 
-The project is intentionally explicit about limitations. Prompt structure can improve analysis quality, but it does not remove the need for human judgment, domain expertise, or independent verification.
+**PSE is a structured information-surfacing tool.** Run the pipeline to surface material, then feed it to a competent analyst. Don't treat the convergence summary as the product — the raw surfaced stages are the product.
+
+Full empirical basis, corrected claims, and decision framework: [`EVIDENCE.md`](EVIDENCE.md).
+
+Raw experiment data: [`experiments/`](experiments/).
 
 ## Repository map
 
 | Path | Purpose | Status |
 |------|------|------|
+| [`EVIDENCE.md`](EVIDENCE.md) | Canonical empirical evidence, corrected claims, and decision framework | Stable |
 | [`FULL-CONTEXT.md`](FULL-CONTEXT.md) | Single-file context dump for AI tools | Stable |
 | [`tools/`](tools/) | Low-friction prompts | Stable |
 | [`methodology/`](methodology/) | Full development methodology + testing domains reference | Stable |
