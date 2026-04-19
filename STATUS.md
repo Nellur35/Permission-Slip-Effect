@@ -16,18 +16,18 @@ This repository contains multiple surfaces with different maturity levels. This 
 |------|------|------|
 | `README.md` | Stable | Primary public positioning and onboarding surface |
 | `START-HERE.md` | Stable | Entry-point map for new readers |
+| `EVIDENCE.md` | Stable | Canonical empirical evidence and decision framework |
 | `FULL-CONTEXT.md` | Stable | Single-file context export for AI tools |
 | `tools/` | Stable | Portable prompt assets with immediate practical use |
-| `methodology/` | Stable | Core operating model of the project |
 | `gotchas/` | Stable | Known failure modes and limitations |
+| `reasoning-pipeline.md` | Stable | Core pipeline architecture document |
 | `pipeline/frameworks.json` | Beta | Structured prompt catalog for the reference CLI |
 | `pipeline/pipeline.py` | Beta | Reference automation layer, now tested but still evolving |
 | `pipeline/README.md` | Beta | CLI usage documentation may change with the implementation |
-| `examples/` | Beta | Curated fixtures showing expected output shape |
 | `tests/` | Beta | Baseline regression coverage, expected to expand |
-| `experiments/` | Experimental | Evidence layer is useful but not a formal validation program |
-| `integrations/` | Experimental | Tool-specific workflows and setup patterns |
-| `multi-agent/` | Experimental | Frontier operating patterns, not stable interfaces |
+| `experiments/` | Experimental | Evidence layer — raw data behind EVIDENCE.md |
+
+**Note:** The development methodology, integrations, and multi-agent patterns have moved to [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology).
 
 ## What this means in practice
 

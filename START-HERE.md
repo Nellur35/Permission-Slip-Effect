@@ -6,19 +6,12 @@ What do you want to do?
 |---|---|
 | **Review something right now** | Paste [`tools/review.md`](tools/review.md) into any AI conversation |
 | **Threat model an architecture** | Paste [`tools/threat-model.md`](tools/threat-model.md) |
-| **Decompose a complex multi-component system** | Paste [`tools/decomposition.md`](tools/decomposition.md) or Phase 2.5 in methodology |
-| **Design test coverage for CI/CD** | [`methodology/testing-domains-reference.md`](methodology/testing-domains-reference.md) |
 | **Scan an existing codebase** | Paste [`tools/audit.md`](tools/audit.md) |
-| **Check if a phase is done** | Paste [`tools/gate-check.md`](tools/gate-check.md) |
 | **Define a problem properly** | Paste [`tools/intake.md`](tools/intake.md) |
 | **Run a session retrospective** | Paste [`tools/session-retro.md`](tools/session-retro.md) |
 | **Analyze a complex decision** | [`reasoning-pipeline.md`](reasoning-pipeline.md) or `python pipeline.py reason "..."` |
-| **Start a new project** | [`methodology/METHODOLOGY.md`](methodology/METHODOLOGY.md) — begin at Phase 1 |
+| **Read the empirical evidence** | [`EVIDENCE.md`](EVIDENCE.md) — what PSE proved, corrected, and when to use it |
 | **Give everything to an AI tool** | `Read https://raw.githubusercontent.com/Nellur35/permission-slip-effect/main/FULL-CONTEXT.md` |
-| **Install in Claude Code** | [`integrations/claude-code/README.md`](integrations/claude-code/README.md) |
-| **Install in Kiro** | [`integrations/kiro/README.md`](integrations/kiro/README.md) |
-| **Install in Cursor** | [`integrations/cursor/README.md`](integrations/cursor/README.md) |
-| **See a worked example** | [`examples/`](examples/) — cicd-audit review + reasoning outputs, pse-harness decomposition case study |
-| **Set up multi-agent** | [`multi-agent/MULTI-AGENT.md`](multi-agent/MULTI-AGENT.md) — start with Tier 0 first |
-| **See the evidence** | [`experiments/`](experiments/) — model shootout, v3 vs v4 A/B, research synthesis |
+| **See the raw experiments** | [`experiments/`](experiments/) — model shootout, v3 vs v4 A/B, research synthesis |
 | **See where Claude breaks** | [`gotchas/`](gotchas/) — system-level and per-skill failure modes |
+| **Use the full development methodology** | [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) — 8-phase security-first workflow that uses PSE as its prompting substrate |

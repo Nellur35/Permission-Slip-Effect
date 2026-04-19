@@ -8,22 +8,17 @@
 
 ## Scope
 
-This repository currently contains two interrelated projects:
+**This repository is the Permission Slip Effect (PSE)** — a domain-agnostic prompt-engineering insight, reasoning pipeline, and analytical toolkit. It works in any analysis-heavy discipline where ambiguity is the main cost: security review, pharmacy, UX decisions, HR, legal analysis, medical diagnosis, product strategy, policy design.
 
-1. **The Permission Slip Effect (PSE)** — a prompt-engineering insight and reasoning pipeline that is domain-agnostic. See `tools/`, `pipeline/`, and `experiments/`. Works in any analysis-heavy discipline where ambiguity is the main cost: security review, pharmacy, UX decisions, HR, legal analysis, medical diagnosis, product strategy, policy design.
-
-2. **A security-first AI-assisted development methodology** — an 8-phase discipline that uses PSE as a prompting substrate and adds the software-engineering scaffolding needed to build security-critical systems with AI. See `methodology/`, `integrations/`, and `case-studies/`. The methodology produced [`cicd-audit`](https://github.com/Nellur35/cicd-audit) (a 50-rule CI/CD security auditor) as its first full-cycle output. **This project is migrating to its own repository: [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology).**
-
-These projects evolved together and currently share a repo. Contributors and readers should consume whichever layer matches their use case; each has its own evidence base and defensible claims.
+**Looking for the security-first AI development methodology?** That project has moved to its own repository: [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology). The methodology uses PSE as its prompting substrate.
 
 ---
 
-The repository has three layers.
+The repository has two layers.
 
 | Layer | What it is | Best for |
 |------|------|------|
-| `tools/` | Paste-in prompts for review, threat modeling, audits, gate checks, intake, and retrospectives | Immediate use in any AI chat |
-| `methodology/` | A security-first AI-assisted development method (Phases 1-8 + Phase 2.5 Decomposition) with gates, templates, testing domains reference, and worked examples | Teams building real systems |
+| `tools/` | Paste-in prompts for review, threat modeling, audits, intake, and retrospectives | Immediate use in any AI chat |
 | `pipeline/` | A reference Python CLI that automates multi-stage reasoning pipelines | Advanced users who want structured runs |
 
 ## Why this exists
@@ -34,7 +29,7 @@ This repository is built around one practical idea.
 
 > If you force the model through structured adversarial, failure-oriented, and de-anchoring frames, it will often surface risks and contradictions that baseline prompting suppresses.
 
-The project packages that idea as **portable prompts**, a **development methodology**, and a **reference implementation**.
+The project packages that idea as **portable prompts** and a **reference implementation**.
 
 ## Start in 5 minutes
 
@@ -44,25 +39,23 @@ Choose the entry point that matches your intent.
 |------|------|
 | Review a design or document | [`tools/review.md`](tools/review.md) |
 | Threat model an architecture | [`tools/threat-model.md`](tools/threat-model.md) |
-| Decompose a complex multi-component system | [`tools/decomposition.md`](tools/decomposition.md) |
-| Design test coverage for CI/CD | [`methodology/testing-domains-reference.md`](methodology/testing-domains-reference.md) |
 | Audit an existing codebase or CI/CD setup | [`tools/audit.md`](tools/audit.md) |
-| Start a new project with the full method | [`methodology/METHODOLOGY.md`](methodology/METHODOLOGY.md) |
 | Run the automated reasoning pipeline | [`pipeline/README.md`](pipeline/README.md) |
+| Read the empirical evidence | [`EVIDENCE.md`](EVIDENCE.md) |
 | Load the whole system into an AI tool | [`FULL-CONTEXT.md`](FULL-CONTEXT.md) |
+| Use the full development methodology | [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) |
 
-If you are new to the project, start with **one prompt file** in `tools/`. If that immediately improves the sharpness of your review, then adopt selected parts of the methodology. Use the CLI only if you specifically want structured, repeatable pipeline runs.
+If you are new to the project, start with **one prompt file** in `tools/`. If that immediately improves the sharpness of your review, try the reasoning pipeline on a real decision. Use the CLI only if you specifically want structured, repeatable pipeline runs.
 
 ## What this repository is — and is not
 
 | It is | It is not |
 |------|------|
-| A methodology for AI-assisted engineering rigor | A polished end-to-end platform |
-| A prompt library you can use immediately | A replacement for engineering judgment |
-| A reference implementation of a reasoning pipeline | Proof that one pipeline is optimal for every domain |
-| A practitioner-tested system | A peer-reviewed scientific result |
+| A prompt library and reasoning pipeline you can use immediately | A polished end-to-end platform |
+| A structured information-surfacing tool | A replacement for engineering judgment |
+| A practitioner-tested, empirically-validated system | Proof that one pipeline is optimal for every domain |
 
-That distinction matters. The repository’s strongest value is the **thinking model and review discipline**, not a large automation layer.
+That distinction matters. The repository’s strongest value is the **thinking model and analytical discipline**, not a large automation layer.
 
 ## When to use it
 
@@ -95,12 +88,8 @@ Raw experiment data: [`experiments/`](experiments/).
 | [`EVIDENCE.md`](EVIDENCE.md) | Canonical empirical evidence, corrected claims, and decision framework | Stable |
 | [`FULL-CONTEXT.md`](FULL-CONTEXT.md) | Single-file context dump for AI tools | Stable |
 | [`tools/`](tools/) | Low-friction prompts | Stable |
-| [`methodology/`](methodology/) | Full development methodology + testing domains reference | Stable |
 | [`pipeline/`](pipeline/) | Reference automation layer | Beta |
-| [`examples/`](examples/) | Example inputs and expected outputs | Beta |
 | [`experiments/`](experiments/) | Validation notes and comparisons | Experimental |
-| [`integrations/`](integrations/) | Tool-specific workflows | Experimental |
-| [`multi-agent/`](multi-agent/) | Multi-agent operating patterns | Experimental |
 | [`gotchas/`](gotchas/) | Known failure modes and limits | Stable |
 | [`STATUS.md`](STATUS.md) | Project surface-area status definitions | Stable |
 
@@ -113,23 +102,9 @@ If you want the highest return for the least process overhead, adopt these piece
 | Order | Recommended first move | Why |
 |------|------|------|
 | 1 | Use one prompt from `tools/` | Fastest path to value |
-| 2 | Add a gate question from the methodology | Improves review rigor without major ceremony |
-| 3 | Use the reasoning pipeline on one high-stakes decision | Good fit for ambiguous, expensive mistakes |
-| 4 | Standardize selected artifacts in your team | Turns the method into a repeatable habit |
-| 5 | Extend the CLI only if you need structured automation | The automation layer is supportive, not primary |
-
-## Example run
-
-The repository now includes an example review flow based on [`cicd-audit`](https://github.com/Nellur35/cicd-audit), a concrete project built with this methodology.
-
-| Example file | Purpose |
-|------|------|
-| [`examples/cicd-audit-artifact.md`](examples/cicd-audit-artifact.md) | Input artifact excerpt used for review |
-| [`examples/cicd-audit-review-output.json`](examples/cicd-audit-review-output.json) | Curated example of a review pipeline result |
-| [`examples/cicd-audit-reasoning-problem.md`](examples/cicd-audit-reasoning-problem.md) | Example decision/problem statement |
-| [`examples/cicd-audit-reasoning-output.json`](examples/cicd-audit-reasoning-output.json) | Curated example of a reasoning pipeline result |
-
-These are **expected-output examples**, not benchmark truth. Their purpose is to show contributors what a good structured output looks like.
+| 2 | Use the reasoning pipeline on one high-stakes decision | Good fit for ambiguous, expensive mistakes |
+| 3 | Read [`EVIDENCE.md`](EVIDENCE.md) for the decision framework | Know when PSE adds value and when to skip it |
+| 4 | Adopt the full development methodology | See [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) |
 
 ## Development and contribution
 

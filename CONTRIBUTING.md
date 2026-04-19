@@ -26,10 +26,8 @@ The repository is divided into different stability zones.
 | Surface | Current expectation |
 |------|------|
 | `tools/` | Stable and usability-focused |
-| `methodology/` | Stable and editorially curated |
 | `pipeline/` | Beta reference implementation |
-| `examples/` | Beta, used to show target output shape |
-| `experiments/`, `integrations/`, `multi-agent/` | Experimental and more open to iteration |
+| `experiments/` | Experimental and more open to iteration |
 
 If you are unsure whether a change belongs in the stable or experimental surface, prefer the experimental side first.
 
