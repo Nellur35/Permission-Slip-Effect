@@ -8,17 +8,32 @@
 
 Models optimize for "plausible response" -- not "thorough response." They stop at the first reasonable answer. This is called **satisficing**. A single reasoning mode cannot cover the full problem space of a complex decision. The solution is to chain multiple reasoning frameworks into a pipeline where each stage analyzes the problem from a different angle, and the output of each stage informs the next.
 
-## The Permission Slip Effect
+## How to use the output: two-stage pattern
 
 This is the single most important property of the pipeline.
 
-Models are sycophantic by default -- RLHF training optimizes for the statistically agreeable answer, not the factually complete one. Research on LLM sycophancy shows that models trained via RLHF are incentivized to be agreeable, sometimes at the cost of accuracy. Adding explicit permission to disagree (e.g., "find why this is wrong") increases rejection of flawed reasoning dramatically.
+**PSE is a surfacing tool, not a decision tool.** The product of a pipeline run is the raw material inside the five framework stages — assumptions, failure modes, stakeholder dynamics, reframings, uncomfortable truths. That material is then consumed by a competent analyst (the navigator, or a subsequent model prompt) who produces the recommendation.
 
-Structured stages like Pre-Mortem ("assume this failed -- why?") and Adversarial Reasoning ("what is each party secretly protecting?") give the model contexts where the expected output is facts and analysis, not the statistically safe answer. The model isn't being tricked -- it's being given a structure where the training permits the complete output.
+```
+Stage 1 — Surface:  Raw problem → Pipeline → 5 framework stages (FPR, RCAR, AdR, ToT, PMR)
+Stage 2 — Analyze:  Competent analyst prompt + 5 surfaced stages → Recommendation
+```
 
-In cross-model testing (3 problems at varied complexity, 4 pipeline variants, Sonnet 4.5 runs evaluated by Opus 4.6), insights like "the mandate itself is contradictory," "the VP ego is driving this decision," and "maybe this platform should not exist at all" appeared **only** in pipeline variants that included Adversarial or Pre-Mortem stages. The baseline ("think step by step") suppressed all of them.
+The convergence stage inside the pipeline is a **summary / navigation aid** over the five stages. It is not the product. Treating convergence output as the final answer is the single most common misuse of PSE. Program B's corrected test compared *baseline alone* to *baseline fed the five surfaced stages* — enriched won 4 of 4 decisions at +3 mean on a 25-point rubric. See [`EVIDENCE.md`](EVIDENCE.md) §3.
 
-The pipeline does not make the model smarter. It gives the model permission to say what it already knows.
+## The Permission Slip Effect (what the name means)
+
+The name comes from an observation: structured stages like Pre-Mortem ("assume this failed -- why?") and Adversarial Reasoning ("what is each party secretly protecting?") give the model contexts where the expected output is analysis of failure modes and hidden incentives rather than an agreeable summary. In cross-model testing, insights like "the mandate itself is contradictory," "the VP ego is driving this decision," and "maybe this platform should not exist at all" appeared in pipeline variants with Adversarial or Pre-Mortem stages but not in the "think step by step" baseline.
+
+That observation is real. It is also only part of the story. The load-bearing driver is **controlled heterogeneity**:
+
+- **Structured decomposition** (Phase 0) — shared interpretation of the input before any framework runs.
+- **Temperature differentiation per stage** — opens or tightens the output distribution to match the cognitive job.
+- **Genuinely diverse reviewer models from different training origins** — the primary driver.
+
+Program A's mechanism-isolation tests (Exp 3 Swap C and Exp 6) removed these one at a time. Removing adversarial framing preserved the effect. Removing model diversity collapsed UNIQUE findings from 15 to 8, a ~50% drop. Adversarial framing is **supportive, not primary**.
+
+The pipeline does not make the model smarter. It widens the set of analytical trajectories that get explored and hands the union to an analyst who decides.
 
 ---
 
@@ -212,15 +227,26 @@ The value scales with problem complexity:
 
 ---
 
-## Why the Permission Slip Effect works (theoretical grounding)
+## Why the pipeline works (mechanism, post-correction)
 
-RLHF alignment is architecturally a **thin behavioral layer** — not a deep structural change. Research demonstrates that fine-tuning a safety-trained model on a few hundred harmful examples strips the safety behavior while preserving all general capabilities. The alignment doesn't remove knowledge or capability. It suppresses certain outputs based on context.
+The original framing here was that adversarial and Pre-Mortem prompts exploit a thin RLHF alignment layer and that framing is what surfaces uncomfortable truths. That framing is **not wrong, but it is not the load-bearing driver.** Program A's mechanism-isolation experiments corrected it.
 
-The Permission Slip Effect exploits this in the productive direction. Instead of stripping alignment to access harmful capabilities, the pipeline creates prompt contexts where uncomfortable-but-useful analysis becomes the "aligned" response. Pre-Mortem says "assume failure." Adversarial says "model the hidden incentives." In those contexts, the agreeable thing to do is surface the truth — because the prompt explicitly asked for it.
+The corrected mechanism is **controlled heterogeneity**:
 
-This is the same mechanism that makes jailbreaks work, pointed in a productive direction. Higher inference temperature (0.7 for adversarial stages vs. 0.2 for analytical stages) further opens the space — at low temperature, the model picks the safest completion; at higher temperature, it explores completions that alignment training would normally filter out.
+1. **Structured decomposition (Phase 0)** standardizes how every reviewer interprets the raw input. Without it, disagreements happen at the parsing level and look like analytical disagreement.
+2. **Per-stage temperature profiles** open the output distribution at the stages where diverse completions matter (AdR 0.7, PMR 0.7, ToT 0.6) and tighten it where determinism matters (Phase 0 0.1, Synthesis 0.1).
+3. **Genuinely diverse reviewer models from different training origins** produce genuinely different analytical trajectories. This is the primary driver. A panel of four models from Anthropic, Moonshot, Qwen, and a fourth distinct origin does not behave like four copies of one model — even at identical temperatures.
 
-The pipeline's adversarial and pre-mortem stages are not prompt tricks. They are **structural bypasses of a known architectural property** of RLHF-trained models. This is why they work consistently across models from different labs — every RLHF-trained model has the same thin alignment layer, and every one of them responds when the prompt context makes factual analysis the expected output rather than the statistically safe one.
+Program A's mechanism-isolation results:
+
+| Configuration | What was removed | Result |
+|---|---|---|
+| Exp 6: Adversarial off | adversarial framing | effect preserved |
+| Exp 3 Swap C: Duplicate model | model diversity | UNIQUE collapsed 15 → 8 (~50%) |
+
+Adversarial framing is **supportive**. Model diversity is **load-bearing**. Both are real. Only one is primary.
+
+The older RLHF-alignment-bypass framing is preserved in the literature, and higher temperature on AdR/PMR does expand the completion space, but the effect is not a jailbreak-style trick. It is a pipeline that runs genuinely different reasoners over a shared decomposition of the problem and returns their union for an analyst to read.
 
 ---
 
@@ -230,7 +256,9 @@ The v3 pipeline (documented above) chains frameworks sequentially with uniform p
 
 v4 adds: Phase 0 (structured decomposition before any framework runs), tiered parallel execution, residual injection of the original problem at every stage, drift gates between tiers, per-stage temperature profiles, and a marginal value audit at synthesis.
 
-A/B testing on real production code with full mechanism isolation showed that Phase 0 and temperature profiles are **necessary counterbalances** — temperature alone is actively harmful (increases disagreement), Phase 0 alone doesn't reduce SPLITs (though it doubles MAJOR findings and increases CONSENSUS), but together they produce zero SPLIT findings for $0.09 more per review. The interaction is non-obvious and wouldn't be predicted from either mechanism alone.
+A/B testing on real production code showed that Phase 0 and temperature profiles are **necessary counterbalances** — temperature alone is actively harmful (increases disagreement), Phase 0 alone does not reduce SPLITs (though it doubles MAJOR findings and increases CONSENSUS), but together they reduce SPLIT variance and stabilize UNIQUE findings. The interaction is non-obvious and would not be predicted from either mechanism alone.
+
+**Correction (2026-04-19):** an earlier write-up claimed v4 eliminated SPLITs for $0.09 more per run. Five identical re-runs of the same artifact produced SPLIT counts of 3, 6, 0, 4, 3 (mean 3.2, stdev ~2). The original zero-SPLIT outcome was a single-run observation inside natural variance, not a repeatable elimination. Treat SPLITs as per-instance signal, not a pipeline-level KPI. UNIQUE findings — the stable de-anchoring signal — are the load-bearing metric. See [`EVIDENCE.md`](EVIDENCE.md) §2 and §5.
 
 **[Full v4 architecture →](experiments/v4-architecture.md)** · **[A/B comparison data →](experiments/v3-vs-v4-comparison.md)** · **[LLM principles analysis →](experiments/llm-principles-analysis.md)**
 

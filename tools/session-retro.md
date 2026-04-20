@@ -5,6 +5,8 @@ Run a structured retrospective after any work session. Not just when things brea
 **Input:** Describe what happened this session. Bug fix, new feature, tech debt, investigation, refactor, configuration change — anything.
 **Output:** Root cause analysis, retrospective, and executable lessons learned that feed back into your process.
 
+This tool is a **surfacing tool, not a verdict.** It produces candidate RCAs, patterns, and lessons. The navigator decides which lessons to apply, which to defer, and which to reject. Lessons surfaced here are proposals, not decisions.
+
 ---
 
 ## Quick Filter
@@ -51,14 +53,14 @@ Read all RCA outputs. Answer with equal rigor for successes and problems:
 
 *What did the tools actually do vs. what the navigator noticed?*
 
-If `telemetry.jsonl` exists at project root, run the analysis script before generating lessons:
+If the project you're retro'ing logs skill/agent telemetry (e.g., a `telemetry.jsonl` at the project root, as the sibling [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) harness produces), run the relevant analysis before generating lessons. Example, if the telemetry skill ships an analyzer:
 
 ```bash
 bash .claude/skills/telemetry/analyze-telemetry.sh          # current session
 bash .claude/skills/telemetry/analyze-telemetry.sh --all     # cross-session trends
 ```
 
-Read the output. Answer:
+If no telemetry exists, skip this stage — the retro works without it. Read the analyzer output (or reconstruct from memory). Answer:
 
 1. **Navigator blind spots.** Which skill activations does the navigator not mention in the session description? These are invisible actions — the model used a skill, produced (or didn't produce) output, and the navigator didn't notice.
 2. **Overtriggering.** Which skills activated but produced no output? Two possibilities: wrong skill triggered (description field needs tuning), or navigator changed direction mid-skill (legitimate, but worth noting).
@@ -80,9 +82,7 @@ Target: [which SKILL.md, hook config, or description field]
 Priority: do now | next session
 ```
 
-When telemetry is available, append to the log entry: skills activated, completion rate, overrides, telemetry signals.
-
-If no `telemetry.jsonl` exists, skip this stage — the retro works without it. Telemetry adds a data layer; the retro is the interpretation layer.
+When telemetry is available, append to the log entry: skills activated, completion rate, overrides, telemetry signals. Telemetry adds a data layer; the retro is the interpretation layer.
 
 ---
 
@@ -106,9 +106,9 @@ Tactical "do now" lessons get applied before the session ends.
 
 ## Project Log Entry
 
-The methodology already maintains a project log — a structured log auto-collected via steering files and hooks (see [`multi-agent/MULTI-AGENT.md`](../multi-agent/MULTI-AGENT.md)). The feedback loop writes to the same project log. Do not create a separate file.
+If the consuming project maintains a structured project log (the sibling [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) does, auto-collected via steering files and hooks), append there. Do not create a separate file. The project log becomes the corpus later runs of Graph of Thoughts can read against — for pattern recognition, emergent roles, and conflict resolution.
 
-After completing the loop (full or quick summary), append to `project-log.md`. The project log is the corpus that Graph of Thoughts runs against — for both agent emergence and conflict resolution. Feedback loop entries become part of that corpus.
+If no project log convention exists, write the entry somewhere stable (e.g., `project-log.md` at the repo root) so cross-session analysis has a target.
 
 ---
 

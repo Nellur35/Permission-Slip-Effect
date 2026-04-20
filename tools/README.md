@@ -1,6 +1,8 @@
 # Tools
 
-Standalone prompts for security-first development. Each tool works in any AI model — Claude Code, Kiro, Cursor, ChatGPT, Gemini, or anything else.
+Standalone prompts for analysis-heavy work. Each tool works in any AI model — Claude Code, Kiro, Cursor, ChatGPT, Gemini, or anything else.
+
+Each tool produces **surfaced material** (structured findings, questions, decomposed inputs, retrospective notes). That material is input for a navigator — a human or a subsequent analyst prompt — who decides what to do with it. None of these tools are verdicts; they are the raw analytical surface a careful reviewer would produce and then reason over. See [`../EVIDENCE.md`](../EVIDENCE.md) for the two-stage usage pattern.
 
 ## How to Use
 
@@ -13,7 +15,7 @@ Read https://raw.githubusercontent.com/Nellur35/permission-slip-effect/main/FULL
 and use the threat-model tool on my architecture
 ```
 
-One file, one fetch. The AI gets the complete methodology, all tools, and templates.
+One file, one fetch. The AI gets the full substrate: prompts, pipeline reference, and evidence.
 
 ### Option 2: Paste manually (for tools that can't read URLs)
 
@@ -22,60 +24,44 @@ One file, one fetch. The AI gets the complete methodology, all tools, and templa
 3. Paste your input (architecture doc, threat model, project structure, etc.) where indicated.
 4. Get structured output.
 
-No methodology knowledge required. Each tool is self-contained.
+Each tool is self-contained.
 
 ## Available Tools
 
 ### `intake.md`
-Interactive questionnaire for Phase 1 problem definition. Asks one question at a time, pushes back on vague answers, redirects solution-jumping back to the problem. Supports greenfield projects and existing codebases.
+Interactive questionnaire for problem definition. Asks one question at a time, pushes back on vague answers, redirects solution-jumping back to the problem. Supports greenfield projects and existing codebases.
 
 **Input:** Describe your project
-**Output:** `problem_statement.md` (greenfield) or `reconstruction_assessment.md` (existing project)
-
-### `decomposition.md`
-Phase 2.5 decomposition. Decides whether a system is one project or N sub-projects, identifies seams between them, and assigns recommended testing domains per sub-project. Supports greenfield (new systems) and brownfield (changes to existing systems).
-
-**Input:** `requirements.md` (greenfield) or existing `decomposition-map.md` + change description (brownfield)
-**Output:** `decomposition-map.md` (greenfield) or `change-decomposition.md` (brownfield)
+**Output:** Surfaced problem statement (greenfield) or reconstruction assessment (existing project) — material a navigator consumes to decide scope and next steps.
 
 ### `audit.md`
-Scan an existing codebase and CI/CD pipeline. Maps architecture, test coverage, security controls, and pipeline gates. Outputs a gap analysis with a recommended entry point into the methodology.
+Scan an existing codebase and CI/CD pipeline. Maps architecture, test coverage, security controls, and pipeline gates. Produces a gap analysis a navigator can prioritize from.
 
 **Input:** Project file tree, CI/CD config, existing docs
-**Output:** Gap analysis with pipeline coverage, architecture map, priority actions
+**Output:** Pipeline coverage, architecture map, priority actions — surfaced, not prescribed.
 
 ### `threat-model.md`
-Generate a structured threat model from an architecture document. Examines trust boundaries, IAM blast radius, secrets lifecycle, data lifecycle, supply chain (including LLM-generated code), and 10 other areas.
+Generate a structured threat model from an architecture document. Examines trust boundaries, IAM blast radius, secrets lifecycle, data lifecycle, supply chain (including LLM-generated code), and related areas.
 
 **Input:** `architecture.md` or system description
-**Output:** `threat_model.md` with risks, impact ratings, and mitigations
+**Output:** Structured threat surface with risks, impact ratings, and mitigations the navigator then triages.
 
 ### `review.md`
-Adversarial review of any development artifact. Finds what is wrong, not whether it is good. Includes review lenses for architecture, threat models, CI/CD pipelines, requirements, and code.
+Adversarial review of any artifact. Finds what is wrong, not whether it is good. Includes review lenses for architecture, threat models, CI/CD pipelines, requirements, and code.
 
 **Input:** Any artifact (architecture, threat model, pipeline config, code, design doc)
-**Output:** Structured findings with severity, impact, and recommended actions
-
-### `gate-check.md`
-Exit criteria checklist for all 8 phases plus Phase 2.5 Decomposition. Each gate lists what it proves and what it doesn't catch. Use it to verify you've met the bar before moving forward.
-
-**Input:** The phase number you are checking
-**Output:** Pass/fail for each gate question, with gaps identified
+**Output:** Structured findings with severity, impact, and recommended actions — input for the navigator's ruling step.
 
 ### `session-retro.md`
-Structured feedback loop for any work session. Three stages: root cause analysis of what happened (not just what broke), retrospective on patterns and deltas, and executable lessons learned that modify your process directly.
+Structured feedback loop for any work session. Three stages: root cause analysis of what happened (not just what broke), retrospective on patterns and deltas, and executable lessons learned.
 
 **Input:** Describe what happened this session — bug fix, feature, tech debt, investigation, anything
-**Output:** RCA with causal chains, retrospective with pattern analysis, lessons learned with executable actions and targets
+**Output:** RCA with causal chains, retrospective with pattern analysis, candidate lessons for the navigator to apply.
 
-## Skills vs Tools
+## Portability
 
-**Skills** (`.claude/skills/`) are Claude Code commands: `/intake`, `/decomposition`, `/threat-model`, `/review`, `/gate-check`, `/audit`, plus `guide` (repo navigation) and `session-retro` (post-session RCA). They auto-detect context, read project files, and generate output directly. Use these if you work in Claude Code.
+Each tool works in any AI model. Point the AI at this repo and tell it which tool to use, or paste the tool contents manually if your AI can't read URLs. They are paste-in prompts, not a framework — keep whichever ones fit your workflow and ignore the rest.
 
-**Tools** (`tools/`) work in any AI model. Point the AI at this repo and tell it which tool to use, or paste the tool contents manually if your AI can't read URLs. Use these if you work in Kiro, Cursor, ChatGPT, Gemini, or any other tool.
+## Relationship to the methodology sibling repo
 
-Same capabilities, different delivery. Skills add auto-detection and file I/O. Tools are portable.
-
-## Relationship to the Full Methodology
-
-These tools extract focused capabilities from the [Security-First AI Dev Methodology](../methodology/METHODOLOGY.md). They are the executables; the methodology is the operating manual. Use any tool independently, or use them together as part of the full 8-phase lifecycle with Phase 2.5 decomposition when triggered.
+These tools are the prompting layer. The software-engineering methodology that sequences them into an 8-phase workflow with gate checks, decomposition, and multi-agent orchestration lives in [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology). That repo uses these tools; it is not a prerequisite for using them. Any individual tool stands alone.

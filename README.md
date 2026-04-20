@@ -1,8 +1,8 @@
 # Permission Slip Effect
 
-*Structured prompts, methodology, and a reference CLI for getting more critical, less agreeable analysis from LLMs when being wrong is expensive.*
+*Structured prompts and a reference CLI for surfacing the assumptions, failure modes, and stakeholder dynamics an LLM would otherwise skip past — then handing that enriched context to a competent analyst.*
 
-`Permission-Slip-Effect` is **not primarily a software product**. It is a **practical operating model** for using AI more rigorously in architecture review, threat modeling, code audit, and ambiguous technical decisions.
+`Permission-Slip-Effect` is **not primarily a software product**. It is a **practical operating model** for using AI more rigorously in analysis-heavy work — architecture review, threat modeling, policy design, clinical reasoning, and ambiguous decisions where being wrong is expensive.
 
 ---
 
@@ -23,13 +23,24 @@ The repository has two layers.
 
 ## Why this exists
 
-LLMs often stop at the first plausible, agreeable answer. That is fine for low-stakes tasks. It is dangerous for architecture, security, and decisions where the cost of being wrong is high.
+LLMs often stop at the first plausible, agreeable answer. That is fine for low-stakes tasks. It is dangerous for architecture, security, policy, and decisions where the cost of being wrong is high.
 
 This repository is built around one practical idea.
 
-> If you force the model through structured adversarial, failure-oriented, and de-anchoring frames, it will often surface risks and contradictions that baseline prompting suppresses.
+> If you decompose the problem, run it past genuinely diverse models under different temperature profiles, and then hand the resulting assumptions, failure modes, and stakeholder reframings to a competent analyst, you get sharper analysis than either a single prompt or a single model could produce alone.
+
+The load-bearing mechanism is **controlled heterogeneity** (structured decomposition + temperature differentiation + reviewer models from different training origins), not the adversarial framing on its own. Adversarial prompts help, but Program A's mechanism-isolation test showed that removing model diversity collapses unique findings by ~50%, while removing adversarial framing does not. See [`EVIDENCE.md`](EVIDENCE.md).
 
 The project packages that idea as **portable prompts** and a **reference implementation**.
+
+### How to use the output (two-stage pattern)
+
+PSE is a **surfacing tool, not a decision tool.** The right usage is two-stage:
+
+1. **Run the pipeline to surface material.** The five framework stages (FPR, RCAR, AdR, ToT, PMR) produce raw assumptions, failure modes, stakeholder dynamics, and reframings.
+2. **Feed the surfaced stages to a competent analyst** — either you reading the raw stage outputs, or a subsequent model prompt that takes the stages as enriched context and produces the recommendation.
+
+The convergence stage is a **summary / navigation aid**, not the product. Treating convergence output as the final answer is the single most common misuse.
 
 ## Start in 5 minutes
 

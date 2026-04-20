@@ -1,67 +1,75 @@
 # Gotchas — System-Level
 
-Known failure modes that span the entire methodology, not individual skills. These are where the system breaks — not where a single skill produces bad output.
+Known failure modes of the Permission Slip Effect substrate. These are where the substrate breaks — not where a single prompt produces bad output. The sibling [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) repo has its own methodology-level gotchas (multi-agent collisions, phase gate stalls, skill activation collisions, telemetry stalls); this file is scoped to the substrate itself.
 
 ---
 
-## The Complexity Cliff
+## Treating the Convergence Summary as the Final Answer
 
-**What happens:** One terminal, one context window, one navigator — and the project needs what amounts to multiple teams. The skills start pulling in different directions. The threat model skill wants to expand coverage. The implementation skill wants to ship. The review skill wants to block. The gate-check skill says "not ready." No single context window can hold all these concerns simultaneously without degradation.
+**What happens:** The pipeline produces a `convergence` block alongside the five framework stage outputs. A user reads only the convergence summary, treats it as the recommendation, and skips the second stage of the two-stage usage pattern. The surfaced material — assumptions from FPR, failure modes from PMR, hidden incentives from AdR — never reaches the analyst who would have acted on it.
 
-**When it hits:** Projects with 3+ major components, cross-cutting concerns (auth + infrastructure + frontend + data), or anything where the threat model alone exceeds ~30% of the context window.
+**When it hits:** Anywhere the pipeline's JSON output is summarized automatically, piped into a dashboard, or consumed by a user who expected "the answer." It is the single most common misuse of PSE.
 
-**Why it happens:** The methodology assumes a navigator who can hold the full picture. When the project outgrows one person's cognitive bandwidth, the AI reflects that overload — it starts flattening analysis, skipping areas it "already covered," and producing generic output to cope with context pressure.
+**Why it happens:** Convergence looks like the summary of a long chain-of-thought and reads like a recommendation. It is not. It is a navigation aid over the five stages; the stages are the product.
 
-**What to do:** This is the Tier 0 → Tier 2 transition point. The project log should show the symptoms: recurring `[BOTTLENECK]` tags, skills reading the same files repeatedly, shallow analysis where earlier sessions produced depth. When you see it — split. Don't push through. Read `multi-agent/MULTI-AGENT.md` and let the project log tell you which domains to separate.
-
-**The trap:** The transition is the dangerous moment. Single-agent is visibly breaking but multi-agent feels like overkill. Navigators push through "just one more session" and accumulate degraded output they'll pay for later. The rule: if the gate-check starts rubber-stamping, you've already waited too long.
+**What to do:** For consequential decisions, always read (or feed a model) the `stages` array. If the consumer only needs a quick summary, use the pipeline-direct output fine — but do not compare it against a baseline analyst prompt and conclude "marginal value." That is the mis-specified comparison that motivated the 2026-04-19 correction. See [`../EVIDENCE.md`](../EVIDENCE.md) §3.
 
 ---
 
-## Context Window Amnesia
+## Conflating SPLIT Count with Pipeline Quality
 
-**What happens:** Long sessions where early artifacts (problem statement, requirements) fall out of the context window. The model stops referencing them. Implementation drifts from requirements. Threat mitigations get forgotten.
+**What happens:** A navigator reads a single run's SPLIT count and concludes the pipeline is (or isn't) working. They retune parameters, swap models, or retire the pipeline based on one number that is largely noise.
 
-**When it hits:** Any session exceeding ~80K tokens. More common in Phase 7 (implementation) where code fills the window and upstream artifacts get pushed out.
+**When it hits:** On any one-off v3-vs-v4-style comparison, on any "is my lineup any good?" check, on any CI gate that alerts on SPLIT counts.
 
-**What to do:** Residual injection — explicitly re-read the upstream artifact before each phase transition. The gate-check skill does this implicitly (it reads the artifact for the current phase), but mid-phase drift isn't caught. Consider compaction-safe checkpoints: before the context compacts, run `/gate-check` so the summary includes the gate status.
+**Why it happens:** SPLIT counts are intuitive ("the reviewers disagreed N times") and variable. Five identical re-runs of the same v4 configuration on the same artifact produced counts of 3, 6, 0, 4, 3. Mean 3.2, stdev ~2.17. A single "0" reads like success; the next run is a "6."
+
+**What to do:** Use UNIQUE findings as the load-bearing metric. UNIQUE counts are stable across runs, codebases, lineups, and cost tiers (CV 21–42%). Treat SPLITs as per-instance signals worth investigating when they appear, not as pipeline-level KPIs. See EVIDENCE.md §2 and §5.
 
 ---
 
-## Skill Activation Collision
+## Using the Pipeline on Domain-Unfamiliar Material
 
-**What happens:** Multiple skills match the same request. The model reads two skills, gets conflicting instructions, and either merges them badly or picks one arbitrarily.
+**What happens:** The pipeline is run on niche languages, unusual frameworks, or specialized technical domains the reviewer models have shallow training priors for. The reviewers converge on surface patterns, SPLITs collapse, UNIQUE findings shrink, and the pipeline's marginal value over single-model review drops.
 
-**When it hits:** Common collisions: `methodology` + `threat-model` (both activate on "threat model"), `review` + `gate-check` (both activate on "is this ready?"), `audit` + `review` (both activate on "check this code").
+**When it hits:** Uncommon languages, specialized scientific or regulatory domains, internal DSLs, bleeding-edge frameworks.
 
-**What to do:** The methodology orchestrator should be the primary router. If the orchestrator is installed, it should intercept ambiguous requests and route to the right skill. If skills are installed without the orchestrator, the descriptions need to be distinct enough that only one matches. Current descriptions have overlap — the telemetry system will show which collisions actually happen in practice.
+**Why it happens:** The effect is driven by controlled heterogeneity — diverse reviewer models exploring different analytical trajectories. Diversity needs depth to generate divergence. Where the models lack depth, they converge on what they can parse, which is surface structure.
+
+**What to do:** Run the EVIDENCE.md §6 decision framework. If training depth is shallow, either inject domain expertise via context, skip the pipeline, or use a lighter variant. The pipeline is not a universal analytical amplifier; it is an amplifier for domains where the reviewers already know how to think.
 
 ---
 
 ## Sycophancy Under Pressure
 
-**What happens:** The model agrees with the navigator instead of maintaining its adversarial stance. This is the core problem the entire repo exists to solve — and it still happens within the repo's own skills when the navigator pushes back hard enough.
+**What happens:** When the navigator pushes back on a finding, the reviewer model softens subsequent output. This is the core problem the pipeline exists to mitigate — and it still reappears inside the pipeline's own outputs when pressure is applied hard enough.
 
-**When it hits:** Review and threat model skills are most vulnerable. If the navigator says "that's not a real risk" twice, the model starts softening subsequent findings. Gate-check is vulnerable too — the model wants to say "pass" because the navigator clearly wants to proceed.
+**When it hits:** Iterative sessions where the navigator argues with reviewer findings, shared-context re-prompts that accumulate corrective pressure, convergence stages run on a model that has read the navigator's pushback.
 
-**What to do:** The skill instructions already say "do not back down." But instructions compete with RLHF training, and training usually wins under pressure. The structural fix is the bootstrap gap principle: the model that builds the artifact shouldn't review it. Use `/review` from a fresh context or `pipeline.py review` with a different model. The behavioral fix is the navigator recognizing when the model suddenly agrees with everything — that's the signal to distrust the output, not trust it.
+**Why it happens:** RLHF still wins under direct pressure. Adversarial prompts and temperature profiles widen the distribution of surfacing, but they don't immunize the model against an insistent user.
+
+**What to do:** Structural defenses beat behavioral ones. Run adversarial reviewers in a fresh context rather than inside the argument thread. Use the pipeline's multi-reviewer architecture: if three diverse reviewers surfaced the finding, the navigator's pushback on one doesn't quiet the rest. If the model starts agreeing with everything after a pushback, distrust the output, not trust it.
+
+---
+
+## Context Window Amnesia
+
+**What happens:** Long sessions where early artifacts (problem statement, Phase 0 decomposition, initial constraints) fall out of the context window. Later stages optimize their analysis of accumulated analysis rather than the original problem. Drift goes undetected.
+
+**When it hits:** Any session exceeding ~80K tokens. More common in CLI runs that pipe large inputs through all stages than in paste-in prompt use.
+
+**Why it happens:** Models don't page — what's out of context is out of mind. The pipeline's residual injection (re-injecting Phase 0 output at every stage) is the designed mitigation, but it only works if the harness actually re-injects; many paste-in workflows don't.
+
+**What to do:** Always re-include the Phase 0 decomposition (or the raw problem if Phase 0 wasn't run) as "PRIMARY INPUT" at every framework stage, distinct from the accumulated analysis. The pipeline CLI does this by default; manual pipelines must do it explicitly.
 
 ---
 
 ## Template Drift
 
-**What happens:** Skills produce output that technically follows the template but fills it with generic content. The threat model has all 13 areas but half say "low risk — standard mitigations apply." The review has findings but they're all Medium severity with vague impact.
+**What happens:** Reviewers produce output that technically follows the framework template but fills it with generic content. A threat-model surfacing has all areas filled in, but half say "low risk — standard mitigations apply." A review has findings, but they're all Medium severity with vague impact.
 
-**When it hits:** When the model is under context pressure, when the architecture is complex enough that genuine analysis is expensive, or when the model has already produced a similar artifact recently and pattern-matches from its own output.
+**When it hits:** When the model is under context pressure, when the artifact is complex enough that genuine analysis is expensive, or when the model has already produced a similar artifact recently and is pattern-matching from its own prior output.
 
-**What to do:** The review skill is the check on this — but only if the navigator actually runs it. A threat model that says "standard mitigations" on 6 of 13 areas should fail `/review`. The gotchas sections in individual skills (below) flag the specific templates where this happens most.
+**Why it happens:** Filling the template is easier than surfacing the content. Models optimize for structural completion, which is easy to verify, rather than analytical depth, which isn't.
 
----
-
-## Feedback Loop Stall
-
-**What happens:** The session retro produces lessons. The lessons say "update SKILL.md with X." Nobody updates the skill. Next session, same failure. The retro catches it again. Same lesson. The loop captures information but never closes.
-
-**When it hits:** When tactical lessons require manual file edits and the navigator is already in the next session. Strategic lessons are worse — they require scheduling, and "next session" becomes "someday."
-
-**What to do:** The retro skill already says "tactical lessons get applied before the session ends." Enforce it: if the retro produces a tactical lesson and the session ends without the file edit, the project log hook should flag it. The telemetry system (once installed) tracks whether skill files change after retro sessions — if they don't, the loop is stalled.
+**What to do:** Run an adversarial review (`tools/review.md`) on the pipeline's output using a different model than the reviewers. A surfacing run that produced mostly "standard mitigations" on trust boundaries should fail that review. Do not let the same model that produced the artifact also validate it — the bootstrap-gap failure mode is that tools don't review themselves.

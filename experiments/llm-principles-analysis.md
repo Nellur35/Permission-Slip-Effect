@@ -4,6 +4,10 @@
 
 ---
 
+> **Post-correction note (2026-04-19).** The nine principles and the P1+P3+P4 convergence (input representation + residual connection + drift constraint are the same fix from three angles) still stand. The **P8 framing is superseded**: PSE is more accurately described as a **controlled-heterogeneity mechanism** (structured decomposition + temperature differentiation + genuinely diverse reviewer models from different training origins) than as "adversarial framing exploiting a thin RLHF alignment layer." Program A's Exp 3 Swap C removed model diversity while preserving adversarial framing and the effect collapsed (UNIQUE 15 → 8). Removing adversarial framing (Exp 6) did not. Adversarial framing is supportive; model diversity is primary. See [`../EVIDENCE.md`](../EVIDENCE.md) §2.
+
+---
+
 ## Method
 
 Nine structural principles extracted from LLM architecture, each mapped onto the reasoning pipeline to find where the same principle validates or exposes a gap.
@@ -72,11 +76,17 @@ This is not metaphor. LLM architecture and the reasoning pipeline are both infor
 
 **Fix:** Analytical stages at 0.2, diagnostic at 0.3-0.4, Permission Slip stages at 0.7, synthesis at 0.1.
 
-### P8: Permission Slip Effect — VALIDATED
+### P8: Permission Slip Effect — VALIDATED, mechanism corrected
 
-**No gap.** This is the pipeline's strongest validated insight. The Permission Slip Effect directly exploits the thin alignment layer — creating contexts where the model's training permits uncomfortable output. Empirically proven, now theoretically grounded.
+**No gap in the effect itself**; this remains the pipeline's strongest validated insight. The corrected mechanism framing is **controlled heterogeneity** rather than "adversarial framing exploiting the thin alignment layer":
 
-**Enhancement:** Document WHY it works at the architectural level. Connect the effect to RLHF alignment fragility. This transforms the pipeline from "clever prompting trick" to "architectural exploitation of known alignment properties."
+- Structured decomposition (Phase 0) standardizes how every reviewer interprets the raw input.
+- Per-stage temperature profiles open the output distribution where diversity matters and tighten it where determinism matters.
+- Genuinely diverse reviewer models from different training origins produce different analytical trajectories — this is the load-bearing driver.
+
+Adversarial framing (AdR, PMR) is supportive: it gives those diverse models specific failure-oriented contexts to explore. The older "RLHF alignment bypass" theory captured the role of high-temperature adversarial stages but overweighted it. Program A's mechanism-isolation tests (Exp 3 Swap C, Exp 6) confirm the re-weighting empirically: removing diversity collapses UNIQUE ~50%; removing adversarial framing does not.
+
+**Enhancement (unchanged):** document WHY it works at the architectural level. The updated story: staged computation across genuinely distinct reasoners, anchored by shared decomposition, with adversarial prompts providing the specific prompts where diverse reasoners produce the most actionable divergence.
 
 ### P9: Emergence Thresholds — Minor Gap
 

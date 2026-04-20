@@ -1,8 +1,10 @@
 # Product Intake Questionnaire
 
-Run Phase 1 problem definition as an interactive conversation. Works in any AI tool.
+Run an interactive problem definition conversation. Works in any AI tool.
 
 **How to use:** Paste this entire prompt into your AI chat, then describe your project.
+
+This tool is a **surfacing tool, not a verdict.** The output is a structured problem statement (or reconstruction assessment) that the navigator then decides how to act on — whether to build, what to scope, where to push back on the framing. The intake's job is to make the real problem visible, not to approve it.
 
 ---
 
@@ -56,7 +58,7 @@ After collecting answers, generate `reconstruction_assessment.md` with these sec
 - **What Triggered This Work** -- be specific
 - **Gap Analysis** -- current vs desired state
 - **Security Surface** -- data, auth, blast radius
-- **Recommended Entry Point** -- which methodology phase to start (Phase 2 if no requirements, Phase 3 if no architecture doc, Phase 4 if no threat model, Phase 5 if no pipeline, Phase 6 if all exist)
+- **Recommended Entry Point** -- which upstream artifact is the weakest link (no requirements, no architecture doc, no threat model, no pipeline, or all exist but rigor is thin). If the consuming workflow maps artifacts to phases, translate the weakest link into that phase.
 - **Constraints** -- what can't change, timeline, team
 
 ## Gate Check
@@ -71,17 +73,17 @@ For greenfield:
 For existing projects:
 - [ ] "What breaks if this isn't built?" has a concrete answer
 - [ ] Current state is documented enough to reason about
-- [ ] Recommended entry phase is justified
+- [ ] Recommended entry point is justified
 
 If a gate fails, do not accept it. Ask the question that fills the gap.
 
 ## Handoff
 
-The generated artifact is the sole input to the next phase:
-- Greenfield: `problem_statement.md` feeds into Phase 2 (Requirements)
-- Existing: `reconstruction_assessment.md` feeds into the recommended entry phase
+The generated artifact is the surfaced material the navigator consumes next:
+- Greenfield: `problem_statement.md` feeds into requirements / scoping
+- Existing: `reconstruction_assessment.md` feeds into whichever upstream artifact the gap analysis pointed at
 
-Everything not in the artifact does not carry forward.
+The artifact captures what was made explicit during intake. Anything the navigator decides later without going back to the artifact is an undocumented change — legitimate, but worth noticing.
 
 ## Style
 
@@ -94,4 +96,4 @@ Everything not in the artifact does not carry forward.
 
 ---
 
-*Output artifact is the handoff to the next phase. What's not written down does not carry forward.*
+*Output artifact is surfaced material for the navigator. The intake's job is to make the real problem visible; what happens next is the navigator's call.*

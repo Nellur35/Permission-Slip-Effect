@@ -4,6 +4,25 @@
 
 ---
 
+## §0 — Variance update (2026-04-19)
+
+The headline result below — *"v4 eliminates SPLITs on code reviews for $0.09 more per run"* — was a single-run observation. Program A later ran the same v4 configuration on the same Python artifact five times. SPLIT counts: **3, 6, 0, 4, 3** (mean 3.2, stdev ~2.17). The original zero-SPLIT outcome fell inside natural run-to-run variance, not outside it.
+
+**What still holds from this file:**
+- The **interaction effect** structure (Phase 0 and temperature profiles are necessary counterbalances; temperature alone is actively harmful; Phase 0 alone does not reduce SPLITs). The mechanism is real; the headline metric from a single run is not.
+- The **domain boundary finding** (Phase 0 decomposition does not reduce SPLITs on strategic documents where disagreements are genuine opinion differences, not parsing artifacts).
+- The **scaling principle finding** (v4 over-analyzes simple code — complexity gating is needed).
+- The **reviewer balance finding** (temperature profiles redistributed UNIQUE contributions away from Strategist dominance).
+
+**What was corrected:**
+- Read "v4 eliminates SPLITs" as "v4 reduces SPLIT variance and stabilizes UNIQUE findings." The effect is a distributional improvement, not a deterministic elimination.
+- **UNIQUE findings are the load-bearing metric** (stable across runs, codebases, lineups, cost tiers). SPLIT counts are per-instance signals; treat them as such, not as pipeline-level KPIs.
+- The "$0.09 per SPLIT eliminated" economics in the Cost Analysis section below assumes reliable elimination; with variance factored in, read that section as "cost per v4 upgrade," not "cost per SPLIT."
+
+See [`../EVIDENCE.md`](../EVIDENCE.md) §2 (Program A mechanism isolation) and §5 (what was corrected).
+
+---
+
 ## Test Design
 
 Three tests, each running both v3 and v4 on the same input. Plus one isolation test to separate mechanism contributions.

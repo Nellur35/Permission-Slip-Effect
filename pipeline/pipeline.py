@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Security-First AI Dev Methodology — Reasoning Pipeline CLI
+Permission Slip Effect — Reasoning Pipeline CLI
 
 Orchestrates multi-model reasoning pipelines and adversarial reviews.
 Ships as a reference implementation with an Anthropic provider included.
