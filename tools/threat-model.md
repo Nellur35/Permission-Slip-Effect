@@ -5,6 +5,8 @@ Generate a structured threat model from an architecture document.
 **Input:** Paste your `architecture.md` (or describe your system's components, boundaries, and data flows).
 **Output:** A complete `threat_model.md` ready for use.
 
+This tool is a **surfacing tool, not a verdict.** It enumerates a threat surface — risks, impacts, candidate mitigations. A navigator (or a subsequent analysis prompt) then decides which mitigations to implement, which risks to accept, and which trust boundaries need deeper review.
+
 ---
 
 ## Instructions
@@ -92,16 +94,14 @@ For each trust boundary, a table:
 |----------------|------|------------|
 | [packages/images/actions/IaC modules/LLM code] | [specific risk] | [pinning, scanning, review] |
 
-### 10. Mitigation-to-Testing-Domain Mapping
+### 10. Mitigation-to-Testing Mapping (optional)
 
-For every mitigation in the threat analysis, identify which testing domain catches it. Use the [Testing Domains Reference](../methodology/testing-domains-reference.md) for the full taxonomy.
+For each mitigation, identify the testing domain that would catch its failure. A mitigation without a way to test whether it still holds is documentation, not a control. If the consuming workflow defines a specific testing taxonomy (e.g., the sibling [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) has one), use that. Otherwise, a simple pairing is enough:
 
 | Mitigation | Testing Domain | Specific Gate/Tool |
 |-----------|---------------|-------------------|
 | [e.g., Input validation on all API endpoints] | [e.g., Security (SAST) + Correctness (PBT)] | [e.g., semgrep rules + Hypothesis property tests] |
 | [e.g., Token expiry enforced at 15 min] | [e.g., Correctness (integration) + Security] | [e.g., Integration test: expired token rejected] |
-
-A mitigation without a corresponding testing domain is documentation without enforcement.
 
 ### 11. Gate Verification
 
@@ -124,4 +124,4 @@ If any answer is missing or vague, go back and fill it in. These are the exit cr
 
 ---
 
-*End of output: the resulting `threat_model.md` is the sole input to the next phase (CI/CD pipeline design). Everything not written here does not carry forward.*
+*End of output: the resulting `threat_model.md` is surfaced material for the navigator. Whatever the navigator accepts from it carries forward; what they reject, reframe, or defer also carries forward as explicit decisions. The artifact's purpose is to make those decisions conscious, not to make them for you.*

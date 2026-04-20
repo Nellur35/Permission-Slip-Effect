@@ -5,6 +5,8 @@ Review any development artifact with an adversarial mandate: find what is wrong,
 **Input:** Paste any artifact (architecture doc, threat model, pipeline config, design doc).
 **Output:** Structured findings with severity, positions, and recommended actions.
 
+This tool is a **surfacing tool, not a verdict.** The findings it produces are raw material for the navigator to triage, rule on, and decide what to do about. "High severity" means the reviewer flagged it as high-impact — not that the artifact is rejected. The navigator owns the decision.
+
 ---
 
 ## Instructions
