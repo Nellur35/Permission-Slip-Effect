@@ -7,6 +7,15 @@ Data sources: 37 meta-pipeline reviews, 4 experiment reports, 2 council reports,
 
 ---
 
+> **Post-correction note (2026-04-19). This file is retained as a historical record and predates Programs A/B.** Two framings below are superseded by [`../EVIDENCE.md`](../EVIDENCE.md):
+>
+> 1. **"SPLIT is where the value lives" is superseded.** UNIQUE findings are the load-bearing de-anchoring metric — stable across runs, codebases, lineups, and cost tiers. SPLIT counts are noisy run-to-run (stdev ~2 across five identical re-runs of the same artifact; counts 3, 6, 0, 4, 3). Section 3 below (100% SPLIT ACTED rate on N=2) was a small-sample directional signal, not a pipeline-level KPI. See EVIDENCE.md §2.
+> 2. **"The zero-SPLIT v4 result" is a single-run observation inside natural variance.** The interaction effect (Phase 0 + temperature profiles) is real and still holds as a variance-reduction mechanism, but the specific zero-SPLIT count from one run does not replicate. See EVIDENCE.md §5.
+>
+> Where statements below contradict EVIDENCE.md, EVIDENCE.md wins. The observations about multi-model diversity (13/1/1 → 3/2/2), the interaction effect structure, and the bootstrap-gap meta-lesson survive the correction.
+
+---
+
 ## 1. The De-Anchoring Thesis: VALIDATED (with caveats)
 
 The core claim — that models from different training origins produce different concern categories — holds across all data points.

@@ -4,6 +4,10 @@
 
 ---
 
+> **Post-correction note (2026-04-19).** The architecture described in this file is unchanged. The effect size is softened: **v4 reduces SPLIT variance and stabilizes UNIQUE findings over v3** — it does not eliminate SPLITs deterministically. The earlier "zero SPLIT findings for $0.09 more per review" claim was a single-run observation inside natural variance; five identical re-runs on the same artifact produced 3, 6, 0, 4, 3. UNIQUE findings (the load-bearing metric) are stable across runs; SPLIT counts are noisy. See [`../EVIDENCE.md`](../EVIDENCE.md) §2 and §5.
+
+---
+
 ## What changed from v3
 
 The v3 pipeline chains frameworks sequentially with uniform parameters. v4 adds six mechanisms derived from mapping LLM design principles onto the pipeline:
@@ -280,16 +284,18 @@ Phase 0 + residual injection are the highest-impact, lowest-effort changes. Star
 
 A/B testing of v4 against v3 on real production code produced three key findings that update the architecture:
 
-**1. The Interaction Effect.** Full mechanism isolation testing on the same codebase:
+**1. The Interaction Effect.** Full mechanism isolation testing on the same codebase (single-run counts):
 
 | Configuration | SPLITs |
 |---------------|--------|
 | v3 baseline (uniform temp, no Phase 0) | 5 |
 | Phase 0 only (uniform temp 0.3) | 6 |
 | Temperature only (varied temp, no Phase 0) | 6 — **worse than baseline** |
-| Full v4 (Phase 0 + temperature profiles) | **0** |
+| Full v4 (Phase 0 + temperature profiles) | 0 (single run; see variance note below) |
 
 The mechanisms are necessary counterbalances. Temperature without Phase 0 is actively harmful — reviewers in different cognitive modes interpret raw input differently, creating MORE disagreement. Phase 0 without temperature is inert for SPLITs — shared structure with uniform cognition doesn't reduce existing disagreements. Only together: Phase 0 ensures shared interpretation, temperature ensures distinct analysis angles.
+
+**Variance caveat:** five identical re-runs of the full v4 configuration on the same artifact produced SPLIT counts of 3, 6, 0, 4, 3. The "0" above is a single draw from that distribution, not the expected value. v4's real contribution here is reducing the variance and mean of SPLITs and stabilizing UNIQUE findings relative to v3, not eliminating SPLITs.
 
 **2. Domain Boundary.** v4 does not reduce SPLITs on strategic/policy documents (6 vs 6). Phase 0 solves "reviewers parsed the code differently" but cannot solve "reviewers genuinely disagree on policy." The Permission Slip Effect still works on strategic problems (uncomfortable truths surface in both versions), but SPLIT elimination is a code-domain benefit.
 

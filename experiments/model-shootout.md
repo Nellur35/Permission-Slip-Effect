@@ -4,6 +4,10 @@
 
 ---
 
+> **Post-correction note (2026-04-19).** This file concluded that model diversity was **a factor** — that it shifted insight distribution from 13/1/1 to 3/2/2 in the tested lineup. Program A's mechanism-isolation experiments later upgraded this conclusion: **model diversity is the primary load-bearing mechanism of the pipeline**, not one factor among many. Program A Exp 3 Swap C duplicated a model in a panel of four (preserving adversarial framing, Phase 0, temperatures) and UNIQUE findings collapsed from 15 to 8 — a ~50% drop. Removing adversarial framing (Exp 6) did not produce a comparable collapse. The shootout's observed distributional shift is the same effect measured in a different way. Read this file as part of that convergent finding, not as an independent "diversity helps" result. See [`../EVIDENCE.md`](../EVIDENCE.md) §2.
+
+---
+
 ## Background
 
 The [reasoning pipeline](../reasoning-pipeline.md) chains multiple analytical frameworks (CoT → RCA → Adversarial → ToT → Pre-Mortem) into a single structured analysis. Early testing used a single model for all stages. This experiment tests whether **assigning different models to different roles** in the pipeline improves output quality.
