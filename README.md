@@ -29,7 +29,7 @@ This repository is built around one practical idea.
 
 > If you decompose the problem, run it past genuinely diverse models under different temperature profiles, and then hand the resulting assumptions, failure modes, and stakeholder reframings to a competent analyst, you get sharper analysis than either a single prompt or a single model could produce alone.
 
-The load-bearing mechanism is **controlled heterogeneity** (structured decomposition + temperature differentiation + reviewer models from different training origins), not the adversarial framing on its own. Adversarial prompts help, but Program A's mechanism-isolation test showed that removing model diversity collapses unique findings by ~50%, while removing adversarial framing does not. See [`EVIDENCE.md`](EVIDENCE.md).
+The load-bearing mechanism is **controlled heterogeneity** (structured decomposition + temperature differentiation + reviewer models from different training origins), not the adversarial framing on its own. Adversarial prompts help, but Program A's mechanism-isolation test showed that removing model diversity collapses unique findings by 47% (15 → 8), while removing adversarial framing does not. See [`EVIDENCE.md`](EVIDENCE.md).
 
 The project packages that idea as **portable prompts** and a **reference implementation**.
 

@@ -84,7 +84,7 @@ This is not metaphor. LLM architecture and the reasoning pipeline are both infor
 - Per-stage temperature profiles open the output distribution where diversity matters and tighten it where determinism matters.
 - Genuinely diverse reviewer models from different training origins produce different analytical trajectories — this is the load-bearing driver.
 
-Adversarial framing (AdR, PMR) is supportive: it gives those diverse models specific failure-oriented contexts to explore. The older "RLHF alignment bypass" theory captured the role of high-temperature adversarial stages but overweighted it. Program A's mechanism-isolation tests (Exp 3 Swap C, Exp 6) confirm the re-weighting empirically: removing diversity collapses UNIQUE ~50%; removing adversarial framing does not.
+Adversarial framing (AdR, PMR) is supportive: it gives those diverse models specific failure-oriented contexts to explore. The older "RLHF alignment bypass" theory captured the role of high-temperature adversarial stages but overweighted it. Program A's mechanism-isolation tests (Exp 3 Swap C, Exp 6) confirm the re-weighting empirically: removing diversity collapses UNIQUE 47% (15 → 8); removing adversarial framing does not.
 
 **Enhancement (unchanged):** document WHY it works at the architectural level. The updated story: staged computation across genuinely distinct reasoners, anchored by shared decomposition, with adversarial prompts providing the specific prompts where diverse reasoners produce the most actionable divergence.
 

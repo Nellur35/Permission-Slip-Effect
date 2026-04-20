@@ -10,7 +10,7 @@ Empirical validation of the reasoning pipeline and the Permission Slip Effect.
 
 ## Model Shootout
 
-**[model-shootout.md](model-shootout.md)** — Multi-model benchmark on Amazon Bedrock showing that role-based model assignment produces balanced insight distribution vs. single-model dominance (13/1/1 → 3/2/2). **Post-correction note:** Program A's Exp 3 Swap C later confirmed model diversity as the load-bearing mechanism at the pipeline level (removing diversity collapsed UNIQUE 15 → 8, ~50%). This upgrades the shootout's conclusion from "model diversity is a factor" to "model diversity is the primary mechanism."
+**[model-shootout.md](model-shootout.md)** — Multi-model benchmark on Amazon Bedrock showing that role-based model assignment produces balanced insight distribution vs. single-model dominance (13/1/1 → 3/2/2). **Post-correction note:** Program A's Exp 3 Swap C later confirmed model diversity as the load-bearing mechanism at the pipeline level (removing diversity collapsed UNIQUE 15 → 8, 47%). This upgrades the shootout's conclusion from "model diversity is a factor" to "model diversity is the primary mechanism."
 
 ## v3 vs v4 Pipeline A/B Comparison
 
