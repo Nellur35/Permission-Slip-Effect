@@ -15,7 +15,7 @@ A structured prompt-engineering substrate for analysis-heavy work in any domain.
 ## Anchoring facts for any AI reading this
 
 1. **Use the output in two stages.** Pipeline output = framework stages (FPR, RCAR, AdR, ToT, PMR). A competent analyst consumes those stages and produces the recommendation. Convergence is a summary, not the product.
-2. **Load-bearing mechanism = controlled heterogeneity.** Structured decomposition + temperature differentiation + genuinely diverse reviewer models. Adversarial framing is supportive, not primary. Program A's Exp 3 Swap C: removing model diversity collapsed UNIQUE 15 → 8 (~50%); removing adversarial framing did not.
+2. **Load-bearing mechanism = controlled heterogeneity.** Structured decomposition + temperature differentiation + genuinely diverse reviewer models. Adversarial framing is supportive, not primary. Program A's Exp 3 Swap C: removing model diversity collapsed UNIQUE 15 → 8 (47%); removing adversarial framing did not.
 3. **UNIQUE findings are the load-bearing metric.** Stable across runs, codebases, lineups, cost tiers. SPLIT counts are noisy run-to-run (stdev ~2 on five identical re-runs). Treat SPLITs as per-instance signal, not a pipeline-level KPI.
 4. **Effect size.** Program B's corrected comparison: baseline-alone vs. baseline-fed-the-five-surfaced-stages. Enriched won 4 of 4 decisions at +3 mean on a 25-point rubric. Total empirical cost across Programs A and B: ~$11.
 5. **Domain sensitivity.** Effect is strongest where the reviewer models have training depth. Mainstream languages, well-trodden domains: strong effect. Niche languages, edge-of-training-data domains: weak effect.

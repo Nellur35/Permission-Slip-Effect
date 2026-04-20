@@ -31,7 +31,7 @@ That observation is real. It is also only part of the story. The load-bearing dr
 - **Temperature differentiation per stage** — opens or tightens the output distribution to match the cognitive job.
 - **Genuinely diverse reviewer models from different training origins** — the primary driver.
 
-Program A's mechanism-isolation tests (Exp 3 Swap C and Exp 6) removed these one at a time. Removing adversarial framing preserved the effect. Removing model diversity collapsed UNIQUE findings from 15 to 8, a ~50% drop. Adversarial framing is **supportive, not primary**.
+Program A's mechanism-isolation tests (Exp 3 Swap C and Exp 6) removed these one at a time. Removing adversarial framing preserved the effect. Removing model diversity collapsed UNIQUE findings from 15 to 8, a 47% drop. Adversarial framing is **supportive, not primary**.
 
 The pipeline does not make the model smarter. It widens the set of analytical trajectories that get explored and hands the union to an analyst who decides.
 
@@ -242,7 +242,7 @@ Program A's mechanism-isolation results:
 | Configuration | What was removed | Result |
 |---|---|---|
 | Exp 6: Adversarial off | adversarial framing | effect preserved |
-| Exp 3 Swap C: Duplicate model | model diversity | UNIQUE collapsed 15 → 8 (~50%) |
+| Exp 3 Swap C: Duplicate model | model diversity | UNIQUE collapsed 15 → 8 (47%) |
 
 Adversarial framing is **supportive**. Model diversity is **load-bearing**. Both are real. Only one is primary.
 
