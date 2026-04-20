@@ -8,7 +8,7 @@
 
 ## Scope
 
-**This repository is the Permission Slip Effect (PSE)** — a domain-agnostic prompt-engineering insight, reasoning pipeline, and analytical toolkit. It works in any analysis-heavy discipline where ambiguity is the main cost: security review, pharmacy, UX decisions, HR, legal analysis, medical diagnosis, product strategy, policy design.
+**This repository is the Permission Slip Effect (PSE)** — a domain-agnostic prompt-engineering insight, reasoning pipeline, and analytical toolkit. It works in any analysis-heavy discipline where ambiguity is the main cost: security review, UX decisions, HR, legal analysis, medical diagnosis, product strategy, policy design.
 
 **Looking for the security-first AI development methodology?** That project has moved to its own repository: [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology). The methodology uses PSE as its prompting substrate.
 
@@ -83,7 +83,7 @@ Two experimental programs (~$11 total, 30+ runs) stress-tested PSE's claims. Bot
 | Pipeline + competent analyst wins 4/4 decisions, +3 mean on 25-point rubric | Program B |
 | Mechanism is model diversity under structure, not adversarial framing | Program A |
 | Effect is domain-sensitive: strongest where models have training depth | Program A |
-| Cross-domain generalization confirmed by independent pharmacist adoption | External validation |
+| Cross-domain generalization confirmed by adoption outside the security/coding domain | External validation |
 | Original v4 "zero-SPLIT" claim was within natural variance — corrected | Program A |
 
 **PSE is a structured information-surfacing tool.** Run the pipeline to surface material, then feed it to a competent analyst. Don't treat the convergence summary as the product — the raw surfaced stages are the product.
