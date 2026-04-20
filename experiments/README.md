@@ -35,7 +35,7 @@ Gemini Deep Research independently assessed the pipeline as:
 - *"Highly useful, specifically for 'Wicked Problems'"*
 - *"Moderately novel — the specific integration constitutes a novel 'Cognitive Macro'"*
 
-A practicing pharmacist with no security or software-engineering background adopted PSE prompts for drug-interaction analysis and patient-specific risk assessment and reported measurably shorter analysis work. N=1, qualitative — an existence proof that the mechanism generalizes outside its original context, not a replacement for controlled replication. See EVIDENCE.md §4.
+At least one practitioner outside the security and software-engineering domain has adopted PSE prompts for analytical work in their own field and reported measurably shorter analysis work. N=1, qualitative — an existence proof that the mechanism generalizes outside its original context, not a replacement for controlled replication. See EVIDENCE.md §4.
 
 ## Run Your Own Tests
 

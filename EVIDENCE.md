@@ -207,13 +207,13 @@ These were insights the pipeline's surfacing stages generated — especially Fir
 
 ## 4. External generalization evidence
 
-Independent of the two formal programs, a practicing pharmacist with no security or software-engineering background adopted PSE prompts for drug-interaction analysis and patient-specific risk assessment. He reported measurably shorter analysis work.
+Independent of the two formal programs, PSE has been adopted by at least one practitioner outside the security and software-engineering domain for analytical work in their own field. They reported measurably shorter analysis work.
 
 This is a different kind of evidence than the experimental programs produced. It's N=1, qualitative, self-reported. But it answers a question the formal experiments cannot: does PSE generalize beyond the context it was built in?
 
-The pharmacist's adoption is consistent with the combined programs' finding. PSE's frameworks (First Principles, Pre-Mortem, Adversarial Reasoning, Stakeholder Mapping, Tree of Thoughts) are generic analytical tools drawn from philosophy, decision psychology, engineering, and management. They existed before PSE and have independent research backing. What PSE adds is the chaining logic, the structured decomposition, and the operational recipe for applying them to ambiguous analytical work.
+The adoption is consistent with the combined programs' finding. PSE's frameworks (First Principles, Pre-Mortem, Adversarial Reasoning, Stakeholder Mapping, Tree of Thoughts) are generic analytical tools drawn from philosophy, decision psychology, engineering, and management. They existed before PSE and have independent research backing. What PSE adds is the chaining logic, the structured decomposition, and the operational recipe for applying them to ambiguous analytical work.
 
-The pharmacist used the pipeline the way it's designed to be used — as a starting surface of questions a careful analyst would ask — and reported it shortened his work. That's the same mechanism Programs A and B identified, applied in a different domain.
+The practitioner used the pipeline the way it's designed to be used — as a starting surface of questions a careful analyst would ask — and reported it shortened their work. That's the same mechanism Programs A and B identified, applied in a different domain.
 
 Whether this signal holds across more users in more fields is a question future replication will answer. For now, it's an existence proof that the generalization claim is at least plausible outside the tool's original context.
 
@@ -221,7 +221,7 @@ Whether this signal holds across more users in more fields is a question future 
 
 ## 5. Combined findings
 
-Putting Program A, Program B, and the pharmacist evidence together:
+Putting Program A, Program B, and the external adoption evidence together:
 
 ### What holds
 
@@ -231,7 +231,7 @@ Putting Program A, Program B, and the pharmacist evidence together:
 4. **UNIQUE findings are the reliable de-anchoring signal.** Stable across runs, codebases, lineups, and cost tiers. SPLIT findings are noisy — treat as per-instance signal, not KPI.
 5. **Opus-as-reviewer is load-bearing.** Cost reduction should preserve reviewer diversity and find savings in the convergence slot.
 6. **The effect is domain-sensitive.** Strongest where reviewers have training depth; weaker where they don't.
-7. **Cross-domain generalization is at least plausible.** Pharmacy validation exists; more replication would strengthen the claim.
+7. **Cross-domain generalization is at least plausible.** At least one adopter outside the security/coding domain reports the mechanism working in their own field; more replication would strengthen the claim.
 
 ### What was corrected
 
@@ -245,7 +245,7 @@ Putting Program A, Program B, and the pharmacist evidence together:
 - Cross-model variance (how does v4 perform on a lineup with no Anthropic reviewers in a clean test?)
 - Prompt-sensitivity of Phase 0 (is the effect structure-driven or wording-driven?)
 - Human expert validation (does a blind human-expert rating converge with the grader model's judgment?)
-- Further cross-domain replication (beyond the pharmacist)
+- Further cross-domain replication (beyond the single external adopter)
 - Token-length confound (does the enriched condition win because of more context, or more useful context?)
 
 ---
@@ -277,7 +277,7 @@ Are the reviewers you're using deeply exposed to this domain in training, or is 
 
 **Yes signals:**
 - Mainstream languages (Python, JavaScript, Java, Go)
-- Well-trodden domains (software architecture, medical diagnosis, legal analysis, pharmacy, UX decisions, HR decisions, product strategy, policy design)
+- Well-trodden domains (software architecture, medical diagnosis, legal analysis, UX decisions, HR decisions, product strategy, policy design)
 - Problems where the model has strong priors to break
 
 **No signals:**
@@ -299,7 +299,7 @@ Are the reviewers you're using deeply exposed to this domain in training, or is 
 Based on the combined evidence and the generalization signal:
 
 - **Security review** — threat modeling, architecture review, incident investigation. Tested; works.
-- **Pharmacy** — ambiguous drug interactions, patient-specific risk. External validation via pharmacist adoption.
+- **External validation** — at least one adopter outside the security/coding domain reports using the pipeline for their own analytical work and finding it shortened that work (N=1, qualitative).
 - **UX design** — "should we add feature X" decisions, who benefits, who resists, how does this fail in six months. UX already uses adjacent tools (Jobs-to-be-Done, 5 Whys, stakeholder mapping); PSE runs them together.
 - **HR** — promotion decisions, performance conversations, team restructures. Stakeholder mapping and adversarial framing are core HR work.
 - **Legal analysis** — case strategy, contract review, risk assessment. Follows similar structured-reasoning traditions (IRAC) with less adversarial framing.
