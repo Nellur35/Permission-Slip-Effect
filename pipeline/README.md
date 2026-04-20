@@ -1,6 +1,15 @@
 # Reasoning Pipeline CLI
 
-Automates the multi-model reasoning pipeline and adversarial review from the methodology. No AWS account needed -- works with any LLM API.
+Reference CLI for the Permission Slip Effect reasoning pipeline and adversarial review. No AWS account needed — works with any LLM API.
+
+## Use the output in two stages
+
+For consequential decisions, the pipeline is a **surfacing tool, not a decision tool.** The right pattern is:
+
+1. **Run the pipeline to surface material.** The output contains a `stages` array (the five framework outputs) and a `convergence` block (a summary / navigation aid). The surfaced stages are the product.
+2. **Feed the surfaced stages to a competent analyst prompt.** Either read them yourself, or pass them as enriched context to a subsequent model call that produces the recommendation.
+
+Program B's corrected comparison (see [`../EVIDENCE.md`](../EVIDENCE.md) §3) measured baseline-alone vs. baseline-fed-the-five-stages. Enriched won 4 of 4 decisions at +3 mean on a 25-point rubric. Treating the convergence block as the final answer is the single most common misuse — that comparison is baseline vs. summary, which is the framing flaw that motivated the correction.
 
 ## Quick Start
 

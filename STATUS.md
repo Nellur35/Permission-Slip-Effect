@@ -31,6 +31,6 @@ This repository contains multiple surfaces with different maturity levels. This 
 
 ## What this means in practice
 
-If you are adopting the project today, the safest path is to start with the **stable** surfaces: the prompt files, the methodology, and the gotchas. If you want more automation, use the **beta** pipeline layer with the understanding that it is a reference implementation rather than a frozen API.
+If you are adopting the project today, the safest path is to start with the **stable** surfaces: the prompt files, the reasoning pipeline reference, EVIDENCE.md, and the gotchas. If you want more automation, use the **beta** pipeline CLI layer with the understanding that it is a reference implementation rather than a frozen API.
 
 If you are contributing, prefer changes that strengthen stable surfaces through clarity and beta surfaces through reliability. Treat experimental areas as places to explore, but do not let them redefine the repository’s primary identity without strong evidence.
