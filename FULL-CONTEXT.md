@@ -28,6 +28,8 @@ Domain-agnostic. Useful wherever ambiguity is the main cost:
 - session retrospectives
 - any ambiguous high-stakes decision where being wrong is expensive
 
+> **Not professional advice.** PSE can support legal-style or clinical-style reasoning by surfacing assumptions, failure modes, and alternate framings — but its output is not legal, medical, or other professional advice, and is not a substitute for a qualified human professional. Treat it as input to a competent analyst, not a verdict.
+
 ## How an AI agent should consume this repo
 
 You do not need to run the full PSE pipeline for every task. Read this file, then route the user's request through the steps below.

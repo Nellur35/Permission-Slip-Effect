@@ -4,6 +4,8 @@
 
 `Permission-Slip-Effect` (PSE) is **standalone**. It is a structured **information-surfacing tool**, not a development methodology, not an agent harness, and not a decision tool. It is useful wherever ambiguity is the main cost: security review, architecture review, threat modeling, policy decisions, product strategy, HR / organizational decisions, legal-style analysis, clinical-style reasoning, incident analysis, ambiguous high-stakes decisions of any kind.
 
+> **Not professional advice.** PSE can support legal-style or clinical-style reasoning by surfacing assumptions, failure modes, and alternate framings — but its output is not legal, medical, or other professional advice, and is not a substitute for a qualified human professional. Treat it as input to a competent analyst, not a verdict.
+
 It is meant to be consumed by **both humans and AI tools.** A model can deep-read this repo, classify the task in front of it, and pick the smallest PSE tool or pipeline that preserves useful rigor — including picking *no PSE* when the task is simple.
 
 ---
