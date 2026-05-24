@@ -27,7 +27,7 @@ This repository contains multiple surfaces with different maturity levels. This 
 | `tests/` | Beta | Baseline regression coverage, expected to expand |
 | `experiments/` | Experimental | Evidence layer — raw data behind EVIDENCE.md |
 
-**Note:** The development methodology, integrations, and multi-agent patterns have moved to [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology).
+**Scope note:** This repo is the Permission Slip Effect substrate — paste-in prompts, the reasoning pipeline, evidence, and known failure modes. Development methodologies, executable harnesses, and multi-agent orchestration are out of scope here; they belong to separate, standalone projects that may use PSE-style prompting as one technique. See [`README.md`](README.md) "Related work" for optional ecosystem links.
 
 ## What this means in practice
 

@@ -53,7 +53,7 @@ Read all RCA outputs. Answer with equal rigor for successes and problems:
 
 *What did the tools actually do vs. what the navigator noticed?*
 
-If the project you're retro'ing logs skill/agent telemetry (e.g., a `telemetry.jsonl` at the project root, as the sibling [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) harness produces), run the relevant analysis before generating lessons. Example, if the telemetry skill ships an analyzer:
+If the project you're retro'ing logs skill/agent telemetry (e.g., a `telemetry.jsonl` at the project root, as some agent harnesses produce), run the relevant analysis before generating lessons. Example, if the telemetry skill ships an analyzer:
 
 ```bash
 bash .claude/skills/telemetry/analyze-telemetry.sh          # current session
@@ -106,7 +106,7 @@ Tactical "do now" lessons get applied before the session ends.
 
 ## Project Log Entry
 
-If the consuming project maintains a structured project log (the sibling [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) does, auto-collected via steering files and hooks), append there. Do not create a separate file. The project log becomes the corpus later runs of Graph of Thoughts can read against — for pattern recognition, emergent roles, and conflict resolution.
+If the consuming project maintains a structured project log (some workflows auto-collect one via steering files and hooks), append there. Do not create a separate file. The project log becomes the corpus later runs of Graph of Thoughts can read against — for pattern recognition, emergent roles, and conflict resolution.
 
 If no project log convention exists, write the entry somewhere stable (e.g., `project-log.md` at the repo root) so cross-session analysis has a target.
 

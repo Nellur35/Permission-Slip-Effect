@@ -96,7 +96,7 @@ For each trust boundary, a table:
 
 ### 10. Mitigation-to-Testing Mapping (optional)
 
-For each mitigation, identify the testing domain that would catch its failure. A mitigation without a way to test whether it still holds is documentation, not a control. If the consuming workflow defines a specific testing taxonomy (e.g., the sibling [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) has one), use that. Otherwise, a simple pairing is enough:
+For each mitigation, identify the testing domain that would catch its failure. A mitigation without a way to test whether it still holds is documentation, not a control. If the consuming workflow defines a specific testing taxonomy, use that. Otherwise, a simple pairing is enough:
 
 | Mitigation | Testing Domain | Specific Gate/Tool |
 |-----------|---------------|-------------------|

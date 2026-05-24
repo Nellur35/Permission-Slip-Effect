@@ -1,6 +1,8 @@
 # Gotchas — System-Level
 
-Known failure modes of the Permission Slip Effect substrate. These are where the substrate breaks — not where a single prompt produces bad output. The sibling [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) repo has its own methodology-level gotchas (multi-agent collisions, phase gate stalls, skill activation collisions, telemetry stalls); this file is scoped to the substrate itself.
+Known failure modes of the Permission Slip Effect substrate itself — where the substrate breaks, not where a single individual prompt happens to produce weak output. These apply whether PSE is used standalone (paste-in tools, manual pipeline runs, the reference CLI) or as one technique embedded inside a larger workflow.
+
+A few gotchas below are specific to AI-consumer use (agents reading the repo and picking tools on a user's behalf) — they are flagged inline.
 
 ---
 
@@ -61,6 +63,30 @@ Known failure modes of the Permission Slip Effect substrate. These are where the
 **Why it happens:** Models don't page — what's out of context is out of mind. The pipeline's residual injection (re-injecting Phase 0 output at every stage) is the designed mitigation, but it only works if the harness actually re-injects; many paste-in workflows don't.
 
 **What to do:** Always re-include the Phase 0 decomposition (or the raw problem if Phase 0 wasn't run) as "PRIMARY INPUT" at every framework stage, distinct from the accumulated analysis. The pipeline CLI does this by default; manual pipelines must do it explicitly.
+
+---
+
+## Running the Full Pipeline by Default (AI-consumer gotcha)
+
+**What happens:** An AI agent reading this repo on a user's behalf reaches for the full multi-stage pipeline on every task — including simple factual questions, routine bounded work, and well-scoped low-risk changes. The user pays 3–5x the tokens for analysis they didn't need, and the agent surfaces noise instead of signal.
+
+**When it hits:** Any agent that treats "use the PSE repo" as "run the pipeline" rather than "classify the task, then pick the smallest tool that preserves useful rigor."
+
+**Why it happens:** The pipeline is the most visible artifact in the repo and looks like the canonical entry point. Most actual PSE work is a single paste-in `tools/` prompt, but the README routing has to be read to learn that.
+
+**What to do:** Classify the task before picking the tool. The hierarchy is: no PSE → single `tools/` prompt → light pipeline → standard pipeline → multi-stakeholder/systems pipeline. Reach for the highest level only when ambiguity, stakes, and irreversibility justify the cost. See the task-routing table in [`README.md`](../README.md) and [`FULL-CONTEXT.md`](../FULL-CONTEXT.md).
+
+---
+
+## Calling Same-Family Reviewers an Independent Council (AI-consumer gotcha)
+
+**What happens:** An agent runs "the pipeline" with four reviewer slots all pointed at the same model, or at different models that share a training origin / family, or at the same model called four times in the same conversation context. The output looks like a multi-reviewer panel; in mechanism terms it is one reviewer with four voices. UNIQUE findings collapse and the agent reports the result as a real council run.
+
+**When it hits:** Any time provider availability, cost, or context constraints push the agent toward homogeneous reviewers. Particularly common when only one provider's API key is configured.
+
+**Why it happens:** Controlled heterogeneity — genuinely diverse reviewer models from different training origins — is the load-bearing mechanism. Program A's Exp 3 Swap C: duplicating one model in the lineup collapsed UNIQUE 15 → 8. Adversarial framing alone doesn't compensate.
+
+**What to do:** If genuinely diverse reviewers aren't available, say so explicitly and lower the claim. A single-reviewer pipeline run is still useful as structured surfacing, but it is not a council and should not be reported as one. Prefer a single `tools/` prompt with honest framing over a "panel" that's actually one reviewer.
 
 ---
 
