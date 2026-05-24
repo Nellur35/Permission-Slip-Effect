@@ -103,7 +103,7 @@ Based on what exists, recommend which upstream artifact is the weakest link:
 - Pipeline has major gaps -> start there
 - All exist -> the gap is in rigor, not coverage
 
-If the consuming workflow defines named phases (e.g., the sibling [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology) has an 8-phase mapping), translate the weakest-link finding into the corresponding phase.
+If the consuming workflow defines named phases or artifact gates, translate the weakest-link finding into the corresponding phase. Otherwise, report the weakest-link artifact directly and let the navigator decide where it fits.
 
 #### Priority Actions
 

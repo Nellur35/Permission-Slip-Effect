@@ -62,6 +62,8 @@ Structured feedback loop for any work session. Three stages: root cause analysis
 
 Each tool works in any AI model. Point the AI at this repo and tell it which tool to use, or paste the tool contents manually if your AI can't read URLs. They are paste-in prompts, not a framework — keep whichever ones fit your workflow and ignore the rest.
 
-## Relationship to the methodology sibling repo
+## Standalone by design
 
-These tools are the prompting layer. The software-engineering methodology that sequences them into an 8-phase workflow with gate checks, decomposition, and multi-agent orchestration lives in [`security-first-ai-dev-methodology`](https://github.com/Nellur35/security-first-ai-dev-methodology). That repo uses these tools; it is not a prerequisite for using them. Any individual tool stands alone.
+These tools stand alone. Each one is a complete paste-in prompt that works in any AI chat with no other PSE artifact loaded. You do not need the reasoning pipeline, the CLI, or any external workflow to get value from a single tool.
+
+Other projects — development methodologies, executable harnesses, domain-specific workflows — may sequence these prompts into larger pipelines or pair them with their own orchestration. Those are independent projects with their own identities; PSE does not depend on any of them. See [`../README.md`](../README.md) "Related work" for optional ecosystem links.
