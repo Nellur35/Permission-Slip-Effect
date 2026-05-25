@@ -84,7 +84,8 @@ Do **not**:
 - treat the convergence summary as the final answer
 - imply adversarial prompting alone is the mechanism (it is supportive, not primary)
 - run the full pipeline by default
-- call same-family or same-context reviewers a real independent council
+
+A council of same-family or zero-context local agents can still work — it will be less effective than a cross-family panel (reviewer diversity is load-bearing), but it's a legitimate option when diverse models aren't available.
 
 For a deep-read entry point optimized for AI consumers, see [`FULL-CONTEXT.md`](FULL-CONTEXT.md).
 

@@ -76,8 +76,9 @@ The pipeline's `convergence` block is a summary / navigation aid over the surfac
 - **Do not** run the full pipeline by default. Pick the smallest fit.
 - **Do not** treat the convergence summary as the final answer.
 - **Do not** imply adversarial prompting alone is the mechanism. Controlled heterogeneity (decomposition + temperature + diverse models) is primary; adversarial framing is supportive.
-- **Do not** call same-family or same-context reviewers a real independent council. Reviewer diversity is load-bearing.
 - **Do not** use PSE on tasks where it would only add friction (simple, factual, routine, low-risk, well-bounded, time-critical).
+
+A council of same-family or zero-context local agents can still work — it will be less effective than a cross-family panel (reviewer diversity is load-bearing), but it's a legitimate option when diverse models aren't available.
 
 ## Anchoring facts (calibrated, from EVIDENCE.md)
 
