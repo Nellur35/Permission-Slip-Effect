@@ -2,6 +2,8 @@
 
 Reference CLI for the Permission Slip Effect reasoning pipeline and adversarial review. No AWS account needed — works with any LLM API.
 
+> **This CLI is a directional reference, not a production tool.** It is a minimal v3-style sequential sketch that shows the *shape* of the technique — how the framework stages chain together, what the JSON output looks like, where temperature and provider selection plug in. The v4 architecture (Phase 0 decomposition, residual injection, tiered parallel execution, drift gates, per-stage temperature profiles, multi-provider diversity) is documented design in [`../experiments/v4-architecture.md`](../experiments/v4-architecture.md), **not shipped code here**. Program A's empirical claims were run on a separate harness; running this CLI as-is will not reproduce those experiments. Treat the code as a starting point to fork from, not the artifact the evidence was measured on.
+
 ## Use the output in two stages
 
 For consequential decisions, the pipeline is a **surfacing tool, not a decision tool.** The right pattern is:

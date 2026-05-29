@@ -22,7 +22,7 @@ This repository contains multiple surfaces with different maturity levels. This 
 | `gotchas/` | Stable | Known failure modes and limitations |
 | `reasoning-pipeline.md` | Stable | Core pipeline architecture document |
 | `pipeline/frameworks.json` | Beta | Structured prompt catalog for the reference CLI |
-| `pipeline/pipeline.py` | Beta | Reference automation layer, now tested but still evolving |
+| `pipeline/pipeline.py` | Beta (directional) | **Directional v3-style reference**, not the v4 harness the experiments ran on. Shows the shape of the technique; not intended to reproduce Program A. See `pipeline/README.md` banner. |
 | `pipeline/README.md` | Beta | CLI usage documentation may change with the implementation |
 | `tests/` | Beta | Baseline regression coverage, expected to expand |
 | `experiments/` | Experimental | Evidence layer — raw data behind EVIDENCE.md |
