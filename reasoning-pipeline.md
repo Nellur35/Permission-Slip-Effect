@@ -39,16 +39,40 @@ The pipeline does not make the model smarter. It widens the set of analytical tr
 
 ## Available Frameworks
 
-| Framework | Abbreviation | What It Does | Use When |
-|-----------|-------------|-------------|----------|
-| **First Principles** | FPR | Validates assumptions, checks if the framing is correct | The brief might be flawed; something feels off; ambiguous problem |
-| **Chain of Thought** | CoT | Establishes facts, timeline, sequential logic | You need to understand what actually happened |
-| **Root Cause Analysis** | RCAR / 5 Whys | Finds structural causes, not symptoms | Surface solutions keep failing; recurring problems |
-| **Graph of Thoughts** | GoT | Maps systemic interconnections and feedback loops | Multiple interconnected elements; situation is stuck |
-| **Stakeholder Mapping** | SMR | Maps power and interest for each player | Competing interests; multiple parties optimizing for different outcomes |
-| **Adversarial Reasoning** | AdR | Models what each party is protecting and optimizing for | Conflict, resistance, hidden incentives |
-| **Tree of Thoughts** | ToT | Generates and compares multiple strategic options with tradeoffs | Designing interventions; high-stakes decisions with multiple paths |
-| **Pre-Mortem** | PMR | Assumes failure, works backward to identify why | Before committing to any major strategy |
+The 13 frameworks — what each does and what it adds:
+
+| Abbr | Framework | What it does | Type | Axis it adds |
+|------|-----------|--------------|------|--------------|
+| FPR | First Principles | Strips assumptions to irreducible truths; checks the framing | Decompositional | Validity of the premise |
+| CoT | Chain of Thought | Sequential step-by-step reasoning | Generative | Linear derivation |
+| RCAR | Root Cause (5 Whys) | Traces a symptom to its single causal root | Decompositional | Causality |
+| GoT | Graph of Thoughts | Maps entities and their relationships/coupling | Structural | Interconnection |
+| SMR | Stakeholder Mapping | Surfaces parties, incentives, power dynamics | Contextual | Human/incentive |
+| AdR | Adversarial Reasoning | Attacks the design; finds failure and abuse | Critical | Attack surface |
+| ToT | Tree of Thoughts | Branches options, prunes, converges | Generative | Solution space |
+| PMR | Pre-Mortem | Imagines one failed future, works backward | Critical | Failure imagination |
+| **INV** | **Inversion** | Finds guaranteed-failure paths, inverts to requirements | **Generative-from-failure** | **Requirement generation** |
+| **SOT** | **Second-Order Thinking** | Traces consequences 2–3 hops forward in time | **Diagnostic** | **Time / downstream** |
+| **BAY** | **Bayesian / Probabilistic** | Makes priors explicit; flags weak assumptions | **Diagnostic** | **Uncertainty** |
+| **CYN** | **Cynefin** | Classifies the problem's nature before acting | **Diagnostic (meta)** | **Problem type** |
+| **STL** | **Steelman** | Builds the strongest case for the rejected option | **Critical (constructive)** | **Opposition strength** |
+
+**Rule for the new five.** CYN, BAY, SOT are diagnostic; INV is generative-from-failure; STL is constructive-critical. A pipeline built only of diagnostic frameworks characterizes but never recommends — **always follow a diagnostic chain with a generative closer (ToT or GoT).** STL is redundant once both SMR and AdR are already in the chain.
+
+### How a sequence works — each stage feeds the next with information the prompt never contained
+
+The CLI runs stages in order. After each stage, its parsed JSON output is appended to an `accumulated` context block (`run_reasoning_pipeline`), and that block is prepended to the next stage's input (`build_stage_input`). A final convergence pass synthesizes every stage. So the chain is not the same question asked five ways — **each stage reasons over the original problem PLUS everything the earlier stages discovered.** That accumulated material is the new information the original prompt didn't provide and the model now has to think about.
+
+Worked example — `CYN → GoT → INV → ToT`:
+
+| Stage | Input it receives | New information it must now reason about |
+|-------|-------------------|------------------------------------------|
+| CYN | the raw problem only | nothing yet — it classifies the problem (e.g. "complex, not complicated") |
+| GoT | problem **+ CYN's verdict** | must map structure *knowing the domain is complex* — so it looks for feedback loops it would have ignored if told the problem was simple |
+| INV | problem + CYN + **GoT's coupling map** | must invert failure *against specific coupling nodes GoT exposed* — its failure paths are concrete, not generic, because the graph handed it the cascade points |
+| ToT | problem + CYN + GoT + **INV's inverted requirements** | must branch options *constrained by requirements it didn't start with* — it prunes branches that violate INV's "make failure impossible" list |
+
+The effect: **the lead framework determines the category of the final answer**, because it shapes the context every later stage inherits. Open with CYN and the whole chain reasons in "complex-domain" mode; open with AdR and it reasons in "attack" mode; open with BAY and every later stage inherits explicit uncertainty it must carry. This is why re-sequencing the same frameworks produces materially different output — the information each stage is *fed* changes with order, even though the frameworks don't.
 
 ### Research Basis
 

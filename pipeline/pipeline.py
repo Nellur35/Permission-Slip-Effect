@@ -184,6 +184,26 @@ PIPELINES = {
         "stages": ["AdR", "ToT", "PMR"],
         "use_when": "Reviewing an existing artifact (architecture, threat model, design)",
     },
+    "classify-first": {
+        "name": "Classify-First (Cynefin opener)",
+        "stages": ["CYN", "FPR", "GoT", "ToT"],
+        "use_when": "Problem type itself is unclear; decide how to reason before reasoning",
+    },
+    "inversion": {
+        "name": "Inversion-Led (failure paths generate requirements)",
+        "stages": ["INV", "ToT", "PMR"],
+        "use_when": "Safety-critical; you want failure avoidance to author the design",
+    },
+    "uncertainty": {
+        "name": "Uncertainty-First (Bayesian opener)",
+        "stages": ["BAY", "AdR", "ToT"],
+        "use_when": "Conclusions may rest on weak priors; force probability before attack",
+    },
+    "dialectic": {
+        "name": "Dialectic (steelman vs adversarial)",
+        "stages": ["FPR", "STL", "AdR", "GoT", "ToT"],
+        "use_when": "Contested decision; surface strongest case both for and against",
+    },
 }
 
 FRAMEWORKS_PATH = Path(__file__).with_name("frameworks.json")

@@ -38,5 +38,30 @@
     "name": "Pre-Mortem",
     "system": "You are a pre-mortem analyst. Assume this has already failed. Your job: explain why it failed. Be specific. Name the failure modes.",
     "prompt": "Run a Pre-Mortem on this decision.\n\nIt is 6 months from now. This has failed. Explain why.\n\n1. What went wrong? (Name 3-5 specific failure modes)\n2. What warning signs existed that were ignored?\n3. Which assumption turned out to be wrong?\n4. What should have been designed against?\n\nRespond in JSON:\n{{\n  \"failure_modes\": [\n    {{\n      \"what_failed\": \"...\",\n      \"why\": \"...\",\n      \"warning_signs\": [\"signs that existed but were ignored\"],\n      \"could_have_been_prevented_by\": \"...\"\n    }}\n  ],\n  \"most_likely_cause_of_death\": \"the single biggest risk\",\n  \"design_against\": [\"specific mitigations to implement now\"],\n  \"key_insight\": \"...\"\n}}\n\nDecision/plan being evaluated:\n{input}"
+  },
+  "INV": {
+    "name": "Inversion",
+    "system": "You are an inversion analyst. Instead of asking how to succeed, you find the surest paths to failure, then invert them into requirements.",
+    "prompt": "Analyze this problem using Inversion.\n\n1. Describe the state of total, unambiguous failure for this goal.\n2. What actions or conditions would reliably PRODUCE that failure?\n3. Which of those failure drivers are already present or likely here?\n4. Invert each driver: what must be true to make that failure impossible (not just unlikely)?\n\nRespond in JSON:\n{{\n  \"failure_state\": \"...\",\n  \"failure_drivers\": [\"...\"],\n  \"present_now\": [\"...\"],\n  \"inverted_requirements\": [\"...\"],\n  \"key_insight\": \"the single most important finding\"\n}}\n\nProblem:\n{input}"
+  },
+  "SOT": {
+    "name": "Second-Order Thinking",
+    "system": "You are a second-order thinker. You refuse to stop at immediate effects and trace consequences across multiple hops in time.",
+    "prompt": "Analyze this problem using Second-Order Thinking.\n\n1. List the immediate (first-order) effects of the proposed action.\n2. For each, ask 'and then what?' to get the second-order effect.\n3. Extend to third-order where the chain is significant.\n4. Flag which downstream effects are delayed, compounding, or irreversible.\n\nRespond in JSON:\n{{\n  \"chains\": [\n    {{\"first_order\": \"...\", \"second_order\": \"...\", \"third_order\": \"...\", \"delayed_or_irreversible\": true}}\n  ],\n  \"key_insight\": \"the single most important downstream consequence\"\n}}\n\nProblem:\n{input}"
+  },
+  "BAY": {
+    "name": "Bayesian / Probabilistic",
+    "system": "You are a probabilistic analyst. You make uncertainty explicit and separate what is known from what is merely assumed.",
+    "prompt": "Analyze this problem using Probabilistic reasoning.\n\n1. Identify the key uncertain claims the analysis depends on.\n2. For each, state a rough prior probability and the basis for it.\n3. State what evidence would update each claim, and in which direction.\n4. Identify which conclusions rest on the weakest priors.\n\nRespond in JSON:\n{{\n  \"claims\": [\n    {{\"claim\": \"...\", \"prior\": \"low|medium|high\", \"basis\": \"...\", \"updating_evidence\": \"...\"}}\n  ],\n  \"weakest_links\": [\"...\"],\n  \"key_insight\": \"where the reasoning is guessing rather than knowing\"\n}}\n\nProblem:\n{input}"
+  },
+  "CYN": {
+    "name": "Cynefin",
+    "system": "You are a Cynefin classifier. You determine the nature of the problem before prescribing how to act on it.",
+    "prompt": "Analyze this problem using the Cynefin framework.\n\n1. Classify the problem as Clear, Complicated, Complex, or Chaotic. Justify.\n2. What is the appropriate response mode for that domain?\n3. What goes wrong if it is treated as a simpler domain than it is?\n4. Which parts of the problem sit in different domains?\n\nRespond in JSON:\n{{\n  \"domain\": \"clear|complicated|complex|chaotic\",\n  \"justification\": \"...\",\n  \"response_mode\": \"...\",\n  \"miscategorization_risk\": \"...\",\n  \"mixed_domains\": [\"...\"],\n  \"key_insight\": \"the most important classification consequence\"\n}}\n\nProblem:\n{input}"
+  },
+  "STL": {
+    "name": "Steelman",
+    "system": "You are a steelman analyst. You build the strongest good-faith version of the opposing or rejected position.",
+    "prompt": "Analyze this problem using Steelmanning.\n\n1. State the position being argued against, or the option being rejected.\n2. Build its strongest good-faith case: best evidence, most charitable framing.\n3. Under what conditions would this position actually be correct?\n4. What does the strong version reveal that the original analysis missed?\n\nRespond in JSON:\n{{\n  \"opposing_position\": \"...\",\n  \"strongest_case\": [\"...\"],\n  \"conditions_where_correct\": [\"...\"],\n  \"what_it_reveals\": \"...\",\n  \"key_insight\": \"the strongest point the original analysis must answer\"\n}}\n\nProblem:\n{input}"
   }
 }
