@@ -12,6 +12,8 @@ total_runs: 30+
 
 *What PSE is, what two experimental programs proved and disproved, and a decision framework for when to reach for it.*
 
+> **Note on the shipped CLI.** The experiments below were run on the v4 architecture (Phase 0 + tiered execution + residual injection + per-stage temperatures + multi-provider diversity). The CLI in [`pipeline/`](pipeline/) is a **directional v3-style reference**, not that harness — it shows the shape of the technique and is not expected to reproduce these results as-is. See [`pipeline/README.md`](pipeline/README.md).
+
 ---
 
 ## Executive summary
